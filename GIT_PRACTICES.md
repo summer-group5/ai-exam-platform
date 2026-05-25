@@ -16,7 +16,7 @@ Three branches that always exist:
 | `dev` | Where finished features land before going to `main`. |
 | your branch | Where you actually work. |
 
-Nobody commits directly to `main` or `dev`. Everything goes through a PR. GitHub is configured to enforce this — you physically can't push there directly.
+Nobody commits directly to `main` or `dev`. Everything goes through a PR. GitHub is configured to enforce this - you physically can't push there directly.
 
 `main` = what we'd show at the Friday demo. If it's broken, it's a problem.
 
@@ -37,7 +37,7 @@ chore/setup-eslint
 
 Types: `feature`, `fix`, `docs`, `spike`, `chore`
 
-Lowercase, hyphens, no spaces. Don't name it `test` or `johns-stuff` or `update` — that tells nobody anything.
+Lowercase, hyphens, no spaces. Don't name it `test` or `johns-stuff` or `update` - that tells nobody anything.
 
 ---
 
@@ -45,7 +45,8 @@ Lowercase, hyphens, no spaces. Don't name it `test` or `johns-stuff` or `update`
 
 ```bash
 # Start something new
-git checkout dev && git pull
+git checkout dev
+git pull
 git checkout -b feature/whatever-you're-doing
 
 # Commit as you go
@@ -86,7 +87,7 @@ asdf
 
 A few rules that actually matter:
 - Under ~70 characters in the summary
-- Imperative tense — "add", not "added"
+- Imperative tense - "add", not "added"
 - One thing per commit. If you're writing "and" in the message, split it.
 
 ---
@@ -100,7 +101,7 @@ Before you open it:
 - [ ] Branch is synced with `dev`
 - [ ] No debug logs, commented-out code, or real `.env` values left in
 
-PR description should cover: what it does, why, and how to test it. This isn't bureaucracy — it's so the reviewer doesn't have to guess.
+PR description should cover: what it does, why, and how to test it. This isn't bureaucracy - it's so the reviewer doesn't have to guess.
 
 ```markdown
 ## What
@@ -116,7 +117,7 @@ Customer wants visibility into focus loss during exams (CRD 4.6).
 4. Check backend logs for `tab_blur` event
 
 ## Notes
-- Still logging to console too — will clean up once dashboard exists
+- Still logging to console too - will clean up once dashboard exists
 - Alt+Tab on Windows not handled yet (separate issue)
 ```
 
@@ -130,8 +131,8 @@ Need 1 approval to merge.
 
 **If you're reviewing:**
 - Pull the branch and run it if you can
-- Be specific — "rename `x` to `studentId`" is useful, "this is unclear" is not
-- Don't leave PRs sitting — approve, request changes, or leave a comment
+- Be specific - "rename `x` to `studentId`" is useful, "this is unclear" is not
+- Don't leave PRs sitting - approve, request changes, or leave a comment
 
 **If your PR is being reviewed:**
 - Don't take it personally
@@ -145,7 +146,7 @@ If a comment thread is going in circles, just call each other.
 ## Merging
 
 - Topic branches → `dev`: **Squash and merge** on GitHub
-- `dev` → `main`: **Merge commit** (at sprint end or before a demo) — [team lead's name] does this
+- `dev` → `main`: **Merge commit** (at sprint end or before a demo) - [team lead's name] does this
 - Delete the branch after merge
 
 ---
@@ -190,7 +191,7 @@ Run the app before you push. A resolved conflict that breaks the build is worse 
 `.gitignore` catches most of it, but double-check:
 
 - `.env` with real keys or passwords
-- `node_modules/`, `venv/`, `__pycache__/`
+- `node_modules/` etc.
 - `.DS_Store`, `Thumbs.db`
 - `dist/`, `build/`, `.next/`
 - Real student data
@@ -200,7 +201,7 @@ Do commit:
 - `.env.example` with placeholder values
 - Lock files (`package-lock.json`, `yarn.lock`)
 
-**Accidentally pushed a secret?** Tell the team now. The secret needs to be rotated — deleting it from history doesn't help once it's been pushed.
+**Accidentally pushed a secret?** Tell the team now. The secret needs to be rotated - deleting it from history doesn't help once it's been pushed.
 
 ---
 
@@ -217,14 +218,18 @@ Do commit:
 
 ```bash
 # New branch
-git checkout dev && git pull
+git checkout dev
+git pull
 git checkout -b feature/my-thing
 
 # Save work
-git add . && git commit -m "feat: ..." && git push
+git add .
+git commit -m "feat: ..."
+git push
 
 # Sync with dev
-git fetch origin && git merge origin/dev
+git fetch origin
+git merge origin/dev
 
 # Undo last commit (not pushed yet)
 git reset --soft HEAD~1
