@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Exam Platform Skeleton</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; }
+      input, button { font-size: 1rem; padding: 0.5rem; }
+      button { margin-left: 0.5rem; }
+      #result { margin-top: 1rem; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <h1>AI Exam Platform Skeleton</h1>
+    <p>Enter text and submit to save it in the backend database.</p>
+
+    <label>
+      Message:
+      <input id="messageInput" type="text" placeholder="Write a sample message" />
+    </label>
+    <button id="sendButton">Send to backend</button>
+
+    <div id="result"></div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
