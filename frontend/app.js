@@ -1,4 +1,4 @@
-const backendUrl = 'http://localhost:4000/api/message';
+const backendUrl = '/api/message';
 const resultEl = document.getElementById('result');
 const inputEl = document.getElementById('messageInput');
 const sendButton = document.getElementById('sendButton');
