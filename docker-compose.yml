@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15-alpine
+    env_file: .env.example
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-exam_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-exam_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-exam_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    env_file: .env.example
+    environment:
+      PORT: ${BACKEND_PORT:-4000}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-exam_user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-exam_pass}
+      DB_NAME: ${POSTGRES_DB:-exam_db}
+    depends_on:
+      - db
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres-data:
