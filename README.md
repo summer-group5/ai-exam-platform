@@ -14,17 +14,29 @@ Phase 1 - research and setup.
 - Research notes in `docs/research/`
 
 ## How to run
-TBD once tech stack is finalized.
 
-1. Copy `.env.example` to `.env` in the repository root:
+**Requirements:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+1. Copy `.env.example` to `.env`:
    ```bash
    cp .env.example .env
    ```
-2. Start the application stack using Docker Compose:
+2. Start the stack:
    ```bash
    docker compose up --build
    ```
-3. Open the frontend in your browser at: `http://localhost:3000`
-4. Enter a message and click **Send to backend**.
+3. Open `http://localhost:3000` in your browser
 
-The frontend sends a request to the backend at `http://localhost:4000/api/message`, the backend writes the message to PostgreSQL, and the response is displayed on the page.
+| Service  | URL                          |
+|----------|------------------------------|
+| Frontend | http://localhost:3000        |
+| Backend  | http://localhost:4000        |
+| Database | localhost:5432               |
+
+**Stop:** `docker compose down`
+**Next time:** `docker compose up` (no `--build` needed unless Dockerfiles or dependencies changed)
+**Wipe database:** `docker compose down -v`
+
+## Wireframes
+
+Open `docs/wireframes.html` directly in your browser.
