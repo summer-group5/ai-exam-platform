@@ -1,0 +1,31 @@
+.selection-row{
+  display: flex;
+  gap: 60px;
+  margin-top: 40px;
+}
+
+.selection-box{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.selection-controls{
+  display: flex;
+  gap: 20px;
+}
+
+.added-box{
+  width: 320px;
+  min-height: 300px;
+  border: 1px solid #999;
+  background: white;
+  padding: 20px;
+}
+
+.item-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
