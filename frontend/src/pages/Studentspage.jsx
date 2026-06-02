@@ -6,7 +6,12 @@ export default function Studentspage() {
   return (
   <>
   <Topnav/>
-    <div>studentspage</div>
+    
+    
+    <div>studentspage
+
+
+    </div>
    </>
   )
 }
