@@ -40,3 +40,13 @@ Phase 1 - research and setup.
 ## Wireframes
 
 Open `docs/wireframes.html` directly in your browser.
+
+
+## dependencies for development 
+
+### Front end 
+
+npm install react-router-dom
+
+### Required backend dependencies
+npm install express pg cors dotenv nodemon
