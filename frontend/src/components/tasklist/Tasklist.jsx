@@ -1,7 +1,7 @@
-//list.jsx
+//Tasklist.jsx
 import React from 'react'
 
-export default function List({
+export default function Tasklist({
   quizTasks,
   onRemoveTask
 }) {
