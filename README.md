@@ -39,4 +39,7 @@ Phase 1 - research and setup.
 
 ## Wireframes
 
-Open `docs/wireframes.html` directly in your browser.
+![Login](docs/wireframes/login.png)
+![Student dashboard](docs/wireframes/student-dashboard.png)
+![Assignment view](docs/wireframes/assignment-view.png)
+
