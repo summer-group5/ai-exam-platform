@@ -38,8 +38,12 @@ Phase 1 - research and setup.
 **Wipe database:** `docker compose down -v`
 
 ## Wireframes
+**Login**
+![Login](docs/wireframes/Login.png)
 
-![Login](docs/wireframes/login.png)
+**Student dashboard**
 ![Student dashboard](docs/wireframes/student-dashboard.png)
+
+**Assignment view**
 ![Assignment view](docs/wireframes/assignment-view.png)
 
