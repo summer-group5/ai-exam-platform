@@ -1,6 +1,9 @@
 // Coursepage.jsx
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import './Coursepage.css'
+import Topnav from '../components/topnav/Topnav';
+
 
 
 export default function Coursepage() {
@@ -16,15 +19,25 @@ export default function Coursepage() {
     { id: 6, title: 'Svenska för arbetlivet' ,description: 'Introduction to Java programming.',teacher: 'John Smith'}
   ];
 
-
   const course = courses.find(
     course => course.id === Number(id)
   );
 
+  // course page links prop for topnav topnav component
+ const courseLinks = [
+    { text: "Home", path: "/" },
+    { text: "My courses", path: "/student" },
+    { text: "Help", path: "/help" },
+    { text: "Login", path: "/login" }
+  ];
+
+  
+   
+
 
   return (
       <div className='coursepage'>
-        
+        <Topnav links={courseLinks}/>
         
         <div className='course-container'>
 
