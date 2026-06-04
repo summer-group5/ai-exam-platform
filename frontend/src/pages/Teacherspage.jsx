@@ -1,6 +1,6 @@
 import React from 'react'
 import Topnav from '../components/topnav/Topnav'
-import ToolCard from '../components/toolcard/toolcard'
+import ToolCard from '../components/toolcard/Toolcard'
 import "./Teacherspage.css"
 
 export default function Teacherspage() {
