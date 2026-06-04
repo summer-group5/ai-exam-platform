@@ -12,7 +12,7 @@ export default function Coursepage() {
   
   const courses = [
     { id: 1, title: 'Java basics',  description: 'Introduction to Java programming.',teacher: 'John Smith' },
-    { id: 2, title: 'Linux basics' ,description: 'Introduction to Java programming.',teacher: 'John Smith'},
+    { id: 2, title: 'Linux basics' ,description: 'Linux commands and basics.',teacher: 'John Smith'},
     { id: 3, title: 'HTML5 and css',description: 'Introduction to Java programming.',teacher: 'John Smith' },
     { id: 4, title: 'Advanced mobile development',description: 'Introduction to Java programming.',teacher: 'John Smith' },
     { id: 5, title: 'Web development project' ,description: 'Introduction to Java programming.',teacher: 'John Smith'},
@@ -31,25 +31,24 @@ export default function Coursepage() {
     { text: "Login", path: "/login" }
   ];
 
-  
-   
-
 
   return (
       <div className='coursepage'>
         <Topnav links={courseLinks}/>
-        
+       
         <div className='course-container'>
 
         {/* Top image for header*/ }  
-
-<img src="#" alt="course image" />
-
+ <div className='image-container'> 
+<img className='course-image' src="../images/course_image.jpg" alt="course image" /> 
+    
+    </div>
+   
             <h1>{course?.title}</h1>
             <h3>Course id: {id}</h3>
             <p>{course.description}</p>
 
-            <h3>Course Teacher: {course?.teacher}</h3>
+            <p>Course Teacher: {course?.teacher}</p>
             
 
           <section>
@@ -61,18 +60,56 @@ export default function Coursepage() {
            <section>
             <h3>Course materials</h3>
            <ul>
-          <li>Week 1 Slides</li>
-           
-           <li>Installation guide</li>
+          <li><div className="file-item">
+  <span className='course-span'> Week 1 Slides</span>
+  <a href="/files/week1.pdf" target="_blank">
+    Open
+  </a>
+</div>
+</li>
+
+
+
+              {/* Word document embedded to course page*/}
+            
+
+           <li>Installation guide:</li>
+     
+     {/* Youtube video embedded to course page*/}
+    
+ 
+    <iframe width="560" height="315" 
+    src="https://www.youtube.com/embed/#placeholder"
+        title="YouTube video player" 
+        frameBorder="0" 
+        allow="accelerometer; autoplay; clipboard-write; 
+               encrypted-media; gyroscope; 
+               picture-in-picture; web-share" 
+        referrerPolicy="strict-origin-when-cross-origin" allowFullScreen>
+    </iframe>
 
            </ul>
              <ul>
           <li>Week 2 Slides</li>
            
-           <li>Basic script</li>
+           <li> <div className="file-item">
+  <span className='course-span'> Basic script</span>
+  <a href="/files/week1.pdf" target="_blank">
+    Open 
+  </a>
+</div>
+</li>
+
+ <li> <div className="file-item">
+  <span className='course-span'> Variables</span>
+  <a href="/files/week1.pdf" target="_blank">
+    Open 
+  </a>
+</div>
+</li>
+
 
            </ul>
-           
            
            
            </section>
@@ -82,18 +119,21 @@ export default function Coursepage() {
 <ul>
   
   <li>week 1 assignment</li>
-<li>week2 assignmen</li>
-<li>week3 assignmen</li>
+<li>week 2 assignment</li>
+<li>week 3 assignment</li>
 
 </ul>
         </section>
         
+       <div className='exam-container'>
         <section>
-          <h3>Exam</h3>
-          <p>Exam is using browser detection and eye tracking and student must have web camera on during the exam. </p>
-          <button>Join</button>
+          <h3 className='exam-title'>Exam</h3>
+          <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
+          <button >Join</button>
         </section>
 
+
+</div>
         </div>
 
     </div>
