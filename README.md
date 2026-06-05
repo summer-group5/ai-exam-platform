@@ -58,7 +58,7 @@ Phase 1 - research and setup.
 ![Assignment view](docs/wireframes/assignment-view.png)
 
 
-**Assignment view**
+**Assignment exam**
 
 
 ![Exam view](docs/wireframes/exam.png)
