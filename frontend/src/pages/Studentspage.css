@@ -1,0 +1,22 @@
+.students-page {
+  padding: 40px;
+}
+.students-page h1 {
+ text-align: center;
+margin: 100px;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+
+}
+
+.tools-grid :hover {
+  background-color: #60a5fa;
+  color: white;
+
+ 
+}
+

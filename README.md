@@ -63,3 +63,12 @@ Phase 1 - research and setup.
 
 ![Exam view](docs/wireframes/exam.png)
 
+
+## dependencies for development 
+
+### Front end 
+
+npm install react-router-dom
+
+### Required backend dependencies
+npm install express pg cors dotenv nodemon

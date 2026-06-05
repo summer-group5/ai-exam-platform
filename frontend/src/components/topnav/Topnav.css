@@ -1,0 +1,28 @@
+.topnav{
+    margin: auto;
+    padding: 10px;
+
+ display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+}
+.topnav .nav-link {
+    color: #111827;
+    background-color: rgb(216, 217, 228);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ font-weight: bold;
+text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+
+}
+
+
+.topnav .nav-link:hover {
+  background-color: #60a5fa;
+  color: white;
+
+  transform: translateY(-2px);
+}
