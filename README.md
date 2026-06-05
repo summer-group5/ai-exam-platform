@@ -39,7 +39,29 @@ Phase 1 - research and setup.
 
 ## Wireframes
 
-Open `docs/wireframes.html` directly in your browser.
+
+**Login**
+
+
+![Login](docs/wireframes/login.png)
+
+
+**Student dashboard**
+
+
+![Student dashboard](docs/wireframes/student-dashboard.png)
+
+
+**Assignment view**
+
+
+![Assignment view](docs/wireframes/assignment-view.png)
+
+
+**Assignment exam**
+
+
+![Exam view](docs/wireframes/exam.png)
 
 
 ## dependencies for development 
