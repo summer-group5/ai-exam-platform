@@ -1,6 +1,6 @@
 import React from 'react'
 import Topnav from '../components/topnav/Topnav'
-import Toolcard from '../components/toolcard/Toolcard'
+import Toolcard from '../components/toolcard/toolcard'
 import './Studentspage.css'
 
 
