@@ -74,7 +74,7 @@ export default function Coursepage() {
             
 
            <li>Installation guide:</li>
-     
+ 
      {/* Youtube video embedded to course page*/}
     
  
@@ -110,7 +110,7 @@ export default function Coursepage() {
 
 
            </ul>
-           
+   
            
            </section>
 
