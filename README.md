@@ -43,7 +43,7 @@ Phase 1 - research and setup.
 **Login**
 
 
-![Login](docs/wireframes/login.png)
+![Login](docs/wireframes/Login.png)
 
 
 **Student dashboard**
