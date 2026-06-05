@@ -43,7 +43,7 @@ Phase 1 - research and setup.
 **Login**
 
 
-![Login](docs/wireframes/Login.png)
+![Login](docs/wireframes/login.png)
 
 
 **Student dashboard**
@@ -56,4 +56,10 @@ Phase 1 - research and setup.
 
 
 ![Assignment view](docs/wireframes/assignment-view.png)
+
+
+**Assignment view**
+
+
+![Exam view](docs/wireframes/exam.png)
 
