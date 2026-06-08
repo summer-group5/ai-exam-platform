@@ -11,6 +11,9 @@ import Examdesignpage from './pages/Examdesignpage'
 import Createquizpage from './pages/Createquizpage' 
 import Createcoursepage from './pages/Createcoursepage'
 import Coursepage from './pages/Coursepage'
+import Exampage from './pages/Exampage'
+
+
 
 const router = createBrowserRouter([
   {
@@ -35,7 +38,11 @@ const router = createBrowserRouter([
       {path: "create-course", element: <Createcoursepage />},
     
       // Single course route
-      {path: "Coursepage/:id", element: <Coursepage />}
+      {path: "Coursepage/:id", element: <Coursepage />},
+
+      //  Route for exam page 
+      { path:"/Coursepage/:id/exam", element: <Exampage /> }
+
 
     ]
   
