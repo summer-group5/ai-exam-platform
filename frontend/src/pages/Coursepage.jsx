@@ -129,7 +129,7 @@ export default function Coursepage() {
         <section>
           <h3 className='exam-title'>Exam</h3>
           <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
-          <button >Join</button>
+          <button>Join</button>
         </section>
 
 
