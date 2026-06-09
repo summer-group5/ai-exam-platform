@@ -28,11 +28,30 @@ Yes, extensively. This is an OS-level lockdown, not just a browser:
 - Can require a password to quit
 
 ### 2. Does it disable plugins?
-Yes. Browser extensions are blocked by design - students can only access the exam interface, with no new tabs, bookmarks, or extensions. Web plugins (Flash, Java applets) are a separate setting and are disabled by default for security. So the answer to the customer's specific question is: yes, it blocks browser extensions.
+Yes. Browser extensions are blocked by design - students can only access the exam interface, with no new tabs, bookmarks, or extensions. Web plugins are a separate setting and are disabled by default for security. So the answer to the customer's specific question is: yes, it blocks browser extensions.
 
 ### 3. Is it usable for our solution?
 No. See below for why.
 
+---
+
+## What an exam with SEB actually looks like
+ 
+SEB does not change what our exam page looks like. It wraps our existing exam page in a locked-down browser. The student sees the same exam UI we already designed, but with no tabs, no taskbar, and no access to anything else on the machine. The work SEB adds is in setup and distribution, not in the exam screen itself.
+ 
+### Phase 1 - teacher setup (once per exam)
+ 
+1. **Install the SEB Configuration Tool** - comes bundled with the SEB Windows download.
+2. **Configure the exam profile** - set the start URL to our app, set a quit password, and toggle the restrictions (disable plugins, block navigation, etc.).
+3. **Save an encrypted .seb config file** - one file per exam, protected against tampering.
+4. **Distribute the config file to students** - via the platform, email, or a download link before the exam.
+
+### Phase 2 - exam day (each student)
+ 
+5. **Install SEB and open the .seb file** - install once, then double-click the config to launch into lockdown.
+6. **Machine locks down** - no Alt-Tab, no taskbar, no other apps, no copy/paste. Exam only.
+7. **Student takes the exam** - our exam page loads at the configured start URL, fullscreen.
+8. **Submit and quit** - student enters the quit password, SEB closes, the machine is restored to normal.
 ---
 
 ## Why it does not fit our project well
