@@ -1,6 +1,6 @@
 // Coursepage.jsx
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import './Coursepage.css'
 import Topnav from '../components/topnav/Topnav';
 
@@ -46,14 +46,21 @@ export default function Coursepage() {
    
             <h1>{course?.title}</h1>
             <h3>Course id: {id}</h3>
-            <p>{course.description}</p>
+            <p>{course?.description}</p>
 
             <p>Course Teacher: {course?.teacher}</p>
             
 
           <section>
           <h1> Course header</h1>
+<h1>{course?.title ?? "Course not found"}</h1>
+<h3>Course id: {id}</h3>
 
+<p>{course?.description ?? "No description available"}</p>
+
+<p>
+  Course Teacher: {course?.teacher ?? "Unknown"}
+</p>
           </section>
 
            
@@ -127,9 +134,13 @@ export default function Coursepage() {
         
        <div className='exam-container'>
         <section>
-          <h3 className='exam-title'>Exam</h3>
+          <h3 className='exam-title'> Final Exam</h3>
           <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
-          <button >Join</button>
+          
+         <Link to={`/Coursepage/${id}/exam`} className="join-btn">
+  Join
+</Link>
+        
         </section>
 
 
