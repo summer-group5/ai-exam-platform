@@ -13,28 +13,37 @@ export default function Exampage() {
     return (
  
  <div className='exam-page'>
-        
+      
         <div className="exam-header">
-            <h1> Exam</h1>
+            <h1>Final Exam</h1>
+       <div className="timer-container">
         <p>timer here</p>
-         <p>Monitoring active here</p>
-        </div>
+       </div> 
+        
+          <p>Monitoring active here</p>
+        
+         
+         
+         </div> 
        
        <div className="row-container">
         <section className='exam-section'>
-        <div className="progress-bar">
-            <h2>Questions</h2>
-            <p>progress cards</p>
-            <p>progress cards</p>
-            <p>progress cards</p>
-          
         
+        <div className="progress-bar">
+            <h2>QUESTIONS</h2>
+            <p>progress cards</p>
+            <p>progress cards</p>
+            <p>progress cards</p>
+         <div className="button-container">
+            <button className='submit'>Submit</button>
+          </div> 
+       
         </div> 
          </section>
            
             <section className='exam-section'>
-             <div className="timer-container">
-                 <h2>Questions 2 OF 5</h2>
+             <div className="question-container">
+                 <h2>QUESTIONS 2 OF 5</h2>
          <h3>What does the acronym HTTP stand for ?</h3>
                   
            <div className="question-options">
@@ -84,7 +93,7 @@ export default function Exampage() {
   </div>
 
 </div>   
-             <button className='submit'>Submit</button>
+            
            
         </div>    
         
