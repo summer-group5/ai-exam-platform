@@ -21,4 +21,6 @@ Official site: `https://safeexambrowser.org`
 
 ### 3. Is it usable for our solution?
 
+## Sources
+- SEB official overview: https://safeexambrowser.org/about_overview_en.html
 
