@@ -51,19 +51,6 @@ export default function Coursepage() {
             <p>Course Teacher: {course?.teacher}</p>
             
 
-          <section>
-          <h1> Course header</h1>
-<h1>{course?.title ?? "Course not found"}</h1>
-<h3>Course id: {id}</h3>
-
-<p>{course?.description ?? "No description available"}</p>
-
-<p>
-  Course Teacher: {course?.teacher ?? "Unknown"}
-</p>
-          </section>
-
-           
            <section>
             <h3>Course materials</h3>
            <ul>
