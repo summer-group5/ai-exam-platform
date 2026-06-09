@@ -10,7 +10,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 20px 40px 20px;
- 
+ border-bottom: 1px solid;
 }
 
 
@@ -66,13 +66,22 @@ text-align: left;
   margin-top: 20px;
 }
 
+
+
 .submit {
     
-
+    cursor: pointer;
     padding: 10px 40px 10px 40px;
     border: 1px solid;
    border-radius: 5px;
     
+}
+
+#submit-grad {
+ background-color: black; /* For browsers that do not support gradients */
+  background-image: linear-gradient(to top, grey, rgb(223, 212, 212));
+  border: 1px solid rgb(104, 100, 100);
+  color: white;
 }
 
 .timer-container{
@@ -85,4 +94,23 @@ border: 1px solid #ccc;
 .button-container {
   display: flex;
   justify-content: center;
+}
+
+
+.monitor-container{
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  background-color: #969292;
+
+}
+
+.timer-container{
+  border: 1px solid #dd991b;
+  padding: 6px 12px;
+  background-color: bisque;
+
+}
+.timer-span {
+  
+
 }

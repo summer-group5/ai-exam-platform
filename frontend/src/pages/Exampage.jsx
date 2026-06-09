@@ -17,11 +17,14 @@ export default function Exampage() {
         <div className="exam-header">
             <h1>Final Exam</h1>
        <div className="timer-container">
-        <p>timer here</p>
-       </div> 
+        <span className="timer-span">timer here</span>
         
-          <p>Monitoring active here</p>
         
+       </div>
+        <div className="monitor-container">
+           <span className="monitor-span">  Monitoring active</span>
+        
+        </div>
          
          
          </div> 
@@ -35,7 +38,7 @@ export default function Exampage() {
             <p>progress cards</p>
             <p>progress cards</p>
          <div className="button-container">
-            <button className='submit'>Submit</button>
+            <button className='submit'id="submit-grad">Submit</button>
           </div> 
        
         </div> 

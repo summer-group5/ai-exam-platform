@@ -1,11 +1,21 @@
 import React from 'react'
 
+
 export default function Questionscard() {
-  return (
+   question,
+    options,
+  selectedAnswer,
+  setSelectedAnswer
+
+  
+  
+    return (
+
     
-    <div>
+    <div className='question-card'>
         
         Questionscard
+        
         </div>
   )
 }
