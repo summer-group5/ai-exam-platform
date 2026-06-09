@@ -1,7 +1,17 @@
+# Environment variables
 .env
+.env.*
+
+# Dependencies
 node_modules/
-.DS_Store
+
+# IDEs
 .idea/
 .vscode/
+
+# OS files
+.DS_Store
+
+# Build output
 dist/
 build/

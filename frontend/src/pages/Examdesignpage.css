@@ -1,0 +1,67 @@
+.exam-designpage{
+padding: 40px;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.exam-designpage h1{
+  text-align: center;
+
+  margin: 100px;
+}
+
+.design-container{
+align-content: center;
+margin: auto;
+width: 60%;
+}
+
+.task-section {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.ai-generator{
+
+margin-top: 10px;
+
+ display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.ai-generator textarea {
+  width: 100%;
+
+  height: 180px;
+
+  padding: 12px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  font-size: 15px;
+
+  resize: vertical;
+}
+
+
+.save-exam{
+margin-top: 100px;
+    display: flex;
+flex-direction: row;
+gap: 200px;
+}
+
+
+  
+

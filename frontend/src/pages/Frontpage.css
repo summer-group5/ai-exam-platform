@@ -1,0 +1,28 @@
+.frontContainer {
+    background-color: rgb(222, 226, 226);
+    
+  }
+
+.Front-title {
+  background-color: #ffff;
+  text-align: center;
+ 
+}
+.Front-title h1 {
+   margin-bottom: 200px;
+}
+
+
+.image-container {
+  
+  height: 300px;
+  margin-top: 20px;
+  margin-bottom: 25px;
+  border-radius: 5px;
+}
+
+.front-image{
+ width: 100%;
+  height: 100%;
+  object-fit:contain;
+}
