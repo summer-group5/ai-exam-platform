@@ -46,17 +46,11 @@ export default function Coursepage() {
    
             <h1>{course?.title}</h1>
             <h3>Course id: {id}</h3>
-            <p>{course.description}</p>
+            <p>{course?.description}</p>
 
             <p>Course Teacher: {course?.teacher}</p>
             
 
-          <section>
-          <h1> Course header</h1>
-
-          </section>
-
-           
            <section>
             <h3>Course materials</h3>
            <ul>
