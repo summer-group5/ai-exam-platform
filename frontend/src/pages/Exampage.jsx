@@ -5,9 +5,10 @@ import QuestionProgress from '../components/questionscard/questionprogress/Quest
 
 
 export default function Exampage() {
-const [currentQuestion, setCurrentQuestion] = useState(0);
-const [selectedAnswer, setSelectedAnswer] = useState('');
-  
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+
+  const [answers, setAnswers] = useState([]); 
+  const isAnswered = (index) => answers[index] !== undefined;
 
   const questions = [
   {
@@ -18,7 +19,7 @@ const [selectedAnswer, setSelectedAnswer] = useState('');
       'Hyper Transfer Tool Protocol',
       'Host Transfer Text Protocol'
     ],
-    answered: true
+   
   },
 
   {
@@ -29,7 +30,7 @@ const [selectedAnswer, setSelectedAnswer] = useState('');
       '<href>',
       '<url>'
     ],
-    answered: false
+  
   },
 
   {
@@ -40,7 +41,7 @@ const [selectedAnswer, setSelectedAnswer] = useState('');
       'text-style',
       'background'
     ],
-    answered: false
+ 
   },
 
   {
@@ -51,7 +52,7 @@ const [selectedAnswer, setSelectedAnswer] = useState('');
       'Server hosting',
       'Operating systems'
     ],
-    answered: false
+
   },
 
   {
@@ -62,7 +63,7 @@ const [selectedAnswer, setSelectedAnswer] = useState('');
       'write()',
       'display()'
     ],
-    answered: true
+  
   }
 ];
 
@@ -94,6 +95,7 @@ const [selectedAnswer, setSelectedAnswer] = useState('');
   questions={questions}
   currentQuestion={currentQuestion}
   setCurrentQuestion={setCurrentQuestion}
+  answers= {answers}
 />
          <div className="button-container">
             <button className='submit'id="submit-grad">Submit</button>
@@ -109,8 +111,13 @@ const [selectedAnswer, setSelectedAnswer] = useState('');
           totalQuestions={questions.length}
           question={questions[currentQuestion].title}
           options={questions[currentQuestion].options}
-          selectedAnswer={selectedAnswer}
-          setSelectedAnswer={setSelectedAnswer}
+          selectedAnswer={answers[currentQuestion]}
+setSelectedAnswer={(answer) =>
+  setAnswers((prev) => ({
+    ...prev,
+    [currentQuestion]: answer
+  }))
+}
         />
         
         </section>   

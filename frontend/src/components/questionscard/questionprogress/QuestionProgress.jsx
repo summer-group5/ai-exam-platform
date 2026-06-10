@@ -3,20 +3,23 @@ import'./QuestionProgress.css'
 export default function QuestionProgress({
   questions,
   currentQuestion,
-  setCurrentQuestion
+  setCurrentQuestion,
+  answers
 }) {
   return (
     <div className="question-list">
 
       <h2>QUESTIONS</h2>
 
-      {questions.map((question, index) => (
-
-       <div
+      {questions.map((question, index) => {
+           const isDone = answers[index] !== undefined;
+    
+    return (
+           <div
   key={index}
   className={`
     question-progress-card
-    ${question.answered ? 'done' : ''}
+    ${isDone ? 'done' : ''}
     ${currentQuestion === index ? 'current' : ''}
   `}
   onClick={() => setCurrentQuestion(index)}
@@ -28,7 +31,7 @@ export default function QuestionProgress({
 
   <span className="question-status">
     {
-      question.answered
+      isDone
       ? 'Done'
       : currentQuestion === index
       ? 'Current'
@@ -38,7 +41,7 @@ export default function QuestionProgress({
 
 </div>
 
-      ))}
+      ); })}
 
     </div>
   );
