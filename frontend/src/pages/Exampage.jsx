@@ -1,13 +1,70 @@
 import React, {useState} from 'react'
 import './Exampage.css'
-
-
+import Questionscard from '../components/questionscard/Questionscard';
+import QuestionProgress from '../components/questionscard/questionprogress/QuestionProgress';
 
 
 export default function Exampage() {
- 
-   const [selectedAnswer, setSelectedAnswer] = useState('');
+const [currentQuestion, setCurrentQuestion] = useState(0);
+const [selectedAnswer, setSelectedAnswer] = useState('');
+  
 
+  const questions = [
+  {
+    title: 'What does the acronym HTTP stand for?',
+    options: [
+      'HyperText Transfer Protocol',
+      'High Transfer Text Process',
+      'Hyper Transfer Tool Protocol',
+      'Host Transfer Text Protocol'
+    ],
+    answered: true
+  },
+
+  {
+    title: 'Which HTML tag creates a hyperlink?',
+    options: [
+      '<a>',
+      '<link>',
+      '<href>',
+      '<url>'
+    ],
+    answered: false
+  },
+
+  {
+    title: 'Which CSS property changes text color?',
+    options: [
+      'color',
+      'font-color',
+      'text-style',
+      'background'
+    ],
+    answered: false
+  },
+
+  {
+    title: 'What is React mainly used for?',
+    options: [
+      'Building user interfaces',
+      'Database management',
+      'Server hosting',
+      'Operating systems'
+    ],
+    answered: false
+  },
+
+  {
+    title: 'Which JavaScript method prints to the browser console?',
+    options: [
+      'console.log()',
+      'print()',
+      'write()',
+      'display()'
+    ],
+    answered: true
+  }
+];
 
  
     return (
@@ -33,10 +90,11 @@ export default function Exampage() {
         <section className='exam-section'>
         
         <div className="progress-bar">
-            <h2>QUESTIONS</h2>
-            <p>progress cards</p>
-            <p>progress cards</p>
-            <p>progress cards</p>
+         <QuestionProgress
+  questions={questions}
+  currentQuestion={currentQuestion}
+  setCurrentQuestion={setCurrentQuestion}
+/>
          <div className="button-container">
             <button className='submit'id="submit-grad">Submit</button>
           </div> 
@@ -45,61 +103,15 @@ export default function Exampage() {
          </section>
            
             <section className='exam-section'>
-             <div className="question-container">
-                 <h2>QUESTIONS 2 OF 5</h2>
-         <h3>What does the acronym HTTP stand for ?</h3>
-                  
-           <div className="question-options">
-
-  <div className="option">
-    <input
-      type="radio"
-      name="http-question"
-      value="HyperText Transfer Protocol"
-      checked={selectedAnswer === 'HyperText Transfer Protocol'}
-      onChange={(e) => setSelectedAnswer(e.target.value)}
-    />
-    <span>HyperText Transfer Protocol</span>
-  </div>
-
-  <div className="option">
-    <input
-      type="radio"
-      name="http-question"
-      value="High Transfer Text Process"
-      checked={selectedAnswer === 'High Transfer Text Process'}
-      onChange={(e) => setSelectedAnswer(e.target.value)}
-    />
-    <span>High Transfer Text Process</span>
-  </div>
-
-  <div className="option">
-    <input
-      type="radio"
-      name="http-question"
-      value="Hyper Transfer Tool Protocol"
-      checked={selectedAnswer === 'Hyper Transfer Tool Protocol'}
-      onChange={(e) => setSelectedAnswer(e.target.value)}
-    />
-    <span>Hyper Transfer Tool Protocol</span>
-  </div>
-
-  <div className="option">
-    <input
-      type="radio"
-      name="http-question"
-      value="Host Transfer Text Protocol"
-      checked={selectedAnswer === 'Host Transfer Text Protocol'}
-      onChange={(e) => setSelectedAnswer(e.target.value)}
-    />
-    <span>Host Transfer Text Protocol</span>
-  </div>
-
-</div>   
-            
-           
-        </div>    
-        
+             
+        <Questionscard
+          questionNumber={currentQuestion+1}
+          totalQuestions={questions.length}
+          question={questions[currentQuestion].title}
+          options={questions[currentQuestion].options}
+          selectedAnswer={selectedAnswer}
+          setSelectedAnswer={setSelectedAnswer}
+        />
         
         </section>   
            
