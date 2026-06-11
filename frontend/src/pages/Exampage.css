@@ -1,0 +1,116 @@
+
+.exam-page{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+.exam-header {
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px 40px 20px;
+ border-bottom: 1px solid;
+}
+
+
+.exam-container h1 {
+text-align: left;
+
+
+}
+/* Container holding both sections */
+.row-container {
+  margin-top: 20px;
+    display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px; /* Space between the two sections */
+  box-sizing: border-box;
+}
+
+.row-container h2 {
+  color: #A9A9A9;
+   
+}
+
+/* Individual sections */
+
+.exam-section {
+  flex: 1; /* Forces both sections to have equal width */
+  padding: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #0f0f0f;
+  
+
+}
+
+.row-container > section:first-of-type {
+  flex: 3; 
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+/* Right section takes up 70% of the ratio (7 parts out of 10) */
+.row-container > section:last-of-type {
+  flex: 7; 
+  padding: 20px;
+  background-color: #ffff;
+}
+
+
+.question-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+
+
+.submit {
+    
+    cursor: pointer;
+    padding: 10px 40px 10px 40px;
+    border: 1px solid;
+   border-radius: 5px;
+    
+}
+
+#submit-grad {
+ background-color: black; /* For browsers that do not support gradients */
+  background-image: linear-gradient(to top, grey, rgb(223, 212, 212));
+  border: 1px solid rgb(104, 100, 100);
+  color: white;
+}
+
+.timer-container{
+border: 1px solid #ccc;
+   padding: 10px 40px 10px 40px;
+
+}
+
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+
+.monitor-container{
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  background-color: #969292;
+
+}
+
+.timer-container{
+  border: 1px solid #dd991b;
+  padding: 6px 12px;
+  background-color: bisque;
+
+}
+.timer-span {
+  
+
+}

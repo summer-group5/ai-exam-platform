@@ -1,0 +1,46 @@
+.question-progress-card {
+  display: flex;
+
+  align-items: center;
+
+  padding: 12px 20px;
+
+  border: 1px solid #999;
+
+  background: #765c8d;
+
+  color: white;
+
+  margin-bottom: 10px;
+
+  cursor: pointer;
+
+  position: relative;
+}
+
+.question-number {
+  width: 30px;
+
+  text-align: left;
+
+  font-weight: bold;
+
+  flex-shrink: 0;
+}
+
+
+.question-status {
+  flex: 1;
+
+  text-align: center;
+}
+
+
+.question-progress-card.done {
+  background: #dff0d8;
+  color: #4f8a10;
+}
+
+.question-progress-card.current {
+  background: #765c8d;
+}
