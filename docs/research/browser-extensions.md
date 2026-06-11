@@ -11,16 +11,26 @@ Ai agents such as Claude agent that could be used to modify code in coding tasks
 
 This works on our project becouse customer wanted to know that is it possible to see what plugins are in use during exam and is it possible to get information about plugins being used during exam. With DOM observer (MutationObserver) we can detect in any browser if Ai assistants are being used during exam and we can detect exact time with timestamps when they have been active. 
 
-It is still a fact  that we cant surely tell which extensions are installed on users machine.         
+It is still a fact  that we cant surely tell which extensions are installed on users machine. 
+
+## Possible disconnection
+
+There is also possibility that cheater can prevent the user data to be sent to applications database by closing the window or browser. Common asynchronoys requests axios or fetch will often abort on sudden change of screen or closing it. 
+
+Suggested solution is to use sendBeacon() method for sending small payloads of data to applications server to prevent issues and ensure that usage data is sent to server even when user closes the exam page suddenly or navigates to a different page.          
+
 
 ## Mutation observer in practice
+
 DOM observing in preactice can detect any changes in html structure in this demo there is a web page where user can directly edit text and observer captures if anything changes.
 
 ![DOM observer_start](image.png)
-
+This image has initial state for html manipulation.
 
 ![DOM observer_edited](image-1.png)
-Thisimage shows that observer can detect changes to html sturcture.
+This image shows that observer can detect changes to html sturcture.
+
+
 
 
 ## links:
@@ -32,3 +42,6 @@ https://www.javascripttutorial.net/javascript-dom/javascript-mutationobserver/
 https://cheq.ai/blog/the-cyborg-session-reversing-detecting-claude-ai-agent-chrome-extension/
 
 https://medium.com/@marktnoonan/use-mutationobserver-to-fix-flaky-dom-updates-66e159eeb10c
+
+https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+
