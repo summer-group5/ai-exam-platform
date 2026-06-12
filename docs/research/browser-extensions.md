@@ -2,7 +2,7 @@
 
 ## Possibilities to detect if user is using browser extensions 
 
-Chrome extension detection is possible on website applications when webpage sends specific URL requests that are using the extensions ID and attempt to access these extensions resources that are exposed for the internet and these resources are known as web- acessible resources. Web application can be used to fingerprint browser at lest google chrome and see what extensions the browser has in use. This only works with google extensions so if user uses another web browser it wont work.   
+Chrome extension detection is possible on website applications when webpage sends specific URL requests that are using the extensions ID and attempt to access these extensions resources that are exposed for the internet and these resources are known as web- acessible resources. Web application can be used to fingerprint browser at least google chrome and see what extensions the browser has in use. Browser leaks web page provides a crome extension detection tool online and this only works with google extensions. This sites tool worked on Microsoft edge browser and it was able to detect known extension in use and this is becouse Edge handles extensions similar way as Google Chrome. Other browsers handle extensions differently so there is different solutions for them.       
 
 # Javasrcipt DOM tree surveilance
 
