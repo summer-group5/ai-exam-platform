@@ -1,11 +1,21 @@
-import React from 'react'
+import React, {useState} from 'react'
+import { useNavigate } from 'react-router-dom'
 import "./Examdesignpage.css"
 import Topnav from '../components/topnav/Topnav'
 
 
 
 
+
+
 export default function Examdesignpage() {
+  
+  const [timeLimit, setTimeLimit] = useState('');
+  const navigate = useNavigate();
+  
+  // for timer porotype added course id
+  const courseId = 1;
+
   return (
 <>
 <Topnav/>
@@ -41,7 +51,7 @@ export default function Examdesignpage() {
 <label>Exam time limit:</label>
 
 
-<select name="timelimits" id="time-limit-select">
+<select name="timelimits" id="time-limit-select" value={timeLimit} onChange={(e) => setTimeLimit(Number(e.target.value))}>
   <option value="">Select time limit for exam</option>
   <option value="60">60min</option>
   <option value="90">90min</option>
@@ -85,8 +95,14 @@ export default function Examdesignpage() {
 
 <button>save and quit</button>
 
-
-<button>Publish exam</button>
+{/*Prototype for timer works when exam is published timelimit is set to selected timelimit */ }
+<button onClick={() =>
+    navigate(`/Coursepage/${courseId}/exam`, {
+      state: {
+        timeLimit
+      }
+    })
+  }>Publish exam</button>
 
 </div>
 
