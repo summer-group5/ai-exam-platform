@@ -4,7 +4,7 @@ export async function createCourse({ title, description }) {
   const { data: { user } } = await supabase.auth.getUser()
   const { data, error } = await supabase
     .from('courses')
-    .insert({ title, description, teacher_id: user.id })
+    .insert({ name: title, description, teacher_id: user.id })
     .select()
     .single()
   if (error) throw error
@@ -33,7 +33,7 @@ export async function getCourse(id) {
 export async function updateCourse(id, { title, description }) {
   const { data, error } = await supabase
     .from('courses')
-    .update({ title, description })
+    .update({ name: title, description })
     .eq('id', id)
     .select()
     .single()
