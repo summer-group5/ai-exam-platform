@@ -3,16 +3,16 @@ import './Exampage.css'
 import Questionscard from '../components/questionscard/Questionscard';
 import QuestionProgress from '../components/questionscard/questionprogress/QuestionProgress';
 import ExamTimer from '../components/timer/ExamTimer';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
 
 export default function Exampage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-
+  const navigate = useNavigate();// navigation to submit page
   const [answers, setAnswers] = useState([]); 
   const isAnswered = (index) => answers[index] !== undefined;
-  
+  const { id } = useParams();
   // timer protype constants
   const location = useLocation();
   const exam = location.state?.exam;
@@ -78,6 +78,18 @@ export default function Exampage() {
   }
 ];
 
+// navigating to submit page
+const goToSubmitPage = () => {
+  navigate(`/Coursepage/${id}/exam/submit`, {
+    state: {
+      exam,
+      timeLimit,
+      answers
+    }
+  });
+};
+
+
 const handleSubmit = () => {
   console.log('Submitted answers:', answers);
   alert('time is up.')
@@ -127,7 +139,7 @@ const handleSubmit = () => {
   answers= {answers}
 />
          <div className="button-container">
-            <button className='submit'id="submit-grad">Submit</button>
+            <button className='submit'id="submit-grad" onClick={goToSubmitPage}>Submit</button>
           </div> 
        
         </div> 

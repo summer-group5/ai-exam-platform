@@ -12,6 +12,7 @@ import Createquizpage from './pages/Createquizpage'
 import Createcoursepage from './pages/Createcoursepage'
 import Coursepage from './pages/Coursepage'
 import Exampage from './pages/Exampage'
+import SubmitExampage from './pages/SubmitExampage'
 
 
 
@@ -41,7 +42,10 @@ const router = createBrowserRouter([
       {path: "Coursepage/:id", element: <Coursepage />},
 
       //  Route for exam page 
-      { path:"/Coursepage/:id/exam", element: <Exampage /> }
+      { path:"/Coursepage/:id/exam", element: <Exampage /> },
+ 
+      //  Route for submit exam page 
+      { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> }
 
 
     ]
