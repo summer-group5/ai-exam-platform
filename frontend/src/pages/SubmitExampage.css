@@ -17,7 +17,8 @@
 
 
 .timer-container{
-  border: 1px solid #dd991b;
+   margin-top: 10px;
+    border: 1px solid #dd991b;
   padding: 6px 12px;
   background-color: bisque;
 
@@ -32,3 +33,17 @@
     
 }
 
+.submit-heading {
+    text-align: center;
+    margin-bottom: 100px;
+
+}
+
+
+.submit-btn {
+ cursor: pointer;
+ margin: 10px 100px 100px 100px;   
+ padding: 10px 40px 10px 40px;
+    border: 1px solid;
+   border-radius: 5px;
+}

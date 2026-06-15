@@ -58,9 +58,11 @@ const returnToExam = () => {
 
 
 <section className='submit-section'>
-<button type='submit' onClick={handleSubmit}>Submit all tasks and return to course</button>
+<h3 className='submit-heading'>Are you sure to submit all answers and return to course page ?</h3>
 
-<button onClick={returnToExam}>Return to exam</button>
+<button className='submit-btn' type='submit' onClick={handleSubmit}>Submit all tasks and return to course</button>
+
+<button className='submit-btn' onClick={returnToExam}>Return to exam</button>
 
 </section>
         

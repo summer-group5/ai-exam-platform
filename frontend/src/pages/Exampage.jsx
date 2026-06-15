@@ -8,30 +8,23 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
 export default function Exampage() {
- 
 const location = useLocation();
-
 const [currentQuestion, setCurrentQuestion] = useState(
   location.state?.currentQuestion ?? 0
 );
-
 const [answers, setAnswers] = useState(
   location.state?.answers ?? []
 );
 
-
   const navigate = useNavigate();// navigation to submit page
-
   const isAnswered = (index) => answers[index] !== undefined;
   const { id } = useParams();
+  
   // timer protype constants
- 
   const exam = location.state?.exam;
   const timeLimit = location.state?.timeLimit ?? 60;
 
 
-
-  
   const questions = [
   {
     title: 'What does the acronym HTTP stand for?',
