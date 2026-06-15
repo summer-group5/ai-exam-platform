@@ -4,8 +4,6 @@ import { useLocation, useNavigate, useParams} from 'react-router-dom';
 import './SubmitExampage.css'
 export default function SubmitExampage() {
  
-
-
     
  // timer protype constants
    const location = useLocation();
@@ -27,6 +25,7 @@ const { id } = useParams();
   // send answers to backend
   // navigate('/results')
   // calculate score
+    navigate(`/Coursepage/${id}/`)
 }; 
 
 const returnToExam = () => {

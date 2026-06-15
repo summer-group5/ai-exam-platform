@@ -8,13 +8,24 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
 export default function Exampage() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+ 
+const location = useLocation();
+
+const [currentQuestion, setCurrentQuestion] = useState(
+  location.state?.currentQuestion ?? 0
+);
+
+const [answers, setAnswers] = useState(
+  location.state?.answers ?? []
+);
+
+
   const navigate = useNavigate();// navigation to submit page
-  const [answers, setAnswers] = useState([]); 
+
   const isAnswered = (index) => answers[index] !== undefined;
   const { id } = useParams();
   // timer protype constants
-  const location = useLocation();
+ 
   const exam = location.state?.exam;
   const timeLimit = location.state?.timeLimit ?? 60;
 
@@ -85,6 +96,7 @@ const goToSubmitPage = () => {
       exam,
       timeLimit,
       answers
+      
     }
   });
 };
