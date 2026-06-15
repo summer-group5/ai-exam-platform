@@ -1,6 +1,6 @@
-# DB Migration — int4 → uuid
+# DB Migration - int4 -> uuid
 
-## Status: Proposed — pending team review
+## Status: Proposed - pending team review
 
 This is a proposal. Please review and leave feedback on the PR. If the team agrees, the migration will be run.
 
@@ -8,14 +8,14 @@ This is a proposal. Please review and leave feedback on the PR. If the team agre
 
 ## Changes in this version
 
-On top of the int4 → uuid conversion, the following schema fixes are folded in:
+On top of the int4 -> uuid conversion, the following schema fixes are folded in:
 
-1. **`questions.exam_id`** — made nullable (a question now belongs to either an exam or an assignment, not both)
-2. **`questions.assignment_id`** — new nullable uuid FK referencing `assignments(id)` on delete cascade
-3. **`questions.order_number`** — new `int4` column for explicit question ordering within an exam or assignment
-4. **`monitoring_events.confidence`** — removed (implies AI scoring, conflicts with teacher-makes-final-decision requirement)
-5. **`monitoring_events.duration_ms`** — new `int4` column to record how long a tab was switched away or focus was lost
-6. **`courses.name`** — renamed to `courses.title` for consistency with `exams` and `assignments`
+1. **`questions.exam_id`** - made nullable (a question now belongs to either an exam or an assignment, not both)
+2. **`questions.assignment_id`** - new nullable uuid FK referencing `assignments(id)` on delete cascade
+3. **`questions.order_number`** - new `int4` column for explicit question ordering within an exam or assignment
+4. **`monitoring_events.confidence`** - removed (implies AI scoring, conflicts with teacher-makes-final-decision requirement)
+5. **`monitoring_events.duration_ms`** - new `int4` column to record how long a tab was switched away or focus was lost
+6. **`courses.name`** - renamed to `courses.title` for consistency with `exams` and `assignments`
 
 ---
 
