@@ -2,6 +2,9 @@ import React, {useState} from 'react'
 import './Exampage.css'
 import Questionscard from '../components/questionscard/Questionscard';
 import QuestionProgress from '../components/questionscard/questionprogress/QuestionProgress';
+import ExamTimer from '../components/timer/ExamTimer';
+import { useLocation } from 'react-router-dom';
+
 
 
 export default function Exampage() {
@@ -9,7 +12,15 @@ export default function Exampage() {
 
   const [answers, setAnswers] = useState([]); 
   const isAnswered = (index) => answers[index] !== undefined;
+  
+  // timer protype constants
+  const location = useLocation();
+  const exam = location.state?.exam;
+  const timeLimit = location.state?.timeLimit ?? 60;
 
+
+
+  
   const questions = [
   {
     title: 'What does the acronym HTTP stand for?',
@@ -67,7 +78,17 @@ export default function Exampage() {
   }
 ];
 
- 
+const handleSubmit = () => {
+  console.log('Submitted answers:', answers);
+  alert('time is up.')
+  alert('All answers are saved and submitted')
+  // Example: 
+  // send answers to backend
+  // navigate('/results')
+  // calculate score
+}; 
+
+
     return (
  
  <div className='exam-page'>
@@ -75,9 +96,17 @@ export default function Exampage() {
         <div className="exam-header">
             <h1>Final Exam</h1>
        <div className="timer-container">
-        <span className="timer-span">timer here</span>
         
+        <span className="timer-span"><ExamTimer
+ 
+   initialHours={Math.floor(timeLimit / 60)}
+  initialMinutes={timeLimit % 60}
+  onFinish={handleSubmit}
+/></span>
         
+       
+
+
        </div>
         <div className="monitor-container">
            <span className="monitor-span">  Monitoring active</span>
