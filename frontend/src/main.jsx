@@ -10,6 +10,7 @@ import Teacherspage from './pages/Teacherspage'
 import Examdesignpage from './pages/Examdesignpage'
 import Createquizpage from './pages/Createquizpage' 
 import Createcoursepage from './pages/Createcoursepage'
+import Loginpage from './pages/Loginpage'
 import Coursepage from './pages/Coursepage'
 import Exampage from './pages/Exampage'
 
@@ -36,6 +37,9 @@ const router = createBrowserRouter([
       
       // Create course route
       {path: "create-course", element: <Createcoursepage />},
+
+      // Login route
+      {path: "login", element: <Loginpage />},
     
       // Single course route
       {path: "Coursepage/:id", element: <Coursepage />},
