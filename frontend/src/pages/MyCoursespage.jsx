@@ -48,7 +48,7 @@ export default function MyCoursespage() {
           {courses.map(course => (
             <div key={course.id} className="course-row">
               <div className="course-info">
-                <h3>{course.name}</h3>
+                <h3>{course.title}</h3>
                 {course.description && <p>{course.description}</p>}
               </div>
               <div className="course-actions">
