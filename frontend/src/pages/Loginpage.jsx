@@ -1,9 +1,28 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { login } from '../services/authService'
 import './Loginpage.css'
 
 export default function Loginpage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const navigate = useNavigate()
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    try {
+      await login(email, password)
+      navigate('/teacher')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className='login-page'>
@@ -15,7 +34,7 @@ export default function Loginpage() {
         <h1>Exam Platform</h1>
         <p className='login-subtitle'>Sign in to continue</p>
 
-        <form>
+        <form onSubmit={handleSubmit}>
 
           <div className='login-form-group'>
             <label>Email</label>
@@ -23,6 +42,7 @@ export default function Loginpage() {
               type='email'
               value={email}
               onChange={e => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -32,11 +52,14 @@ export default function Loginpage() {
               type='password'
               value={password}
               onChange={e => setPassword(e.target.value)}
+              required
             />
           </div>
 
-          <button type='submit' className='login-btn'>
-            Sign in
+          {error && <p className='login-error'>{error}</p>}
+
+          <button type='submit' className='login-btn' disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign in'}
           </button>
 
         </form>
