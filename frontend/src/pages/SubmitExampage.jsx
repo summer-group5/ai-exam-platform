@@ -23,6 +23,9 @@ const { id } = useParams();
   const questions = location.state?.questions ?? [];
 
 
+  console.log("QUESTIONS:", location.state?.questions);
+    console.log("ANSWERS:", location.state?.answers);
+
  const handleSubmit = () => {
   try {
     console.log('Submitted answers:', answers);

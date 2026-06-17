@@ -8,7 +8,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
 export default function Exampage() {
-const location = useLocation();
+
+
+  const location = useLocation();
 const [currentQuestion, setCurrentQuestion] = useState(
   location.state?.currentQuestion ?? 0
 );
@@ -25,6 +27,7 @@ const [answers, setAnswers] = useState(
   const timeLimit = location.state?.timeLimit ?? 60;
 
 
+  // for prototyping questions and scoring 
   const questions = [
   {
     title: 'What does the acronym HTTP stand for?',
@@ -34,7 +37,7 @@ const [answers, setAnswers] = useState(
       'Hyper Transfer Tool Protocol',
       'Host Transfer Text Protocol'
     ],
-   
+    correctAnswer: 'HyperText Transfer Protocol'
   },
 
   {
@@ -45,7 +48,7 @@ const [answers, setAnswers] = useState(
       '<href>',
       '<url>'
     ],
-  
+    correctAnswer: '<a>'
   },
 
   {
@@ -56,7 +59,7 @@ const [answers, setAnswers] = useState(
       'text-style',
       'background'
     ],
- 
+    correctAnswer: 'color'
   },
 
   {
@@ -67,7 +70,7 @@ const [answers, setAnswers] = useState(
       'Server hosting',
       'Operating systems'
     ],
-
+    correctAnswer: 'Building user interfaces'
   },
 
   {
@@ -78,12 +81,14 @@ const [answers, setAnswers] = useState(
       'write()',
       'display()'
     ],
-  
+    correctAnswer: 'console.log()'
   }
 ];
 
 // navigating to submit page
 const goToSubmitPage = () => {
+
+
   navigate(`/Coursepage/${id}/exam/submit`, {
     state: {
       exam,
@@ -161,10 +166,12 @@ const handleSubmit = () => {
           options={questions[currentQuestion].options}
           selectedAnswer={answers[currentQuestion]}
 setSelectedAnswer={(answer) =>
-  setAnswers((prev) => ({
-    ...prev,
-    [currentQuestion]: answer
-  }))
+  setAnswers((prev) => {
+    const newAnswers = [...prev];      // create copy of array
+    newAnswers[currentQuestion] = answer; // updates index of current question
+    return newAnswers;
+  })
+  
 }
         />
         
