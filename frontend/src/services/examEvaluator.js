@@ -1,10 +1,21 @@
-export function evaluateExam(question, answers) {
-    let score =0;
+export function evaluateExam(questions, answers) {
+  try {
+    if (!Array.isArray(questions) || !Array.isArray(answers)) {
+      throw new Error("Invalid input: questions or answers missing");
+    }
 
-    questions.forEach((question, index) => {
-        if (answers[index]=== question.correctAnswer) {
-            score+= question.points ?? 1;
-        }
-    })
+    let score = 0;
+
+    questions.forEach((q, index) => {
+      if (q.correctAnswer && answers[index] === q.correctAnswer) {
+        score++;
+      }
+    });
+
     return score;
+
+  } catch (error) {
+    console.error("Evaluation failed:", error);
+    return 0; // fallback score
+  }
 }

@@ -2,6 +2,9 @@ import React from 'react'
 import ExamTimer from '../components/timer/ExamTimer'
 import { useLocation, useNavigate, useParams} from 'react-router-dom';
 import './SubmitExampage.css'
+
+import { evaluateExam } from '../services/examEvaluator'; // imported exam evaluator as service
+
 export default function SubmitExampage() {
  
     
@@ -11,31 +14,48 @@ export default function SubmitExampage() {
    const timeLimit = location.state?.timeLimit ?? 60;
  
 
+
 const navigate = useNavigate();
 const { id } = useParams();
  
 
-  
   const answers = location.state?.answers ?? [];
+  const questions = location.state?.questions ?? [];
+
 
  const handleSubmit = () => {
-  console.log('Submitted answers:', answers);
-  alert('All answers are saved and submitted')
-  // Example: 
-  // send answers to backend
-  // navigate('/results')
-  // calculate score
-    navigate(`/Coursepage/${id}/`)
-}; 
+  try {
+    console.log('Submitted answers:', answers);
+   
+    alert('All answers are saved and submitted');
+    const score = evaluateExam(questions, answers);
+    // Example:
+    // send answers to backend
+    // navigate('/results')
+    // calculate score
 
+    navigate(`/Coursepage/${id}/exam/results`, {
+      state: { score }
+    });
+  } catch (err) {
+    console.error(err);
+    alert('Cannot evaluate exam: missing data');
+  }
+};
+
+
+ 
 const returnToExam = () => {
 
  navigate(`/Coursepage/${id}/exam`, {
     state: {
       exam,
       timeLimit,
-      answers
+      answers,
+      questions
+  
     }
+
   });
 };
 

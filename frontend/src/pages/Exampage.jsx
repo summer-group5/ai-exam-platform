@@ -88,7 +88,9 @@ const goToSubmitPage = () => {
     state: {
       exam,
       timeLimit,
-      answers
+      answers, 
+      questions,
+      currentQuestion
       
     }
   });
