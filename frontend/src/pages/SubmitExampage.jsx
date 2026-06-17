@@ -18,13 +18,10 @@ export default function SubmitExampage() {
 const navigate = useNavigate();
 const { id } = useParams();
  
-
   const answers = location.state?.answers ?? [];
   const questions = location.state?.questions ?? [];
 
 
-  console.log("QUESTIONS:", location.state?.questions);
-    console.log("ANSWERS:", location.state?.answers);
 
  const handleSubmit = () => {
   try {

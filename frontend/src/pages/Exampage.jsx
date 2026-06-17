@@ -6,7 +6,6 @@ import ExamTimer from '../components/timer/ExamTimer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
-
 export default function Exampage() {
 
 
