@@ -5,8 +5,7 @@ Web-based platform for weekly programming assignments and supervised online exam
 with AI-assisted monitoring during exams.
 
 ## Status
-Phase 1 - research and setup.
-** Phase 2 - active development. **
+Phase 2 - active development.
 
 ## Documentation
 - [Git practices](GIT_PRACTICES.md)
@@ -18,7 +17,7 @@ Phase 1 - research and setup.
 
 **Requirements:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-> **Note:** Docker is not yet configured for local development. Use the manual setup below.
+> **Note:** Docker is set up but not currently used for local development. Use the manual setup below.
 
 ### Supabase setup
 
@@ -41,9 +40,9 @@ npm run dev
 
 Open `http://localhost:5173` in your browser.
 
-### Docker (not ready for development)
+### Docker
 
-Docker setup exists but is not yet configured for local development. The following commands are for future use:
+Docker is set up but not currently used for local development. The following commands are for future use:
 
 1. Copy `.env.example` to `.env`:
    ```bash
