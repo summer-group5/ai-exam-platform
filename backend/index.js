@@ -80,6 +80,50 @@ app.get('/api/messages', async (req, res) => {
   }
 });
 
+
+// added gemma4 api calls
+app.post('/api/ai/generate-exam', async (req, res) => {
+  const { topic } = req.body;
+
+  if (!topic) {
+    return res.status(400).json({ error: 'Topic is required' });
+  }
+
+  try {
+    const response = await fetch('http://localhost:11434/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gemma4',
+        prompt: `
+You are an exam generator.
+
+Create 5 multiple-choice questions about: ${topic}
+
+Return ONLY valid JSON in this format:
+[
+  {
+    "title": "",
+    "options": ["A", "B", "C", "D"],
+    "correctAnswer": "A"
+  }
+]
+        `,
+        stream: false
+      })
+    });
+
+    const data = await response.json();
+
+    res.json({
+      raw: data.response
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(port, async () => {
   console.log(`Backend listening on port ${port}`);
   try {
