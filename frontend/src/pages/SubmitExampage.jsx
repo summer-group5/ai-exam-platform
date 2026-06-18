@@ -35,7 +35,13 @@ const { id } = useParams();
     // calculate score
 
     navigate(`/Coursepage/${id}/exam/results`, {
-      state: { score }
+      state: { 
+        score,
+        questions,
+        answers
+
+
+       }
     });
   } catch (err) {
     console.error(err);
