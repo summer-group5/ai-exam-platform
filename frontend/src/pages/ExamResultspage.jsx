@@ -12,8 +12,13 @@ export default function ExamResultspage() {
     const questions = location.state?.questions ?? [];
     const answers = location.state?.answers ?? [];
     
+// max score for different points weights 
+   const maxScore = questions.reduce(
+  (sum, q) => sum + (q.points ?? 1),
+  0
+);
 
-    const maxScore = questions.length;
+
 
     const goTocourse = () => {
  
@@ -73,9 +78,9 @@ export default function ExamResultspage() {
                 {question.correctAnswer}
               </p>
 
-              <p className="result-status">
+      <p className="result-status">
   {isCorrect
-    ? '✅ Correct — 1 point(s)'
+    ? `✅ Correct — ${question.points ?? 1} point(s)`
     : '❌ Incorrect — 0 points'}
 </p>
 
@@ -88,7 +93,7 @@ export default function ExamResultspage() {
    <h2 className="total-score">
   Total points: {score} / {maxScore}
 </h2>
-        
+    
 <button className='return-btn' onClick={goTocourse}> return to course</button>
 </div> 
         </div>
