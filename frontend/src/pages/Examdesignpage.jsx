@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import "./Examdesignpage.css"
 import Topnav from '../components/topnav/Topnav'
 
-
+import { generateExamTasks } from '../services/aiService'
 
 
 
@@ -13,6 +13,34 @@ export default function Examdesignpage() {
   const [timeLimit, setTimeLimit] = useState('');
   const navigate = useNavigate();
   
+// Ai states
+const [aiPrompt, setAiPrompt] = useState('');
+const [generatedTasks, setGeneratedTasks] = useState('');
+const [loading, setLoading] = useState(false);
+
+
+
+
+const handleGenerateAI = async () => {
+  try {
+    setLoading(true);
+
+    const result =
+      await generateExamTasks(aiPrompt);
+
+    setGeneratedTasks(result);
+
+  } catch (error) {
+    console.error(error);
+
+    alert('AI generation failed');
+
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   // for timer porotype added course id
   const courseId = 1;
 
@@ -83,13 +111,16 @@ export default function Examdesignpage() {
 
 <h3>Generate exam tasks with AI</h3>
 
-<textarea  id="ai-assistant" name="assistant" placeholder='Example: Create 5 React questions for beginners' >
+<textarea  id="ai-assistant" name="assistant" placeholder='Example: Create 5 React questions for beginners' value={aiPrompt} onChange={(e) =>
+    setAiPrompt(e.target.value)}>
 
 </textarea>
 
 
 </div>
- <button>Generate with AI</button>
+ <button onClick={handleGenerateAI}> {loading
+    ? 'Generating...'
+    : 'Generate with AI'}</button>
 
 <div className='save-exam'>
 
@@ -104,8 +135,23 @@ export default function Examdesignpage() {
     })
   }>Publish exam</button>
 
-</div>
 
+
+
+</div>
+{generatedTasks && (
+  <div className="generated-exam">
+
+    <h3>Generated Tasks</h3>
+
+    <textarea
+      value={generatedTasks}
+      readOnly
+      rows={20}
+    />
+
+  </div>
+)}
 
 </div>
 
