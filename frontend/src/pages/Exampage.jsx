@@ -6,10 +6,9 @@ import ExamTimer from '../components/timer/ExamTimer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
+
 export default function Exampage() {
-
-
-  const location = useLocation();
+const location = useLocation();
 const [currentQuestion, setCurrentQuestion] = useState(
   location.state?.currentQuestion ?? 0
 );
@@ -26,7 +25,6 @@ const [answers, setAnswers] = useState(
   const timeLimit = location.state?.timeLimit ?? 60;
 
 
-  // for prototyping questions and scoring 
   const questions = [
   {
     title: 'What does the acronym HTTP stand for?',
@@ -86,15 +84,11 @@ const [answers, setAnswers] = useState(
 
 // navigating to submit page
 const goToSubmitPage = () => {
-
-
   navigate(`/Coursepage/${id}/exam/submit`, {
     state: {
       exam,
       timeLimit,
-      answers, 
-      questions,
-      currentQuestion
+      answers
       
     }
   });

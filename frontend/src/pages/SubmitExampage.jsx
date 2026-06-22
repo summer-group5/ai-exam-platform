@@ -51,6 +51,23 @@ const { id } = useParams();
 
 
  
+const navigate = useNavigate();
+const { id } = useParams();
+ 
+
+  
+  const answers = location.state?.answers ?? [];
+
+ const handleSubmit = () => {
+  console.log('Submitted answers:', answers);
+  alert('All answers are saved and submitted')
+  // Example: 
+  // send answers to backend
+  // navigate('/results')
+  // calculate score
+    navigate(`/Coursepage/${id}/`)
+}; 
+
 const returnToExam = () => {
 
  navigate(`/Coursepage/${id}/exam`, {
@@ -62,6 +79,8 @@ const returnToExam = () => {
   
     }
 
+      answers
+    }
   });
 };
 

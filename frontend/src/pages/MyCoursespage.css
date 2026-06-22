@@ -1,0 +1,72 @@
+.my-courses-page {
+  padding: 40px;
+}
+
+.my-courses-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.my-courses-header h1 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: #60a5fa;
+}
+
+.courses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.course-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #999;
+  background: white;
+}
+
+.course-info h3 {
+  margin: 0 0 4px 0;
+}
+
+.course-info p {
+  margin: 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.empty-state {
+  color: #555;
+}
+
+.form-error {
+  color: #dc2626;
+}
