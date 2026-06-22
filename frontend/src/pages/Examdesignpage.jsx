@@ -13,28 +13,51 @@ export default function Examdesignpage() {
   const [timeLimit, setTimeLimit] = useState('');
   const navigate = useNavigate();
   
-// Ai states
+  const [examTasks, setExamTasks] = useState([]);
+
+
+  // Ai states
 const [aiPrompt, setAiPrompt] = useState('');
-const [generatedTasks, setGeneratedTasks] = useState('');
+const [generatedTasks, setGeneratedTasks] = useState([]);
 const [loading, setLoading] = useState(false);
 
+// add generated tasks to exam
+const addGeneratedTasks = () => {
+  if (!Array.isArray(generatedTasks) || generatedTasks.length === 0) {
+    alert("No AI tasks to add");
+    return;
+  }
+
+  setExamTasks((prev) => [
+    ...prev,
+    ...generatedTasks
+  ]);
+
+  alert("AI tasks added to exam!");
+};
 
 
 
+// generate tasks with Ai
 const handleGenerateAI = async () => {
+  
+
   try {
     setLoading(true);
 
-    const result =
-      await generateExamTasks(aiPrompt);
+    const result = await generateExamTasks(aiPrompt);
 
-    setGeneratedTasks(result);
+  
+
+    const parsed = JSON.parse(result); 
+
+   
+
+    setGeneratedTasks(parsed);
 
   } catch (error) {
-    console.error(error);
-
-    alert('AI generation failed');
-
+    console.error("AI PARSE ERROR:", error);
+    alert("AI returned invalid JSON");
   } finally {
     setLoading(false);
   }
@@ -88,7 +111,24 @@ const handleGenerateAI = async () => {
 </select>
 </div>
 
+<h3>Current Exam Tasks</h3>
 
+{examTasks.length === 0 ? (
+  <p>No tasks added yet</p>
+) : (
+  examTasks.map((task, index) => (
+    <div key={index} className="task-preview">
+      <h4>Question {index + 1}</h4>
+      <p>{task.title}</p>
+
+      <ul>
+        {task.options?.map((opt, i) => (
+          <li key={i}>{opt}</li>
+        ))}
+      </ul>
+    </div>
+  ))
+)}
 
 <h3>Create tasks:</h3>
 
@@ -139,17 +179,31 @@ const handleGenerateAI = async () => {
 
 
 </div>
-{generatedTasks && (
+{generatedTasks.length  > 0 && (
   <div className="generated-exam">
 
     <h3>Generated Tasks</h3>
 
-    <textarea
-      value={generatedTasks}
-      readOnly
-      rows={20}
-    />
+    {generatedTasks.map((task, index) => (
+  <div key={index} className="task-preview">
+    <h4>Question {index + 1}</h4>
 
+    <p>{task.title}</p>
+
+    <ul>
+      {task.options.map((opt, i) => (
+        <li key={i}>{opt}</li>
+      ))}
+    </ul>
+
+    <p>
+      <strong>Correct:</strong> {task.correctAnswer}
+    </p>
+  </div>
+))}
+<button onClick={addGeneratedTasks}>
+  Add AI Tasks to Exam
+</button>
   </div>
 )}
 

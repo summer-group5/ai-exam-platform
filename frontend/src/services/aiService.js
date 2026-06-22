@@ -9,10 +9,25 @@ export async function generateExamTasks(prompt) {
       prompt: `
 Generate exam questions.
 
+Return ONLY valid JSON in this format:
+
+[
+  {
+    "title": "question here",
+    "options": ["A", "B", "C", "D"],
+    "correctAnswer": "A"
+  }
+]
+
 Rules:
 - Return exactly 5 multiple choice questions
 - Include 4 options
 - Include correct answer
+- no explanations
+- no markdown
+- ONLY JSON
+
+
 - Topic: ${prompt}
 
 Format:
