@@ -1,0 +1,48 @@
+.coursepage{
+
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+margin: 1rem;
+padding: 1em;
+}
+
+
+.course-image{
+ width: 100%;
+  height: 100%;
+  object-fit:contain;
+}
+
+.image-container {
+  
+  height: 300px;
+  margin-top: 20px;
+  margin-bottom: 25px;
+  border-radius: 5px;
+}
+
+.exam-container{
+    border: 1px solid;
+    margin-top: 2rem;
+ text-align: center;
+padding: 1rem;
+}
+
+.exam-container button {
+border: 0px solid;
+border-radius: 10px;
+background-color: rgb(188, 202, 209);
+color: rgb(0, 0, 0);
+padding: 12px 24px;
+font-size: 18px;
+cursor: pointer;
+
+}
+
+.exam-container button:hover {
+
+background-color: rgb(19, 152, 204);
+
+
+}
