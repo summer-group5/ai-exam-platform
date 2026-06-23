@@ -21,7 +21,7 @@ export default function Topnav({ links }) {
     { text: "Teacher", path: "/teacher" },
     { text: "Student", path: "/student" },
     { text: "Help", path: "/help" },
-    { text: "Login", path: "/login" }
+    ...(!session ? [{ text: "Login", path: "/login" }] : [])
   ];
 
   const navLinks = links || defaultLinks;
