@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+//Exampage.jsx
+import React, {useState, useEffect} from 'react'
 import './Exampage.css'
 import Questionscard from '../components/questionscard/Questionscard';
 import QuestionProgress from '../components/questionscard/questionprogress/QuestionProgress';
@@ -12,19 +13,38 @@ const location = useLocation();
 const [currentQuestion, setCurrentQuestion] = useState(
   location.state?.currentQuestion ?? 0
 );
+
+
+
 const [answers, setAnswers] = useState(
   location.state?.answers ?? []
 );
 
+
+// fullscreen nitification for demo exam
+const [fullscreenWarning, setFullscreenWarning] = useState(false);
+const [fullscreenViolations, setFullscreenViolations] = useState(0);
+
+
+
+// exam demo 
+const isDemo = location.state?.demo ?? false;
+ const timeLimit = location.state?.timeLimit || (isDemo ? 5 : 60);
+  
+  
   const navigate = useNavigate();// navigation to submit page
   const isAnswered = (index) => answers[index] !== undefined;
   const { id } = useParams();
   
   // timer protype constants
   const exam = location.state?.exam;
-  const timeLimit = location.state?.timeLimit ?? 60;
+ 
+  
 
 
+
+
+  
   const questions = [
   {
     title: 'What does the acronym HTTP stand for?',
@@ -84,6 +104,12 @@ const [answers, setAnswers] = useState(
 
 // navigating to submit page
 const goToSubmitPage = () => {
+  
+   if (isDemo) {
+    alert('Demo completed. No answers were submitted.');
+    navigate(`/Coursepage/${id}`);
+    return;
+  }
   navigate(`/Coursepage/${id}/exam/submit`, {
     state: {
       exam,
@@ -105,13 +131,76 @@ const handleSubmit = () => {
   // calculate score
 }; 
 
+useEffect(() => {
+
+  const startFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch (err) {
+      console.log("Fullscreen denied");
+    }
+  };
+
+  startFullscreen();
+
+}, []);
+
+
+
+
+// check fullsceen exit
+useEffect(() => {
+
+  const handleFullscreenChange = () => {
+
+    const exited = !document.fullscreenElement;
+
+    if (exited) {
+
+      setFullscreenWarning(true);
+
+      setFullscreenViolations(prev => prev + 1);
+
+      if (isDemo) {
+        alert(
+          'Demo notice: You exited fullscreen. During a real exam this action may be recorded.'
+        );
+      } else {
+        alert(
+          'Warning: Fullscreen mode exited. This event has been recorded.'
+        );
+      }
+    }
+  };
+
+  document.addEventListener(
+    'fullscreenchange',
+    handleFullscreenChange
+  );
+
+  return () =>
+    document.removeEventListener(
+      'fullscreenchange',
+      handleFullscreenChange
+    );
+
+}, [isDemo]);
+
+
 
     return (
  
  <div className='exam-page'>
       
+
+      
+
+
+
         <div className="exam-header">
-            <h1>Final Exam</h1>
+            <h1> {isDemo ? 'Exam Demo' : 'Final Exam'}</h1>
        <div className="timer-container">
         
         <span className="timer-span"><ExamTimer
@@ -125,11 +214,16 @@ const handleSubmit = () => {
 
 
        </div>
+       {!isDemo && (
+
+      
         <div className="monitor-container">
-           <span className="monitor-span">  Monitoring active</span>
+          
+           <span className="monitor-span">  
+            Monitoring active</span>
         
         </div>
-         
+         ) }
          
          </div> 
        
@@ -175,3 +269,4 @@ setSelectedAnswer={(answer) =>
         </div>
   )
 }
+
