@@ -34,7 +34,7 @@ const [answers, setAnswers] = useState(
       'Hyper Transfer Tool Protocol',
       'Host Transfer Text Protocol'
     ],
-   
+    correctAnswer: 'HyperText Transfer Protocol'
   },
 
   {
@@ -45,7 +45,7 @@ const [answers, setAnswers] = useState(
       '<href>',
       '<url>'
     ],
-  
+    correctAnswer: '<a>'
   },
 
   {
@@ -56,7 +56,7 @@ const [answers, setAnswers] = useState(
       'text-style',
       'background'
     ],
- 
+    correctAnswer: 'color'
   },
 
   {
@@ -67,7 +67,7 @@ const [answers, setAnswers] = useState(
       'Server hosting',
       'Operating systems'
     ],
-
+    correctAnswer: 'Building user interfaces'
   },
 
   {
@@ -78,7 +78,7 @@ const [answers, setAnswers] = useState(
       'write()',
       'display()'
     ],
-  
+    correctAnswer: 'console.log()'
   }
 ];
 
@@ -159,10 +159,12 @@ const handleSubmit = () => {
           options={questions[currentQuestion].options}
           selectedAnswer={answers[currentQuestion]}
 setSelectedAnswer={(answer) =>
-  setAnswers((prev) => ({
-    ...prev,
-    [currentQuestion]: answer
-  }))
+  setAnswers((prev) => {
+    const newAnswers = [...prev];      // create copy of array
+    newAnswers[currentQuestion] = answer; // updates index of current question
+    return newAnswers;
+  })
+  
 }
         />
         

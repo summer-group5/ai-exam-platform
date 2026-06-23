@@ -14,6 +14,7 @@ import MyCoursespage from './pages/MyCoursespage'
 import Coursepage from './pages/Coursepage'
 import Exampage from './pages/Exampage'
 import SubmitExampage from './pages/SubmitExampage'
+import ExamResultspage from './pages/ExamResultspage'
 
 
 
@@ -49,6 +50,11 @@ const router = createBrowserRouter([
       { path:"/Coursepage/:id/exam", element: <Exampage /> },
  
       //  Route for submit exam page 
+      
+
+      //  Route for exam results 
+      { path:"/Coursepage/:id/exam/results", element: <ExamResultspage /> },
+
       { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> }
 
 
