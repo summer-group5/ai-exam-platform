@@ -10,7 +10,7 @@ import { generateExamTasks } from '../services/aiService'
 
 export default function Examdesignpage() {
   
-  const [timeLimit, setTimeLimit] = useState('');
+  const [timeLimit, setTimeLimit] = useState(null);
   const navigate = useNavigate();
   
   const [examTasks, setExamTasks] = useState([]);
@@ -170,7 +170,8 @@ const handleGenerateAI = async () => {
 <button onClick={() =>
     navigate(`/Coursepage/${courseId}/exam`, {
       state: {
-        timeLimit
+        timeLimit,
+        demo: false
       }
     })
   }>Publish exam</button>
