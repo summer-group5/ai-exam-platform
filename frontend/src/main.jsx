@@ -10,9 +10,11 @@ import Teacherspage from './pages/Teacherspage'
 import Examdesignpage from './pages/Examdesignpage'
 import Createquizpage from './pages/Createquizpage'
 import Createcoursepage from './pages/Createcoursepage'
-import MyCoursespage from './pages/MyCoursespage'
+import Loginpage from './pages/Loginpage'
 import Coursepage from './pages/Coursepage'
 import Exampage from './pages/Exampage'
+import ProtectedRoute from './components/ProtectedRoute'
+import MyCoursespage from './pages/MyCoursespage'
 import SubmitExampage from './pages/SubmitExampage'
 import ExamResultspage from './pages/ExamResultspage'
 
@@ -27,27 +29,44 @@ const router = createBrowserRouter([
     { index: true, element: <Frontpage/> },
 
      // Student route
+      { path: "student", element: <ProtectedRoute><Studentspage /></ProtectedRoute> },
+    // Teacher route
+      { path: "teacher", element: <ProtectedRoute><Teacherspage /></ProtectedRoute> },
+
+      // Design exam route
+      {path: "design-exam", element: <ProtectedRoute><Examdesignpage /></ProtectedRoute>},
+
+     // Design quiz route
+      {path: "create-quiz", element: <ProtectedRoute><Createquizpage /></ProtectedRoute>},
+
+      // Create course route
+      {path: "create-course", element: <ProtectedRoute><Createcoursepage /></ProtectedRoute>},
+
+      // Login route
+      {path: "login", element: <Loginpage />},
       { path: "student", element: <Studentspage /> },
     // Teacher route
       { path: "teacher", element: <Teacherspage /> },
 
       // Design exam route
-      {path: "design-exam", element: <Examdesignpage />},
+     
 
      // Design quiz route
-      {path: "create-quiz", element: <Createquizpage />},
+      
 
       // Create course route
-      {path: "create-course", element: <Createcoursepage />},
+     
 
       // My courses route
       {path: "my-courses", element: <MyCoursespage />},
 
       // Single course route
-      {path: "Coursepage/:id", element: <Coursepage />},
+      {path: "Coursepage/:id", element: <ProtectedRoute><Coursepage /></ProtectedRoute>},
 
+      //  Route for exam page
+      { path:"/Coursepage/:id/exam", element: <ProtectedRoute><Exampage /></ProtectedRoute> },
       //  Route for exam page 
-      { path:"/Coursepage/:id/exam", element: <Exampage /> },
+      
  
       //  Route for submit exam page 
       
