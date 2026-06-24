@@ -14,7 +14,9 @@ const [currentQuestion, setCurrentQuestion] = useState(
   location.state?.currentQuestion ?? 0
 );
 
-
+// tab change costants
+const [tabWarnings, setTabWarnings] = useState(0);
+const [tabWarningVisible, setTabWarningVisible] = useState(false);
 
 const [answers, setAnswers] = useState(
   location.state?.answers ?? []
@@ -227,6 +229,52 @@ const returnFullscreen = async () => {
 };
 
 
+useEffect(() => {
+
+  const handleVisibilityChange = () => {
+
+    const hidden =
+      document.visibilityState === 'hidden';
+
+    if (hidden) {
+
+      setTabWarningVisible(true);
+
+      setTabWarnings(prev => prev + 1);
+
+      if (isDemo) {
+        alert(
+          'Demo notice: You left the exam tab.'
+        );
+      } else {
+        alert(
+          'Warning: Tab switch detected.'
+        );
+      }
+
+    } else {
+
+      setTabWarningVisible(false);
+
+    }
+  };
+
+  document.addEventListener(
+    'visibilitychange',
+    handleVisibilityChange
+  );
+
+  return () => {
+    document.removeEventListener(
+      'visibilitychange',
+      handleVisibilityChange
+    );
+  };
+
+}, [isDemo]);
+
+
+
 
     return (
  
@@ -249,6 +297,7 @@ const returnFullscreen = async () => {
 
 </div>
 )}
+      
        <div className="timer-container">
       
         <span className="timer-span"><ExamTimer
