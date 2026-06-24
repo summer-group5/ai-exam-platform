@@ -125,13 +125,28 @@ router.post('/import', requireCourseOwner, upload.single('file'), async (req, re
 
 // GET /api/courses/:courseId/enrollments
 router.get('/', requireCourseOwner, async (req, res) => {
-  const { data, error } = await supabaseAdmin
+  const { data: enrollments, error } = await supabaseAdmin
     .from('course_enrollments')
-    .select('id, enrolled_at, student:student_id(id, name, email)')
+    .select('id, enrolled_at, student_id')
     .eq('course_id', req.params.courseId)
     .order('enrolled_at', { ascending: true })
 
   if (error) return res.status(500).json({ error: error.message })
+
+  const studentIds = enrollments.map(e => e.student_id)
+  const { data: users, error: usersError } = await supabaseAdmin
+    .from('users')
+    .select('id, name, email')
+    .in('id', studentIds)
+
+  if (usersError) return res.status(500).json({ error: usersError.message })
+
+  const data = enrollments.map(e => ({
+    id: e.id,
+    enrolled_at: e.enrolled_at,
+    student: users.find(u => u.id === e.student_id) ?? null
+  }))
+
   return res.json({ students: data })
 })
 
