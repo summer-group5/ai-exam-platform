@@ -1,15 +1,33 @@
 // Coursepage.jsx
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import './Coursepage.css'
 import Topnav from '../components/topnav/Topnav';
+import { getCourse } from '../services/courseService'
+import { supabase } from '../utils/supabase'
 
 
 
 export default function Coursepage() {
   
   const { id } = useParams();
-  
+  const [isOwner, setIsOwner] = useState(false)
+
+  useEffect(() => {
+    async function checkOwnership() {
+      try {
+        const [courseData, { data: { user } }] = await Promise.all([
+          getCourse(id),
+          supabase.auth.getUser()
+        ])
+        setIsOwner(!!user && courseData.teacher_id === user.id)
+      } catch {
+        setIsOwner(false)
+      }
+    }
+    checkOwnership()
+  }, [id])
+
   const courses = [
     { id: 1, title: 'Java basics',  description: 'Introduction to Java programming.',teacher: 'John Smith' },
     { id: 2, title: 'Linux basics' ,description: 'Linux commands and basics.',teacher: 'John Smith'},
@@ -123,15 +141,23 @@ export default function Coursepage() {
         <section>
           <h3 className='exam-title'> Final Exam</h3>
           <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
-          
+
          <Link to={`/Coursepage/${id}/exam`} className="join-btn">
   Join
 </Link>
-        
+
         </section>
 
 
 </div>
+
+        {isOwner && (
+          <div className='teacher-tools'>
+            <Link to={`/Coursepage/${id}/enrollments`} className='manage-students-btn'>
+              Manage Students
+            </Link>
+          </div>
+        )}
         </div>
 
     </div>
