@@ -123,7 +123,8 @@ export default function Coursepage() {
         <section>
           <h3 className='exam-title'> Final Exam</h3>
           <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
-          
+    
+     <div className='exam-buttons'>    
        <Link
   to={`/Coursepage/${id}/exam`}
   state={{
@@ -141,7 +142,8 @@ export default function Coursepage() {
   className="exam-btn"
 >
    Final Exam 
-</Link>
+</Link> 
+  </div>      
         </section>
 
 
