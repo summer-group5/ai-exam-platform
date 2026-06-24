@@ -229,6 +229,12 @@ const returnFullscreen = async () => {
 };
 
 
+
+
+
+
+
+
 useEffect(() => {
 
   const handleVisibilityChange = () => {
@@ -274,6 +280,19 @@ useEffect(() => {
 }, [isDemo]);
 
 
+const [tutorialStep, setTutorialStep] = useState(
+  isDemo ? 0 : -1
+);
+
+const tutorial = [
+  'Welcome to exam training mode.',
+  'This timer shows remaining exam time.',
+  'Use question navigation to move between tasks.',
+  'Choose one answer for each question.',
+  'Submit when finished.'
+];
+
+
 
 
     return (
@@ -285,6 +304,9 @@ useEffect(() => {
         <div className="exam-header">
             <h1> {isDemo ? 'Exam Demo' : 'Final Exam'}</h1>
              {fullscreenWarning && (
+
+
+
 <div className="fullscreen-alert">
 
   <p>⚠️ Fullscreen exited</p>
@@ -297,7 +319,24 @@ useEffect(() => {
 
 </div>
 )}
-      
+      {tutorialStep >= 0 && (
+<div className="tutorial-box">
+
+<p>{tutorial[tutorialStep]}</p>
+
+<button
+onClick={() =>
+setTutorialStep(prev =>
+prev < tutorial.length - 1
+? prev + 1
+: -1
+)}
+>
+Next
+</button>
+
+</div>
+)}
        <div className="timer-container">
       
         <span className="timer-span"><ExamTimer
