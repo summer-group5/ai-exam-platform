@@ -15,8 +15,6 @@ import Coursepage from './pages/Coursepage'
 import Exampage from './pages/Exampage'
 import ProtectedRoute from './components/ProtectedRoute'
 import MyCoursespage from './pages/MyCoursespage'
-import Coursepage from './pages/Coursepage'
-import Exampage from './pages/Exampage'
 import SubmitExampage from './pages/SubmitExampage'
 
 
@@ -50,13 +48,13 @@ const router = createBrowserRouter([
       { path: "teacher", element: <Teacherspage /> },
 
       // Design exam route
-      {path: "design-exam", element: <Examdesignpage />},
+     
 
      // Design quiz route
-      {path: "create-quiz", element: <Createquizpage />},
+      
 
       // Create course route
-      {path: "create-course", element: <Createcoursepage />},
+     
 
       // My courses route
       {path: "my-courses", element: <MyCoursespage />},
@@ -65,9 +63,9 @@ const router = createBrowserRouter([
       {path: "Coursepage/:id", element: <ProtectedRoute><Coursepage /></ProtectedRoute>},
 
       //  Route for exam page
-      { path:"/Coursepage/:id/exam", element: <ProtectedRoute><Exampage /></ProtectedRoute> }
+      { path:"/Coursepage/:id/exam", element: <ProtectedRoute><Exampage /></ProtectedRoute> },
       //  Route for exam page 
-      { path:"/Coursepage/:id/exam", element: <Exampage /> },
+      
  
       //  Route for submit exam page 
       { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> }
