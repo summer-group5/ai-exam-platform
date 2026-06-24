@@ -41,9 +41,6 @@ const isDemo = location.state?.demo ?? false;
  
   
 
-
-
-
   
   const questions = [
   {
@@ -153,11 +150,21 @@ useEffect(() => {
 // check fullsceen exit
 useEffect(() => {
 
-  const handleFullscreenChange = () => {
+  let wasFullscreen = true;
 
-    const exited = !document.fullscreenElement;
+  const checkFullscreen = () => {
 
-    if (exited) {
+    const browserFullscreen =
+      window.innerHeight === screen.height;
+
+    const apiFullscreen =
+      !!document.fullscreenElement;
+
+    const fullscreen =
+      browserFullscreen || apiFullscreen;
+
+    // count only transition fullscreen → not fullscreen
+    if (wasFullscreen && !fullscreen) {
 
       setFullscreenWarning(true);
 
@@ -165,28 +172,59 @@ useEffect(() => {
 
       if (isDemo) {
         alert(
-          'Demo notice: You exited fullscreen. During a real exam this action may be recorded.'
+          'Demo notice: You exited fullscreen. In real exam this will be recorded'
         );
       } else {
         alert(
-          'Warning: Fullscreen mode exited. This event has been recorded.'
+          'Warning: Fullscreen exited.'
         );
       }
+
     }
+
+    // hide warning when returning
+    if (fullscreen) {
+      setFullscreenWarning(false);
+    }
+
+    wasFullscreen = fullscreen;
   };
 
   document.addEventListener(
     'fullscreenchange',
-    handleFullscreenChange
+    checkFullscreen
   );
 
-  return () =>
+  window.addEventListener(
+    'resize',
+    checkFullscreen
+  );
+
+  return () => {
+
     document.removeEventListener(
       'fullscreenchange',
-      handleFullscreenChange
+      checkFullscreen
     );
 
+    window.removeEventListener(
+      'resize',
+      checkFullscreen
+    );
+
+  };
+
 }, [isDemo]);
+
+
+// return to fullscreen button
+const returnFullscreen = async () => {
+  try {
+    await document.documentElement.requestFullscreen();
+  } catch {
+    alert('Could not enter fullscreen');
+  }
+};
 
 
 
@@ -195,14 +233,24 @@ useEffect(() => {
  <div className='exam-page'>
       
 
-      
-
-
 
         <div className="exam-header">
             <h1> {isDemo ? 'Exam Demo' : 'Final Exam'}</h1>
+             {fullscreenWarning && (
+<div className="fullscreen-alert">
+
+  <p>⚠️ Fullscreen exited</p>
+
+  <p>Warnings: {fullscreenViolations}</p>
+
+  <button onClick={returnFullscreen}>
+    Return to fullscreen
+  </button>
+
+</div>
+)}
        <div className="timer-container">
-        
+      
         <span className="timer-span"><ExamTimer
  
    initialHours={Math.floor(timeLimit / 60)}
@@ -210,7 +258,7 @@ useEffect(() => {
   onFinish={handleSubmit}
 /></span>
         
-       
+  
 
 
        </div>
