@@ -5,7 +5,7 @@ import Questionscard from '../components/questionscard/Questionscard';
 import QuestionProgress from '../components/questionscard/questionprogress/QuestionProgress';
 import ExamTimer from '../components/timer/ExamTimer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-
+import { Toaster, toast } from 'react-hot-toast';
 
 
 export default function Exampage() {
@@ -172,11 +172,14 @@ useEffect(() => {
       setFullscreenViolations(prev => prev + 1);
 
       if (isDemo) {
-        alert(
-          'Demo notice: You exited fullscreen. In real exam this will be recorded'
+      
+      
+        toast(
+          'Demo notice: You exited fullscreen. In real exam this will be recorded',
+         
         );
       } else {
-        alert(
+        toast(
           'Warning: Fullscreen exited.'
         );
       }
@@ -243,9 +246,8 @@ useEffect(() => {
       setTabWarnings(prev => prev + 1);
 
       if (isDemo) {
-        alert(
-          'Demo notice: You left the exam tab.'
-        );
+        
+        showToast('Demo: Browser tab change detected.');
       } else {
         alert(
           'Warning: Tab switch detected.'
@@ -287,14 +289,30 @@ const tutorial = [
   'Choose one answer for each question.',
   'Submit when finished.'
 ];
+const [toastMessage, setToastMessage] = useState('');
 
+
+// toasts for demo display violations 
+
+const showToast = (message) => {
+
+  setToastMessage(message);
+
+  setTimeout(() => {
+    setToastMessage('');
+  }, 5000);
+
+};
 
 
     return (
  
  <div className='exam-page'>
-      
-
+  
+  <Toaster
+position="top-center"
+reverseOrder={false}
+/>
 
         <div className="exam-header">
            
