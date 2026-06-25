@@ -148,7 +148,6 @@ useEffect(() => {
 
 
 
-
 // check fullsceen exit
 useEffect(() => {
 
@@ -230,11 +229,6 @@ const returnFullscreen = async () => {
 
 
 
-
-
-
-
-
 useEffect(() => {
 
   const handleVisibilityChange = () => {
@@ -280,6 +274,7 @@ useEffect(() => {
 }, [isDemo]);
 
 
+// tutorial for exam demo
 const [tutorialStep, setTutorialStep] = useState(
   isDemo ? 0 : -1
 );
@@ -291,7 +286,6 @@ const tutorial = [
   'Choose one answer for each question.',
   'Submit when finished.'
 ];
-
 
 
 
@@ -337,6 +331,12 @@ Next
 
 </div>
 )}
+      
+      <div className={
+tutorialStep === 1
+? 'highlight'
+: ''
+}>
        <div className="timer-container">
       
         <span className="timer-span"><ExamTimer
@@ -346,11 +346,12 @@ Next
   onFinish={handleSubmit}
 /></span>
         
-  
 
 
        </div>
-       {!isDemo && (
+   </div>   
+   
+    {!isDemo && (
 
       
         <div className="monitor-container">
@@ -366,6 +367,11 @@ Next
        <div className="row-container">
         <section className='exam-section'>
         
+         <div className={
+tutorialStep === 2
+? 'highlight'
+: ''
+}> 
         <div className="progress-bar">
          <QuestionProgress
   questions={questions}
@@ -373,15 +379,27 @@ Next
   setCurrentQuestion={setCurrentQuestion}
   answers= {answers}
 />
+      </div> 
+          <div className={
+tutorialStep === 4
+? 'highlight'
+: ''
+}>   
          <div className="button-container">
+         
             <button className='submit'id="submit-grad" onClick={goToSubmitPage}>Submit</button>
+         
           </div> 
-       
+         </div> 
         </div> 
          </section>
            
             <section className='exam-section'>
-             
+              <div className={
+tutorialStep === 3
+? 'highlight'
+: ''
+}>   
         <Questionscard
           questionNumber={currentQuestion+1}
           totalQuestions={questions.length}
@@ -394,7 +412,7 @@ setSelectedAnswer={(answer) =>
     [currentQuestion]: answer
   }))
 }
-        />
+        /> </div> 
         
         </section>   
            
