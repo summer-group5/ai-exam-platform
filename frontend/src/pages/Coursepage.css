@@ -46,3 +46,34 @@ background-color: rgb(19, 152, 204);
 
 
 }
+
+.assignments-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.assignments-header h3 {
+  margin: 0;
+}
+
+.create-assignment-link {
+  font-size: 0.9rem;
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.create-assignment-link:hover {
+  text-decoration: underline;
+}
+
+.no-assignments {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.due-date {
+  color: #555;
+  font-size: 0.85rem;
+}
