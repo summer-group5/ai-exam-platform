@@ -49,6 +49,9 @@ router.post('/', requireCourseOwner, async (req, res) => {
   if (due_date && isNaN(Date.parse(due_date))) {
     return res.status(400).json({ error: 'Invalid due_date' })
   }
+  if (available_from && due_date && new Date(due_date) < new Date(available_from)) {
+    return res.status(400).json({ error: 'Due date cannot be before available from date' })
+  }
 
   const { data, error } = await supabaseAdmin
     .from('assignments')
@@ -105,6 +108,9 @@ router.put('/:assignmentId', requireCourseOwner, async (req, res) => {
   }
   if (due_date && isNaN(Date.parse(due_date))) {
     return res.status(400).json({ error: 'Invalid due_date' })
+  }
+  if (available_from && due_date && new Date(due_date) < new Date(available_from)) {
+    return res.status(400).json({ error: 'Due date cannot be before available from date' })
   }
 
   const updates = {}
