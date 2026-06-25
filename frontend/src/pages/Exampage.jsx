@@ -282,6 +282,7 @@ const [tutorialStep, setTutorialStep] = useState(
 const tutorial = [
   'Welcome to exam training mode.',
   'This timer shows remaining exam time.',
+  'This monitoring means that any exit from fullcreen may be recorded and any browser tab changes may be recorded ',
   'Use question navigation to move between tasks.',
   'Choose one answer for each question.',
   'Submit when finished.'
@@ -296,6 +297,9 @@ const tutorial = [
 
 
         <div className="exam-header">
+           
+           
+           
             <h1> {isDemo ? 'Exam Demo' : 'Final Exam'}</h1>
              {fullscreenWarning && (
 
@@ -350,17 +354,22 @@ tutorialStep === 1
 
        </div>
    </div>   
-   
-    {!isDemo && (
+      <div className={
+tutorialStep === 2
+? 'highlight'
+: ''
+}>
+   <div className="monitor-container">
 
-      
-        <div className="monitor-container">
-          
-           <span className="monitor-span">  
-            Monitoring active</span>
-        
-        </div>
-         ) }
+<span className="monitor-span">
+
+{isDemo
+? 'Demo monitoring preview'
+: 'Monitoring active'}
+
+</span>
+
+</div></div>
          
          </div> 
        
@@ -368,7 +377,7 @@ tutorialStep === 1
         <section className='exam-section'>
         
          <div className={
-tutorialStep === 2
+tutorialStep === 3
 ? 'highlight'
 : ''
 }> 
@@ -381,7 +390,7 @@ tutorialStep === 2
 />
       </div> 
           <div className={
-tutorialStep === 4
+tutorialStep === 5
 ? 'highlight'
 : ''
 }>   
@@ -396,7 +405,7 @@ tutorialStep === 4
            
             <section className='exam-section'>
               <div className={
-tutorialStep === 3
+tutorialStep === 4
 ? 'highlight'
 : ''
 }>   
