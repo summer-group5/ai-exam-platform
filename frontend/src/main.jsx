@@ -17,6 +17,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import MyCoursespage from './pages/MyCoursespage'
 import SubmitExampage from './pages/SubmitExampage'
 import ExamResultspage from './pages/ExamResultspage'
+import CreateAssignmentPage from './pages/CreateAssignmentPage'
 
 
 
@@ -74,7 +75,9 @@ const router = createBrowserRouter([
       //  Route for exam results 
       { path:"/Coursepage/:id/exam/results", element: <ExamResultspage /> },
 
-      { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> }
+      { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> },
+
+      { path: "/Coursepage/:id/create-assignment", element: <ProtectedRoute><CreateAssignmentPage /></ProtectedRoute> }
 
 
     ]
