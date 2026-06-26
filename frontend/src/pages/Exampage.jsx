@@ -247,7 +247,7 @@ useEffect(() => {
 
       if (isDemo) {
         
-        showToast('Demo: Browser tab change detected.');
+        toast('Demo: Browser tab change detected.');
       } else {
         alert(
           'Warning: Tab switch detected.'
@@ -289,20 +289,7 @@ const tutorial = [
   'Choose one answer for each question.',
   'Submit when finished.'
 ];
-const [toastMessage, setToastMessage] = useState('');
 
-
-// toasts for demo display violations 
-
-const showToast = (message) => {
-
-  setToastMessage(message);
-
-  setTimeout(() => {
-    setToastMessage('');
-  }, 5000);
-
-};
 
 
     return (
