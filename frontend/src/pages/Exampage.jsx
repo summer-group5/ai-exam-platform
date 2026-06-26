@@ -41,7 +41,9 @@ const isDemo = location.state?.demo ?? false;
   // timer protype constants
   const exam = location.state?.exam;
  
-  
+
+  // introduction before exam demo
+  const [showIntro, setShowIntro] = useState(isDemo);
 
   
   const questions = [
@@ -290,7 +292,63 @@ const tutorial = [
   'Submit when finished.'
 ];
 
+const [accepted, setAccepted] = useState(false);
 
+
+
+
+if (showIntro) {
+  return (
+    <div className="exam-intro-overlay">
+
+      <div className="exam-intro-box">
+
+        <h2>Exam Instructions</h2>
+
+        <p>
+          Before starting, please read the following rules:
+        </p>
+
+        <ul>
+          <li>Fullscreen mode will be required</li>
+          <li>Leaving the tab may be recorded</li>
+          <li>Exiting fullscreen may be recorded</li>
+          <li>Timer starts immediately after start</li>
+        </ul>
+
+        {isDemo && (
+          <p style={{ color: 'orange' }}>
+            This is a training preview of monitoring features.
+          </p>
+        )}
+
+<input
+  type="checkbox"
+  onChange={(e) => setAccepted(e.target.checked)}
+/>
+I understand the exam rules
+
+        <button disabled={!accepted}
+          onClick={async () => {
+
+            setShowIntro(false);
+
+            try {
+              await document.documentElement.requestFullscreen();
+            } catch (err) {
+              console.log("Fullscreen blocked");
+            }
+
+          }}
+        >
+          Start Exam
+        </button>
+
+      </div>
+
+    </div>
+  );
+}
 
     return (
  
