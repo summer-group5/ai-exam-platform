@@ -294,6 +294,36 @@ const tutorial = [
 
 const [accepted, setAccepted] = useState(false);
 
+const [cameraAllowed, setCameraAllowed] = useState(false);
+const [cameraError, setCameraError] = useState('');
+const [stream, setStream] = useState(null);
+
+
+// requesting camera access
+
+const requestCamera = async() => {
+ try {
+  const mediaStream = await navigator.mediaDevices.getUserMedia(
+    {
+      video: true,
+      audio: false
+    });
+
+    setStream(mediaStream);
+    setCameraAllowed(true);
+    setCameraError('');
+
+    } catch (err) {
+
+      setCameraAllowed(false);
+      setCameraError('Camera acces is required to start the exam')
+      
+  
+  }
+
+}; 
+
+
 
 
 
@@ -328,18 +358,22 @@ if (showIntro) {
 />
 I understand the exam rules
 
-        <button disabled={!accepted}
-          onClick={async () => {
+        <button   disabled={!accepted}
+  onClick={async () => {
 
-            setShowIntro(false);
+    await requestCamera();
 
-            try {
-              await document.documentElement.requestFullscreen();
-            } catch (err) {
-              console.log("Fullscreen blocked");
-            }
+    if (!cameraAllowed) return;
 
-          }}
+    setShowIntro(false);
+
+    try {
+      await document.documentElement.requestFullscreen();
+    } catch {
+      toast.error("Fullscreen required");
+    }
+
+  }}
         >
           Start Exam
         </button>
