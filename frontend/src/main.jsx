@@ -78,7 +78,7 @@ const router = createBrowserRouter([
 
       { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> },
 
-      { path: "/Coursepage/:id/create-assignment", element: <ProtectedRoute><CreateAssignmentPage /></ProtectedRoute> }
+      { path: "/Coursepage/:id/create-assignment", element: <ProtectedRoute><CreateAssignmentPage /></ProtectedRoute> },
       { path: "/Coursepage/:id/enrollments", element: <EnrollmentPage /> }
 
 

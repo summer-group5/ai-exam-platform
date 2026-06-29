@@ -20,7 +20,7 @@ export default function Coursepage() {
       .then(data => setAssignments(data.assignments))
       .catch(() => setAssignments([]))
 
-  const [isOwner, setIsOwner] = useState(false)
+    }, [id])
 
   useEffect(() => {
     async function checkOwnership() {
@@ -184,6 +184,6 @@ export default function Coursepage() {
     </div>
 
    
-    
-  )
+      
+      ) 
 }
