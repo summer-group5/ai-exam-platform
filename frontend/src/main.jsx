@@ -18,6 +18,7 @@ import MyCoursespage from './pages/MyCoursespage'
 import SubmitExampage from './pages/SubmitExampage'
 import ExamResultspage from './pages/ExamResultspage'
 import CreateAssignmentPage from './pages/CreateAssignmentPage'
+import EnrollmentPage from './pages/EnrollmentPage'
 
 
 
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
       { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> },
 
       { path: "/Coursepage/:id/create-assignment", element: <ProtectedRoute><CreateAssignmentPage /></ProtectedRoute> }
+      { path: "/Coursepage/:id/enrollments", element: <EnrollmentPage /> }
 
 
     ]

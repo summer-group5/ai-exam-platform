@@ -20,6 +20,9 @@ export default function Coursepage() {
       .then(data => setAssignments(data.assignments))
       .catch(() => setAssignments([]))
 
+  const [isOwner, setIsOwner] = useState(false)
+
+  useEffect(() => {
     async function checkOwnership() {
       try {
         const [courseData, { data: { user } }] = await Promise.all([
@@ -159,15 +162,23 @@ export default function Coursepage() {
         <section>
           <h3 className='exam-title'> Final Exam</h3>
           <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
-          
+
          <Link to={`/Coursepage/${id}/exam`} className="join-btn">
   Join
 </Link>
-        
+
         </section>
 
 
 </div>
+
+        {isOwner && (
+          <div className='teacher-tools'>
+            <Link to={`/Coursepage/${id}/enrollments`} className='manage-students-btn'>
+              Manage Students
+            </Link>
+          </div>
+        )}
         </div>
 
     </div>
