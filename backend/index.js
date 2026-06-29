@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
@@ -36,9 +37,13 @@ async function initDb() {
   console.log('Database ready.');
 }
 
+const enrollmentRouter = require('./src/enrollmentRouter')
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/courses/:courseId/enrollments', enrollmentRouter)
 
 app.get('/api/health', async (req, res) => {
   try {
