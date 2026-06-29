@@ -1,3 +1,4 @@
+//index.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -94,3 +95,5 @@ app.listen(port, async () => {
     process.exit(1);
   }
 });
+
+module.exports = app;
