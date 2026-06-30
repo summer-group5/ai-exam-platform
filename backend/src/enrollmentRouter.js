@@ -1,3 +1,4 @@
+//enrollmentRouter.js
 const express = require('express')
 const multer = require('multer')
 const { parse } = require('csv-parse/sync')
@@ -122,11 +123,12 @@ router.post('/import', requireCourseOwner, upload.single('file'), async (req, re
 
   return res.json({ imported, skipped })
 })
-
+console.log("HIT ENROLLMENT ROUTE") 
 // GET /api/courses/:courseId/enrollments
 router.get('/', requireCourseOwner, async (req, res) => {
   const { data: enrollments, error } = await supabaseAdmin
-    .from('course_enrollments')
+  
+  .from('course_enrollments')
     .select('id, enrolled_at, student_id')
     .eq('course_id', req.params.courseId)
     .order('enrolled_at', { ascending: true })
