@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const assignmentRouter = require('./src/assignmentRouter')
 
 const port = Number(process.env.PORT || 4000);
 const pool = new Pool({
@@ -44,6 +45,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/courses/:courseId/assignments', assignmentRouter)
 app.use('/api/courses/:courseId/enrollments', enrollmentRouter)
 
 app.get('/api/health', async (req, res) => {

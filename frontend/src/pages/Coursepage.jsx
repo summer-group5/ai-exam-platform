@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom'
 import './Coursepage.css'
 import Topnav from '../components/topnav/Topnav';
 import { getCourse } from '../services/courseService'
+import { getAssignments } from '../services/assignmentService'
 import { supabase } from '../utils/supabase'
 
 
@@ -11,7 +12,15 @@ import { supabase } from '../utils/supabase'
 export default function Coursepage() {
   
   const { id } = useParams();
+  const [assignments, setAssignments] = useState([])
   const [isOwner, setIsOwner] = useState(false)
+
+  useEffect(() => {
+    getAssignments(id)
+      .then(data => setAssignments(data.assignments))
+      .catch(() => setAssignments([]))
+
+    }, [id])
 
   useEffect(() => {
     async function checkOwnership() {
@@ -127,14 +136,26 @@ export default function Coursepage() {
            </section>
 
         <section>
-          <h3>Assignments</h3>
-<ul>
-  
-  <li>week 1 assignment</li>
-<li>week 2 assignment</li>
-<li>week 3 assignment</li>
-
-</ul>
+          <div className='assignments-header'>
+            <h3>Assignments</h3>
+            {isOwner && (
+              <Link to={`/Coursepage/${id}/create-assignment`} className='create-assignment-link'>
+                + Create Assignment
+              </Link>
+            )}
+          </div>
+          {assignments.length === 0 ? (
+            <p className='no-assignments'>No assignments yet.</p>
+          ) : (
+            <ul>
+              {assignments.map(a => (
+                <li key={a.id}>
+                  <span>{a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}</span>
+                  {a.due_date && <span className='due-date'> (Due: {new Date(a.due_date).toLocaleDateString()})</span>}
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
         
        <div className='exam-container'>
@@ -163,6 +184,6 @@ export default function Coursepage() {
     </div>
 
    
-    
-  )
+      
+      ) 
 }
