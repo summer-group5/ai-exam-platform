@@ -55,7 +55,7 @@ const isDemo = location.state?.demo ?? false;
       'Hyper Transfer Tool Protocol',
       'Host Transfer Text Protocol'
     ],
-   
+    correctAnswer: 'HyperText Transfer Protocol'
   },
 
   {
@@ -66,7 +66,7 @@ const isDemo = location.state?.demo ?? false;
       '<href>',
       '<url>'
     ],
-  
+    correctAnswer: '<a>'
   },
 
   {
@@ -77,7 +77,7 @@ const isDemo = location.state?.demo ?? false;
       'text-style',
       'background'
     ],
- 
+    correctAnswer: 'color'
   },
 
   {
@@ -88,7 +88,7 @@ const isDemo = location.state?.demo ?? false;
       'Server hosting',
       'Operating systems'
     ],
-
+    correctAnswer: 'Building user interfaces'
   },
 
   {
@@ -99,7 +99,7 @@ const isDemo = location.state?.demo ?? false;
       'write()',
       'display()'
     ],
-  
+    correctAnswer: 'console.log()'
   }
 ];
 
@@ -513,10 +513,12 @@ tutorialStep === 4
           options={questions[currentQuestion].options}
           selectedAnswer={answers[currentQuestion]}
 setSelectedAnswer={(answer) =>
-  setAnswers((prev) => ({
-    ...prev,
-    [currentQuestion]: answer
-  }))
+  setAnswers((prev) => {
+    const newAnswers = [...prev];      // create copy of array
+    newAnswers[currentQuestion] = answer; // updates index of current question
+    return newAnswers;
+  })
+  
 }
         /> </div> 
         

@@ -19,6 +19,12 @@
   padding: 10px 20px;
   text-decoration: none;
   font-size: 1rem;
+  font-family: inherit;
+  display: inline-block;
+  line-height: 1.5;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
@@ -50,13 +56,23 @@
   font-size: 0.9rem;
 }
 
+.course-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .btn-danger {
   background-color: #ef4444;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 20px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-family: inherit;
+  display: inline-block;
+  line-height: 1.5;
+  box-sizing: border-box;
 }
 
 .btn-danger:hover {

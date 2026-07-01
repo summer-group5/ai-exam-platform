@@ -1,0 +1,57 @@
+.exam-results-page {
+
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+
+.return-btn {
+    cursor: pointer;
+    padding: 10px 40px 10px 40px;
+    border: 1px solid;
+   border-radius: 5px;
+    
+}
+.results-container {
+margin: 100px 10px 10px 20px;
+
+}
+
+.results-heding {
+text-align: center;
+
+}
+
+
+.results-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+     
+}
+
+.question-result {
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid;
+}
+
+.correct-answer {
+ 
+  
+}
+
+.wrong-answer {
+  
+  
+}
+
+.result-status {
+  font-weight: bold;
+}
+
+.return-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+}

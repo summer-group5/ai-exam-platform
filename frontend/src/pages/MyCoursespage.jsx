@@ -52,6 +52,9 @@ export default function MyCoursespage() {
                 {course.description && <p>{course.description}</p>}
               </div>
               <div className="course-actions">
+                <Link to={`/Coursepage/${course.id}`} className="btn-primary">
+                  View
+                </Link>
                 <button
                   className="btn-danger"
                   onClick={() => handleDelete(course.id)}
