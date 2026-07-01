@@ -39,12 +39,14 @@ async function initDb() {
 }
 
 const enrollmentRouter = require('./src/enrollmentRouter')
+const submissionRouter = require('./src/submissionRouter')
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use('/api/courses/:courseId/assignments', assignmentRouter)
+app.use('/api/courses/:courseId/assignments', submissionRouter)
 app.use('/api/courses/:courseId/enrollments', enrollmentRouter)
 
 app.get('/api/health', async (req, res) => {
