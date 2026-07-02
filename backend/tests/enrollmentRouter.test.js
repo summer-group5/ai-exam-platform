@@ -33,10 +33,25 @@ describe('GET enrollments', () => {
         },
       },
       error: null,
+   // more tests structured here
+    it('returns 401 when token is missing', () => {});
+  it('returns 403 when teacher is not owner', () => {});
+  it('returns 404 when course does not exist', () => {});
+   
     });
 
+describe('POST /api/courses/:courseId/enrollments/import', () => {
+  it('imports valid CSV', () => {});
+  it('returns 400 when no file is uploaded', () => {});
+  it('skips duplicate emails', () => {});
+});
+
+describe('DELETE /api/courses/:courseId/enrollments/:studentId', () => {
+  it('removes a student', () => {});
+  it('returns 404 when enrollment does not exist', () => {});
+});
     fakeSupabase.from.mockImplementation((table) => {
-     
+       
      
       
     if (table === 'courses') {
@@ -106,3 +121,4 @@ describe('GET enrollments', () => {
     expect(res.body.students.length).toBe(1);
   });
 });
+
