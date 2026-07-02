@@ -2,9 +2,14 @@
 const express = require('express')
 const multer = require('multer')
 const { parse } = require('csv-parse/sync')
-const { supabaseAdmin } = require('./supabaseAdmin')
+//const { supabaseAdmin } = require('./supabaseAdmin')
 
-const router = express.Router({ mergeParams: true })
+//const router = express.Router({ mergeParams: true })
+
+module.exports = function createEnrollmentRouter(supabaseAdmin) {
+  const router = express.Router({ mergeParams: true });
+
+
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1_000_000 } })
 
 async function requireCourseOwner(req, res, next) {
@@ -123,9 +128,10 @@ router.post('/import', requireCourseOwner, upload.single('file'), async (req, re
 
   return res.json({ imported, skipped })
 })
-console.log("HIT ENROLLMENT ROUTE") 
+
 // GET /api/courses/:courseId/enrollments
 router.get('/', requireCourseOwner, async (req, res) => {
+  try {
   const { data: enrollments, error } = await supabaseAdmin
   
   .from('course_enrollments')
@@ -149,8 +155,12 @@ router.get('/', requireCourseOwner, async (req, res) => {
     student: users.find(u => u.id === e.student_id) ?? null
   }))
 
-  return res.json({ students: data })
-})
+  return res.json({ students: data });
+}catch (err) {
+  console.log(err);
+  return res.status(500).json({error: err.message});
+}
+});
 
 // DELETE /api/courses/:courseId/enrollments/:studentId
 router.delete('/:studentId', requireCourseOwner, async (req, res) => {
@@ -164,4 +174,5 @@ router.delete('/:studentId', requireCourseOwner, async (req, res) => {
   return res.status(204).send()
 })
 
-module.exports = router
+  return router;
+}
