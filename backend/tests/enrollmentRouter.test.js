@@ -33,25 +33,14 @@ describe('GET enrollments', () => {
         },
       },
       error: null,
-   // more tests structured here
-    it('returns 401 when token is missing', () => {});
-  it('returns 403 when teacher is not owner', () => {});
-  it('returns 404 when course does not exist', () => {});
-   
     });
 
-describe('POST /api/courses/:courseId/enrollments/import', () => {
-  it('imports valid CSV', () => {});
-  it('returns 400 when no file is uploaded', () => {});
-  it('skips duplicate emails', () => {});
-});
 
-describe('DELETE /api/courses/:courseId/enrollments/:studentId', () => {
-  it('removes a student', () => {});
-  it('returns 404 when enrollment does not exist', () => {});
-});
+    
+
+
     fakeSupabase.from.mockImplementation((table) => {
-       
+     
      
       
     if (table === 'courses') {
@@ -120,5 +109,20 @@ describe('DELETE /api/courses/:courseId/enrollments/:studentId', () => {
     expect(res.status).toBe(200);
     expect(res.body.students.length).toBe(1);
   });
+
+
+  // Test missing token  
+it('returns 401 when token is missing', async () => {
+    const res = await request(app)
+      .get('/api/courses/1/enrollments');
+
+    expect(res.status).toBe(401);
+    expect(res.body).toEqual({
+      error: 'Missing auth token',
+    });
+
+    expect(fakeSupabase.auth.getUser).not.toHaveBeenCalled();
+  });
+
 });
 
