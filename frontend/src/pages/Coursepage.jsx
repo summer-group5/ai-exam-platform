@@ -150,7 +150,14 @@ export default function Coursepage() {
             <ul>
               {assignments.map(a => (
                 <li key={a.id}>
-                  <span>{a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}</span>
+                  <Link
+                    to={isOwner
+                      ? `/Coursepage/${id}/assignments/${a.id}/submissions`
+                      : `/Coursepage/${id}/assignments/${a.id}`}
+                    className='assignment-link'
+                  >
+                    {a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}
+                  </Link>
                   {a.due_date && <span className='due-date'> (Due: {new Date(a.due_date).toLocaleDateString()})</span>}
                 </li>
               ))}

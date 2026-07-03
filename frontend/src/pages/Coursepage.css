@@ -63,3 +63,12 @@ background-color: rgb(19, 152, 204);
 .manage-students-btn:hover {
   background-color: #60a5fa;
 }
+
+.assignment-link {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.assignment-link:hover {
+  text-decoration: underline;
+}
