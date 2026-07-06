@@ -397,9 +397,58 @@ describe('DELETE /api/courses/:courseId/enrollments/:studentId', () => {
   it('removes a student', async () => {
     // TODO
   
+ fakeSupabase.auth.getUser.mockResolvedValue({
+      data: {
+        user: {
+          id: 'teacher1',
+        },
+      },
+      error: null,
+    });
+
+   fakeSupabase.from.mockImplementation((table) => {
+      if (table === 'courses') {
+        return {
+          select: () => ({
+            eq: () => ({
+              single: async () => ({
+                data: {
+                  id: 1,
+                  teacher_id: 'teacher1',
+                },
+                error: null,
+              }),
+            }),
+          }),
+        };
+      } 
+
+ if (table === 'course_enrollments') {
+        return {
+          delete: () => ({
+            eq: () => ({
+              eq: async () => ({
+                error: null,
+              }),
+            }),
+          }),
+        };
+      }
+
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+ const res = await request(app)
+      .delete('/api/courses/1/enrollments/stu1')
+      .set('Authorization', 'Bearer token');
+
+    expect(res.status).toBe(204);
+    expect(res.body).toEqual({});
+
+
   });
 
-  it('returns 404 when enrollment does not exist', async () => {
-    // TODO
-  });
+
+  
+  
 });
