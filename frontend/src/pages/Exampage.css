@@ -115,3 +115,27 @@ border: 1px solid #ccc;
   
 
 }
+
+
+.highlight{
+outline:4px solid orange;
+border-radius:10px;
+}
+
+
+.exam-intro-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  
+}
+
+.exam-intro-box{
+  background:white;
+  padding:24px;
+  border-radius:12px;
+  width:400px;
+}

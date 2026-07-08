@@ -63,3 +63,8 @@ background-color: rgb(19, 152, 204);
 .manage-students-btn:hover {
   background-color: #60a5fa;
 }
+.exam-buttons{
+display: flex;
+justify-content: center;
+gap: 20px;
+}
