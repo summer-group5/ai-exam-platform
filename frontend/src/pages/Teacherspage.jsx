@@ -11,7 +11,7 @@ export default function Teacherspage() {
     { id: 2, title: "My Courses", path: "/my-courses" },
     { id: 3, title: "Design an Exam", path: "/design-exam" },
     { id: 4, title: "Create a quiz", path: "/create-quiz" },
-    { id: 5, title: "Exam event log", path: "/exam-events" },
+    { id: 5, title: "Exam Monitoring", path: "/exam-monitoring" },
     { id: 6, title: "List of students", path: "/student-list" },
     { id: 7, title: "Reports", path: "/reports" }
 
