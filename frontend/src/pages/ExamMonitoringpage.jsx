@@ -42,44 +42,7 @@ export default function ExamMonitoringpage() {
        
         <div className="ExamMonitoring-container">
 
-          <h1>Live Exam Monitoring</h1>
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Student</th>
-                        <th>Status</th>
-                        <th>Current Question</th>
-                        <th>Progress</th>
-                        <th>Warnings</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {students.map(student => (
-
-                        <tr key={student.id}>
-
-                            <td>{student.name}</td>
-
-                            <td>{student.status}</td>
-
-                            <td>{student.question}</td>
-
-                            <td>{student.progress}</td>
-
-                            <td>{student.warnings}</td>
-
-                        </tr>
-
-                    ))}
-
-                </tbody>
-
-            </table>
-
+        
 
         </div>
         
