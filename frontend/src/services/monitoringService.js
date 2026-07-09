@@ -59,16 +59,24 @@ export async function getMonitoringEvents(sessionId) {
 }
 
 // sessions
-export async function createExamSession(courseId) {
-  const token = await getAuthToken();
+export async function createExamSession(examId) {
+  
+    // test log
+   console.log("Creating session for exam:", examId);
+    
+   const token = await getAuthToken();
 
   const res = await fetch(
-    `${BACKEND}/api/courses/${courseId}/exam-sessions`,
+    `${BACKEND}/api/exam-sessions`,
     {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        exam_id: examId
+      })
     }
   );
 

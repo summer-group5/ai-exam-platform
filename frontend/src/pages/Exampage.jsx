@@ -10,7 +10,10 @@ import { logMonitoringEvent } from '../services/monitoringService';
 
 
 export default function Exampage() {
-const location = useLocation();
+
+ console.log("Exampage rendered");
+
+  const location = useLocation();
 const [currentQuestion, setCurrentQuestion] = useState(
   location.state?.currentQuestion ?? 0
 );
@@ -86,7 +89,8 @@ const [answers, setAnswers] = useState(
     correctAnswer: 'console.log()'
   }
 ];
-
+console.log("Course ID:", id);
+console.log("Exam:", exam);
 // session use effect
 useEffect(() => {
   async function startSession() {
@@ -189,18 +193,32 @@ const goToSubmitPage = () => {
   });
 };
 
-
-const handleSubmit = () => {
+// handle submit
+const handleSubmit =  async () => {
+ 
+   if (sessionId) {
+    await logMonitoringEvent(sessionId, {
+      type: "EXAM_SUBMITTED",
+      details: "Student submitted the exam"
+    });
+  }
+ 
+ 
   console.log('Submitted answers:', answers);
   alert('time is up.')
   alert('All answers are saved and submitted')
- 
+   navigate(`/Coursepage/${id}/exam/submit`, {
+    state: {
+      exam,
+      answers
+    }
  
   // Example: 
   // send answers to backend
   // navigate('/results')
   // calculate score
-}; 
+ });
+};
 
 
     return (

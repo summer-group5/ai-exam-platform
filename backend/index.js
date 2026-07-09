@@ -49,7 +49,7 @@ app.use(express.json());
 
 app.use('/api/courses/:courseId/assignments', assignmentRouter)
 app.use('/api/courses/:courseId/enrollments', enrollmentRouter)
-app.use('/api/exam-sessions', monitoringRouter);
+app.use('/api', monitoringRouter);
 
 app.get('/api/health', async (req, res) => {
   try {

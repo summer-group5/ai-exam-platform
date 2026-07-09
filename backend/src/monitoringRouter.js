@@ -20,23 +20,29 @@ async function requireAuth(req, res, next) {
 
 
 // POST /api/courses/:courseId/exam-sessions
-router.post('/courses/:courseId/exam-sessions', requireAuth, async (req, res) => {
-  const { courseId } = req.params;
+router.post('/exam-sessions', requireAuth, async (req, res) => {
+  const { exam_id } = req.body;
+
+  if (!exam_id) {
+    return res.status(400).json({
+      error: 'exam_id is required'
+    });
+  }
 
   const { data, error } = await supabaseAdmin
     .from('exam_sessions')
     .insert({
-      course_id: courseId,
+      exam_id,
       student_id: req.user.id,
-      status: 'active'
+      attempt_number: 1,
+      status: 'active',
+      started_at: new Date()
     })
     .select()
     .single();
 
   if (error) {
-    return res.status(500).json({
-      error: error.message
-    });
+    return res.status(500).json({ error: error.message });
   }
 
   return res.status(201).json(data);
@@ -46,7 +52,7 @@ router.post('/courses/:courseId/exam-sessions', requireAuth, async (req, res) =>
 
 
 //POST /api/exam-sessions/:sessionId/events
-router.post('/:sessionId/events', requireAuth, async (req, res) => {
+router.post('/exam-sessions/:sessionId/events', requireAuth, async (req, res) => {
   const { sessionId } = req.params
   
   const {
@@ -92,7 +98,7 @@ if (sessionError || !session) {
 
 //GET /api/exam-sessions/:sessionId/events
 
-router.get('/:sessionId/events', requireAuth, async (req, res) => {
+router.get('/exam-sessions/:sessionId/events', requireAuth, async (req, res) => {
   const { sessionId } = req.params
 
   const { data, error } = await supabaseAdmin
