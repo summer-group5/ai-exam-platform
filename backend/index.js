@@ -3,6 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const assignmentRouter = require('./src/assignmentRouter')
+// exam monitoring router
+
+
 
 const port = Number(process.env.PORT || 4000);
 const pool = new Pool({
@@ -37,7 +40,7 @@ async function initDb() {
   `);
   console.log('Database ready.');
 }
-
+const monitoringRouter = require('./src/monitoringRouter')
 const enrollmentRouter = require('./src/enrollmentRouter')
 
 const app = express();
@@ -46,6 +49,7 @@ app.use(express.json());
 
 app.use('/api/courses/:courseId/assignments', assignmentRouter)
 app.use('/api/courses/:courseId/enrollments', enrollmentRouter)
+app.use('/api/exam-sessions', monitoringRouter);
 
 app.get('/api/health', async (req, res) => {
   try {
