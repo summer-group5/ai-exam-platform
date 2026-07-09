@@ -1,9 +1,11 @@
-import React, {useState} from 'react'
+import React, { useEffect, useState } from 'react';
 import './Exampage.css'
 import Questionscard from '../components/questionscard/Questionscard';
 import QuestionProgress from '../components/questionscard/questionprogress/QuestionProgress';
 import ExamTimer from '../components/timer/ExamTimer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { createExamSession } from '../services/monitoringService';
+import { logMonitoringEvent } from '../services/monitoringService';
 
 
 
@@ -23,6 +25,9 @@ const [answers, setAnswers] = useState(
   // timer protype constants
   const exam = location.state?.exam;
   const timeLimit = location.state?.timeLimit ?? 60;
+
+  const [sessionId, setSessionId] = useState(null);
+
 
 
   const questions = [
@@ -82,6 +87,96 @@ const [answers, setAnswers] = useState(
   }
 ];
 
+// session use effect
+useEffect(() => {
+  async function startSession() {
+    try {
+      const session = await createExamSession(id);
+
+      setSessionId(session.id);
+
+      await logMonitoringEvent(session.id, {
+        type: "EXAM_STARTED",
+        details: "Student started the exam"
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  startSession();
+}, [id]);
+
+// tab changes
+useEffect(() => {
+  if (!sessionId) return;
+
+  const handleVisibility = async () => {
+    if (document.hidden) {
+      try {
+        await logMonitoringEvent(sessionId, {
+          type: "TAB_CHANGE",
+          details: "Student switched browser tab"
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  document.addEventListener(
+    "visibilitychange",
+    handleVisibility
+  );
+
+  return () => {
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibility
+    );
+  };
+
+}, [sessionId]);
+
+
+// detect screen changes 
+
+useEffect(() => {
+  if (!sessionId) return;
+
+  const handleFullscreen = async () => {
+    if (!document.fullscreenElement) {
+      try {
+        await logMonitoringEvent(sessionId, {
+          type: "FULLSCREEN_EXIT",
+          details: "Student exited fullscreen"
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  document.addEventListener(
+    "fullscreenchange",
+    handleFullscreen
+  );
+
+  return () => {
+    document.removeEventListener(
+      "fullscreenchange",
+      handleFullscreen
+    );
+  };
+
+}, [sessionId]);
+
+
+
+
+
+
 // navigating to submit page
 const goToSubmitPage = () => {
   navigate(`/Coursepage/${id}/exam/submit`, {
@@ -99,6 +194,8 @@ const handleSubmit = () => {
   console.log('Submitted answers:', answers);
   alert('time is up.')
   alert('All answers are saved and submitted')
+ 
+ 
   // Example: 
   // send answers to backend
   // navigate('/results')

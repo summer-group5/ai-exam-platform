@@ -1,3 +1,4 @@
+//monitoringRouter.js
 const express = require('express')
 const { supabaseAdmin } = require('./supabaseAdmin')
 
@@ -16,6 +17,32 @@ async function requireAuth(req, res, next) {
   req.user = user
   next()
 }
+
+
+// POST /api/courses/:courseId/exam-sessions
+router.post('/courses/:courseId/exam-sessions', requireAuth, async (req, res) => {
+  const { courseId } = req.params;
+
+  const { data, error } = await supabaseAdmin
+    .from('exam_sessions')
+    .insert({
+      course_id: courseId,
+      student_id: req.user.id,
+      status: 'active'
+    })
+    .select()
+    .single();
+
+  if (error) {
+    return res.status(500).json({
+      error: error.message
+    });
+  }
+
+  return res.status(201).json(data);
+});
+
+
 
 
 //POST /api/exam-sessions/:sessionId/events
@@ -80,3 +107,6 @@ router.get('/:sessionId/events', requireAuth, async (req, res) => {
  return   res.json(data)
 })
 
+
+
+module.exports = router;
