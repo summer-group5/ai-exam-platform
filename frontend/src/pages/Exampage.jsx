@@ -7,7 +7,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { createExamSession } from '../services/monitoringService';
 import { logMonitoringEvent } from '../services/monitoringService';
 
-
+import { getExam } from "../services/examService";
 
 export default function Exampage() {
 
@@ -95,7 +95,11 @@ console.log("Exam:", exam);
 useEffect(() => {
   async function startSession() {
     try {
-      const session = await createExamSession(id);
+      const exam = await getExam(id);
+
+console.log(exam);
+
+const session = await createExamSession(exam.id);
 
       setSessionId(session.id);
 
