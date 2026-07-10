@@ -62,7 +62,7 @@ export async function getMonitoringEvents(sessionId) {
 export async function createExamSession(examId) {
   
     // test log
-   console.log("Creating session for exam:", examId);
+  console.log("Creating exam session with exam_id:", examId);
     
    const token = await getAuthToken();
 
