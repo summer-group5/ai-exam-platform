@@ -47,7 +47,7 @@ export default function AssignmentSubmissionsPage() {
       <Topnav links={navLinks} />
 
       <div className='submissions-container'>
-        <button className='back-btn' onClick={() => navigate(`/Coursepage/${id}`)}>
+        <button className='back-link' onClick={() => navigate(`/Coursepage/${id}`)}>
           &larr; Back to course
         </button>
 

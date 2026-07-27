@@ -118,15 +118,3 @@ export async function getSubmissions(courseId, assignmentId) {
   }
   return res.json()
 }
-
-export async function getStudentSubmission(courseId, assignmentId, studentId) {
-  const token = await getAuthToken()
-  const res = await fetch(`${BACKEND}/api/courses/${courseId}/assignments/${assignmentId}/submissions/${studentId}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new Error(body.error ?? `Request failed (${res.status})`)
-  }
-  return res.json()
-}

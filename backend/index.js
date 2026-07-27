@@ -45,8 +45,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Assignment CRUD
 app.use('/api/courses/:courseId/assignments', assignmentRouter)
-app.use('/api/courses/:courseId/assignments', submissionRouter)
+// Assignment submissions
+app.use('/api/courses/:courseId/assignments/:assignmentId', submissionRouter)
 app.use('/api/courses/:courseId/enrollments', enrollmentRouter)
 
 app.get('/api/health', async (req, res) => {

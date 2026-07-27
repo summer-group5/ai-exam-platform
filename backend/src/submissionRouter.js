@@ -122,17 +122,27 @@ router.get('/my-submission', requireAuth, async (req, res) => {
   const { assignmentId } = req.params
   const studentId = req.user.id
 
-  const { data, error } = await supabaseAdmin
-    .from('assignment_submissions')
-    .select('id, score, status, submitted_at')
-    .eq('assignment_id', assignmentId)
-    .eq('student_id', studentId)
-    .maybeSingle()
+  const [{ data, error }, { data: assignmentData }] = await Promise.all([
+    supabaseAdmin
+      .from('assignment_submissions')
+      .select('id, score, status, submitted_at')
+      .eq('assignment_id', assignmentId)
+      .eq('student_id', studentId)
+      .maybeSingle(),
+    supabaseAdmin
+      .from('assignments')
+      .select('questions(max_points)')
+      .eq('id', assignmentId)
+      .single()
+  ])
 
   if (error) return res.status(500).json({ error: error.message })
   if (!data) return res.status(404).json({ error: 'No submission found' })
 
-  return res.json(data)
+  const questions = assignmentData?.questions ?? []
+  const max_score = questions.reduce((sum, q) => sum + (q.max_points ?? 1), 0)
+
+  return res.json({ ...data, max_score })
 })
 
 // GET /api/courses/:courseId/assignments/:assignmentId/submissions  (teacher)

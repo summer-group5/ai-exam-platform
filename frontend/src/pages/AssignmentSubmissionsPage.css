@@ -19,7 +19,7 @@
   color: #555;
 }
 
-.back-btn {
+.back-link {
   background: none;
   border: none;
   color: rgb(19, 152, 204);
@@ -29,7 +29,7 @@
   margin-bottom: 1rem;
 }
 
-.back-btn:hover {
+.back-link:hover {
   text-decoration: underline;
 }
 
