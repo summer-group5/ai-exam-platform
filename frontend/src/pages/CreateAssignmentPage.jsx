@@ -30,7 +30,7 @@ export default function CreateAssignmentPage() {
     setLoading(true)
     setError(null)
     try {
-      await createAssignment(courseId, {
+      const created = await createAssignment(courseId, {
         title: title.trim(),
         description: description.trim() || null,
         week_number: weekNumber ? Number(weekNumber) : null,
@@ -38,7 +38,7 @@ export default function CreateAssignmentPage() {
         due_date: dueDate || null,
         max_points: maxPoints ? Number(maxPoints) : null
       })
-      navigate(`/Coursepage/${courseId}`)
+      navigate(`/Coursepage/${courseId}/assignments/${created.id}/edit`)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -126,12 +126,7 @@ export default function CreateAssignmentPage() {
             </div>
           </div>
 
-          <div className="questions-placeholder">
-            <h2>Questions</h2>
-            <p className="placeholder-text">Question management will be here soon.</p>
-          </div>
-
-          {error && <p className="form-error">{error}</p>}
+{error && <p className="form-error">{error}</p>}
 
           <div className="form-actions">
             <button type="button" onClick={() => navigate(`/Coursepage/${courseId}`)}>
