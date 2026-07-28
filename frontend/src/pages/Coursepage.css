@@ -72,3 +72,15 @@ background-color: rgb(19, 152, 204);
 .assignment-link:hover {
   text-decoration: underline;
 }
+
+.assignment-edit-link {
+  margin-left: 0.75rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.assignment-edit-link:hover {
+  text-decoration: underline;
+  color: #374151;
+}

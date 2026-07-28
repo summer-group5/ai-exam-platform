@@ -159,6 +159,14 @@ export default function Coursepage() {
                     {a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}
                   </Link>
                   {a.due_date && <span className='due-date'> (Due: {new Date(a.due_date).toLocaleDateString()})</span>}
+                  {isOwner && (
+                    <Link
+                      to={`/Coursepage/${id}/assignments/${a.id}/edit`}
+                      className='assignment-edit-link'
+                    >
+                      Edit
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
