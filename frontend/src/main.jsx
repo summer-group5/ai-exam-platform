@@ -35,9 +35,9 @@ const router = createBrowserRouter([
     { index: true, element: <Frontpage/> },
 
      // Student route
-      { path: "student", element: <ProtectedRoute><Studentspage /></ProtectedRoute> },
+      { path: "student", element: <ProtectedRoute requiredRole="student"><Studentspage /></ProtectedRoute> },
     // Teacher route
-      { path: "teacher", element: <ProtectedRoute><Teacherspage /></ProtectedRoute> },
+      { path: "teacher", element: <ProtectedRoute requiredRole="teacher"><Teacherspage /></ProtectedRoute> },
 
       // Design exam route
       {path: "design-exam", element: <ProtectedRoute><Examdesignpage /></ProtectedRoute>},

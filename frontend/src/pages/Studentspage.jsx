@@ -18,9 +18,9 @@ export default function Studentspage() {
 
   return (
     <>
-      <Topnav />
+      <Topnav links={[{ text: 'My Courses', path: '/student' }]} />
       <div className='students-page'>
-        <h1>My courses</h1>
+        <h1>My Courses</h1>
 
         {loading && <p>Loading...</p>}
         {error && <p>{error}</p>}
