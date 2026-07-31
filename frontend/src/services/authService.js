@@ -19,7 +19,6 @@ export async function getUserRole() {
     .select('role')
     .eq('id', user.id)
     .maybeSingle()
-  console.log('getUserRole →', { userId: user.id, data, error })
   if (error) throw error
   return data?.role ?? 'teacher'
 }
