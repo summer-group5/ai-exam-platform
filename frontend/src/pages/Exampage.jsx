@@ -258,7 +258,7 @@ useEffect(() => {
 
     } else {
 
-      setTabWarningVisible(false);
+      
 
     }
   };
@@ -407,8 +407,7 @@ reverseOrder={false}
 />
 
         <div className="exam-header">
-           
-           
+          
            
             <h1> {isDemo ? 'Exam Demo' : 'Final Exam'}</h1>
              {fullscreenWarning && (
@@ -426,7 +425,20 @@ reverseOrder={false}
   </button>
 
 </div>
+
 )}
+     
+     {tabWarningVisible && (
+  <div className="tab-alert">
+    <p>⚠️ Browser tab changed</p>
+    <p>Warnings: {tabWarnings}</p>
+   <button onClick={() => setTabWarningVisible(false)}>
+      Dismiss
+    </button>
+  </div>
+)}
+     
+     
       {tutorialStep >= 0 && (
 <div className="tutorial-box">
 
