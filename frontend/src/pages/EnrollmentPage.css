@@ -1,0 +1,127 @@
+.enrollment-page {
+  padding: 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.enrollment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.enrollment-section {
+  margin-bottom: 40px;
+}
+
+.enrollment-section h2 {
+  margin-bottom: 16px;
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.students-table th,
+.students-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.students-table th {
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.import-hint {
+  color: #555;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.import-hint code {
+  background: #f3f4f6;
+  padding: 1px 4px;
+}
+
+.import-result {
+  margin-top: 16px;
+}
+
+.import-success {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.import-skipped {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.skipped-list {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 4px;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background-color: #60a5fa;
+}
+
+.btn-primary:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #111827;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.empty-state {
+  color: #555;
+}
+
+.form-error {
+  color: #dc2626;
+}

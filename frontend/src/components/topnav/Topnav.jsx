@@ -1,21 +1,36 @@
 //Topnav.jsx
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./Topnav.css"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { logout } from '../../services/authService'
+import { supabase } from '../../utils/supabase'
 
 export default function Topnav({ links }) {
-  
-   const defaultLinks = [
+
+  const navigate = useNavigate()
+  const [session, setSession] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session))
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session))
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const defaultLinks = [
     { text: "Home", path: "/" },
     { text: "Teacher", path: "/teacher" },
     { text: "Student", path: "/student" },
     { text: "Help", path: "/help" },
-    { text: "Login", path: "/login" }
+    ...(!session ? [{ text: "Login", path: "/login" }] : [])
   ];
 
   const navLinks = links || defaultLinks;
-  
-  
+
+  async function handleLogout() {
+    await logout()
+    navigate('/login')
+  }
+
   return (
     <nav className='topnav'>
         {navLinks.map(link => (
@@ -25,12 +40,9 @@ export default function Topnav({ links }) {
           className='nav-link'
           >
           {link.text}
-
           </Link>
-
         ))}
-        
-   
+        {session && <button onClick={handleLogout} className='nav-logout'>Logout</button>}
     </nav>
   )
 }
