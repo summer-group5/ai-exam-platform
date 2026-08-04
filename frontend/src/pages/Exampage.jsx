@@ -366,7 +366,11 @@ if (showIntro) {
   onChange={(e) => setAccepted(e.target.checked)}
 />
 I understand the exam rules
-
+{cameraError && (
+  <p className="camera-error">
+    {cameraError}
+  </p>
+)}
         <button   disabled={!accepted}
   onClick={async () => {
     const success = await requestCamera();

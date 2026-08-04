@@ -184,10 +184,6 @@ export default function Coursepage() {
 </Link> 
   </div>      
 
-         <Link to={`/Coursepage/${id}/exam`} className="join-btn">
-  Join
-</Link>
-
         </section>
 
 

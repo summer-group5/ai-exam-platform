@@ -139,3 +139,10 @@ border-radius:10px;
   border-radius:12px;
   width:400px;
 }
+
+
+.camera-error {
+  color: red;
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
