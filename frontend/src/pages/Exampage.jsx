@@ -313,17 +313,26 @@ const requestCamera = async() => {
     setCameraAllowed(true);
     setCameraError('');
 
+    return true; // fixed camera allowance and start exam functionality
+
+
     } catch (err) {
 
       setCameraAllowed(false);
       setCameraError('Camera acces is required to start the exam')
       
-  
+      return false;
   }
 
 }; 
-
-
+// camera stop use effect
+useEffect(() => {
+  return () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+  };
+}, [stream]);
 
 
 
@@ -360,10 +369,10 @@ I understand the exam rules
 
         <button   disabled={!accepted}
   onClick={async () => {
+    const success = await requestCamera();
+  
 
-    await requestCamera();
-
-    if (!cameraAllowed) return;
+    if (!success) return;
 
     setShowIntro(false);
 
