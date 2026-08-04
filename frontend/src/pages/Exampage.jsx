@@ -43,7 +43,7 @@ const isDemo = location.state?.demo ?? false;
  
 
   // introduction before exam demo
-  const [showIntro, setShowIntro] = useState(isDemo);
+  const [showIntro, setShowIntro] = useState(true);
 
   
   const questions = [
