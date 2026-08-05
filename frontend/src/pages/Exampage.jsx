@@ -8,6 +8,7 @@ import { createExamSession } from '../services/monitoringService';
 import { logMonitoringEvent } from '../services/monitoringService';
 
 import { getExam } from "../services/examService";
+import { getExamQuestions } from '../services/questionService';
 
 export default function Exampage() {
 
@@ -33,7 +34,7 @@ const [answers, setAnswers] = useState(
 
 
 
-  const questions = [
+  /*const questions = [
   {
     title: 'What does the acronym HTTP stand for?',
     options: [
@@ -89,8 +90,41 @@ const [answers, setAnswers] = useState(
     correctAnswer: 'console.log()'
   }
 ];
+*/
+
+const [questions, setQuestions] = useState([]);
+
+useEffect(() => {
+async function loadQuestions() {
+  try {
+    const exam = await getExam(id);
+    const data = await getExamQuestions(exam.id);
+    console.log(data);
+
+    const formatted = data.map(q => ({
+      title: q.question_text,
+      options: q.question_options.map(o => o.option_text),
+      correctAnswer:
+      q.question_options.find( o => o.is_correct)?.option_text
+    }) );
+    setQuestions(formatted);
+
+  } catch (err) {
+    console.error(err);
+
+  }
+
+}
+
+  loadQuestions (); 
+  
+}, [id])
+
+
 console.log("Course ID:", id);
 console.log("Exam:", exam);
+
+
 // session use effect
 useEffect(() => {
   async function startSession() {
@@ -224,6 +258,9 @@ const handleSubmit =  async () => {
  });
 };
 
+if (questions.length === 0) {
+  return <div>Loading exam...</div>;
+}
 
     return (
  
@@ -281,6 +318,7 @@ setSelectedAnswer={(answer) =>
   setAnswers((prev) => {
     const newAnswers = [...prev];      // create copy of array
     newAnswers[currentQuestion] = answer; // updates index of current question
+    
     return newAnswers;
   })
   
