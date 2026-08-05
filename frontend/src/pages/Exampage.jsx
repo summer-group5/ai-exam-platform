@@ -33,65 +33,6 @@ const [answers, setAnswers] = useState(
   const [sessionId, setSessionId] = useState(null);
 
 
-
-  /*const questions = [
-  {
-    title: 'What does the acronym HTTP stand for?',
-    options: [
-      'HyperText Transfer Protocol',
-      'High Transfer Text Process',
-      'Hyper Transfer Tool Protocol',
-      'Host Transfer Text Protocol'
-    ],
-    correctAnswer: 'HyperText Transfer Protocol'
-  },
-
-  {
-    title: 'Which HTML tag creates a hyperlink?',
-    options: [
-      '<a>',
-      '<link>',
-      '<href>',
-      '<url>'
-    ],
-    correctAnswer: '<a>'
-  },
-
-  {
-    title: 'Which CSS property changes text color?',
-    options: [
-      'color',
-      'font-color',
-      'text-style',
-      'background'
-    ],
-    correctAnswer: 'color'
-  },
-
-  {
-    title: 'What is React mainly used for?',
-    options: [
-      'Building user interfaces',
-      'Database management',
-      'Server hosting',
-      'Operating systems'
-    ],
-    correctAnswer: 'Building user interfaces'
-  },
-
-  {
-    title: 'Which JavaScript method prints to the browser console?',
-    options: [
-      'console.log()',
-      'print()',
-      'write()',
-      'display()'
-    ],
-    correctAnswer: 'console.log()'
-  }
-];
-*/
-
 const [questions, setQuestions] = useState([]);
 
 useEffect(() => {
@@ -99,6 +40,7 @@ async function loadQuestions() {
   try {
     const exam = await getExam(id);
     const data = await getExamQuestions(exam.id);
+    console.log(exam);
     console.log(data);
 
     const formatted = data.map(q => ({
