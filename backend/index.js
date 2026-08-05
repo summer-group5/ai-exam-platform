@@ -5,7 +5,7 @@ const { Pool } = require('pg');
 const assignmentRouter = require('./src/assignmentRouter')
 
 const examRouter = require("./src/examRouter");
-
+const questionRouter = require("./src/questionRouter");
 
 const port = Number(process.env.PORT || 4000);
 const pool = new Pool({
@@ -51,7 +51,7 @@ app.use('/api/courses/:courseId/assignments', assignmentRouter)
 app.use('/api/courses/:courseId/enrollments', enrollmentRouter)
 app.use('/api', monitoringRouter);
 app.use("/api/courses/:courseId/exam", examRouter);
-
+app.use("/api/exams", questionRouter);
 
 app.get('/api/health', async (req, res) => {
   try {
