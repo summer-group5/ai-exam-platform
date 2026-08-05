@@ -112,15 +112,6 @@ useEffect(() => {
   startSession();
 }, [id]);
 
-
-// detect screen changes 
-
-
-
-
-
-
-
 // navigating to submit page
 
 const goToSubmitPage = () => {
@@ -161,10 +152,6 @@ const handleSubmit =  async () => {
       answers
     }
  
-  // Example: 
-  // send answers to backend
-  // navigate('/results')
-  // calculate score
  });
 };
 
@@ -216,8 +203,6 @@ useEffect(() => {
   };
 }, [sessionId, isDemo]);
 
-
-
 // return to fullscreen button
 const returnFullscreen = async () => {
   try {
@@ -259,10 +244,6 @@ useEffect(() => {
   };
 }, [sessionId, isDemo]);
 
-
-  
-
-
 // tutorial for exam demo
 const [tutorialStep, setTutorialStep] = useState(
   isDemo ? 0 : -1
@@ -278,11 +259,9 @@ const tutorial = [
 ];
 
 const [accepted, setAccepted] = useState(false);
-
 const [cameraAllowed, setCameraAllowed] = useState(false);
 const [cameraError, setCameraError] = useState('');
 const [stream, setStream] = useState(null);
-
 
 // requesting camera access
 
@@ -299,7 +278,6 @@ const requestCamera = async() => {
     setCameraError('');
 
     return true; // fixed camera allowance and start exam functionality
-
 
     } catch (err) {
 
@@ -318,8 +296,6 @@ useEffect(() => {
     }
   };
 }, [stream]);
-
-
 
 if (showIntro) {
   return (
@@ -360,7 +336,6 @@ I understand the exam rules
   onClick={async () => {
     const success = await requestCamera();
   
-
     if (!success) return;
 
     setShowIntro(false);
@@ -382,8 +357,6 @@ I understand the exam rules
   );
 }
 
-
-
 if (questions.length === 0) {
   return <div>Loading exam...</div>;
 }
@@ -403,17 +376,13 @@ if (questions.length === 0) {
   initialMinutes={timeLimit % 60}
   onFinish={handleSubmit}
 /></span>
-        
-       
-
-
+          
        </div>
         <div className="monitor-container">
            <span className="monitor-span">  Monitoring active</span>
         
         </div>
-         
-         
+          
          </div> 
        
        <div className="row-container">
