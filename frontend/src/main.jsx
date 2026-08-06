@@ -88,7 +88,7 @@ const router = createBrowserRouter([
 
       // Examevent page route here
 
-      { path: "/exam-monitoring", element: <ProtectedRoute><ExamMonitoringPage /></ProtectedRoute> }
+      { path: "/exam-monitoring", element: <ProtectedRoute><ExamMonitoringPage /></ProtectedRoute> },
       { path: "/Coursepage/:id/assignments/:assignmentId/edit", element: <ProtectedRoute><EditAssignmentPage /></ProtectedRoute> },
       { path: "/Coursepage/:id/enrollments", element: <EnrollmentPage /> },
 

@@ -58,7 +58,7 @@ export async function deleteQuestion(courseId, assignmentId, questionId) {
 
   return res.json()
 }
-}
+
 
 export async function addOption(courseId, assignmentId, questionId, { option_text, is_correct }) {
   const token = await getAuthToken()
