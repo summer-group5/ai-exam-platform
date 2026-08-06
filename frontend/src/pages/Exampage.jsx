@@ -46,39 +46,56 @@ const isDemo = location.state?.demo ?? false;
   // introduction before exam demo
   const [showIntro, setShowIntro] = useState(true);
 
+console.log("location.state =", location.state);
+console.log("isDemo =", isDemo);
+console.log("showIntro =", showIntro);
+
 const [questions, setQuestions] = useState([]);
 
 useEffect(() => {
-async function loadQuestions() {
-  try {
-    const loadedExam = await getExam(id);
+  if (showIntro) return;
 
-    setExam(loadedExam);
+  if (isDemo) {
+    setQuestions(
+      demoQuestions.map(q => ({
+        title: q.question,
+        options: q.options,
+        correctAnswer: q.correctAnswer
+      }))
+    );
 
-    const data = await getExamQuestions(loadedExam.id);
-    //const exam = await getExam(id);
-    //const data = await getExamQuestions(exam.id);
-    console.log(exam);
-    console.log(data);
+    setExam({
+      title: "Demo Exam"
+    });
 
-    const formatted = data.map(q => ({
-      title: q.question_text,
-      options: q.question_options.map(o => o.option_text),
-      correctAnswer:
-      q.question_options.find( o => o.is_correct)?.option_text
-    }) );
-    setQuestions(formatted);
-
-  } catch (err) {
-    console.error(err);
-
+    return;
   }
 
-}
+  async function loadQuestions() {
+    try {
+      const loadedExam = await getExam(id);
 
-  loadQuestions (); 
-  
-}, [id])
+      setExam(loadedExam);
+
+      const data = await getExamQuestions(loadedExam.id);
+
+      const formatted = data.map(q => ({
+        title: q.question_text,
+        options: q.question_options.map(o => o.option_text),
+        correctAnswer:
+          q.question_options.find(o => o.is_correct)?.option_text
+      }));
+
+      setQuestions(formatted);
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  loadQuestions();
+
+}, [id, showIntro, isDemo]);
 
 
 console.log("Course ID:", id);
@@ -87,13 +104,15 @@ console.log("Exam:", exam);
 
 // session use effect
 useEffect(() => {
+  if (showIntro) return;
+
+  if (isDemo) return;
+
   async function startSession() {
     try {
       const loadedExam = await getExam(id);
 
       setExam(loadedExam);
-
-      console.log(loadedExam);
 
       const session = await createExamSession(loadedExam.id);
 
@@ -110,7 +129,8 @@ useEffect(() => {
   }
 
   startSession();
-}, [id]);
+
+}, [id, showIntro, isDemo]);
 
 // navigating to submit page
 
@@ -132,27 +152,27 @@ const goToSubmitPage = () => {
 };
 
 // handle submit
-const handleSubmit =  async () => {
- 
-   if (sessionId) {
-    await logMonitoringEvent(sessionId, {
-      type: "EXAM_SUBMITTED",
-      details: "Student submitted the exam"
-       
-    });
-  }
- 
- 
-  console.log('Submitted answers:', answers);
-  alert('time is up.')
-  alert('All answers are saved and submitted')
-   navigate(`/Coursepage/${id}/exam/submit`, {
-    state: {
-      exam,
-      answers
+const handleSubmit = async () => {
+
+    if (isDemo) {
+        alert("Demo completed.");
+        navigate(`/Coursepage/${id}`);
+        return;
     }
- 
- });
+
+    if (sessionId) {
+        await logMonitoringEvent(sessionId, {
+            type: "EXAM_SUBMITTED",
+            details: "Student submitted the exam"
+        });
+    }
+
+    navigate(`/Coursepage/${id}/exam/submit`, {
+        state: {
+            exam,
+            answers
+        }
+    });
 };
 
 // new fullscreen exit
@@ -258,6 +278,23 @@ const tutorial = [
   'Submit when finished.'
 ];
 
+
+const demoQuestions = [
+  {
+    id: 1,
+    question: "Which keyword declares a variable in Java?",
+    options: ["type", "var", "declare", "define"],
+    correctAnswer: 1,
+  },
+  {
+    id: 2,
+    question: "Which collection does not allow duplicates?",
+    options: ["List", "Queue", "Set", "Array"],
+    correctAnswer: 2,
+  },
+];
+
+
 const [accepted, setAccepted] = useState(false);
 const [cameraAllowed, setCameraAllowed] = useState(false);
 const [cameraError, setCameraError] = useState('');
@@ -296,6 +333,9 @@ useEffect(() => {
     }
   };
 }, [stream]);
+
+
+
 
 if (showIntro) {
   return (
@@ -362,13 +402,51 @@ if (questions.length === 0) {
 }
 
     return (
+   
    <>
-   <Toaster position="top-right" />
+  <Toaster position="top-right" />
+
+  {isDemo && tutorialStep >= 0 && (
+    <div className="tutorial-overlay">
+      <div className="tutorial-box">
+        <h3>Training Tutorial</h3>
+
+        <p>{tutorial[tutorialStep]}</p>
+
+        <div className="tutorial-buttons">
+          <button
+            disabled={tutorialStep === 0}
+            onClick={() => setTutorialStep(prev => prev - 1)}
+          >
+            Previous
+          </button>
+
+          <button
+            onClick={() => {
+              if (tutorialStep === tutorial.length - 1) {
+                setTutorialStep(-1);
+              } else {
+                setTutorialStep(prev => prev + 1);
+              }
+            }}
+          >
+            {tutorialStep === tutorial.length - 1 ? "Finish" : "Next"}
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+ 
+ 
  <div className='exam-page'>
       
         <div className="exam-header">
-            <h1>Final Exam</h1>
-       <div className="timer-container">
+           <h1>{isDemo ? "Demo Exam" : exam?.title}</h1>
+       <div  className={
+    tutorialStep === 1
+      ? "timer-container highlight"
+      : "timer-container"
+  }>
         
         <span className="timer-span"><ExamTimer
  
@@ -378,7 +456,11 @@ if (questions.length === 0) {
 /></span>
           
        </div>
-        <div className="monitor-container">
+        <div className={
+    tutorialStep === 2
+      ? "monitor-container highlight"
+      : "monitor-container"
+  }>
            <span className="monitor-span">  Monitoring active</span>
         
         </div>
@@ -388,14 +470,22 @@ if (questions.length === 0) {
        <div className="row-container">
         <section className='exam-section'>
         
-        <div className="progress-bar">
+        <div className={
+    tutorialStep === 3
+      ? "progress-bar highlight"
+      : "progress-bar"
+  }>
          <QuestionProgress
   questions={questions}
   currentQuestion={currentQuestion}
   setCurrentQuestion={setCurrentQuestion}
   answers= {answers}
 />
-         <div className="button-container">
+         <div className={
+    tutorialStep === 5
+      ? "button-container highlight"
+      : "button-container"
+  }>
             <button className='submit'id="submit-grad" onClick={goToSubmitPage}>Submit</button>
           </div> 
        
@@ -403,8 +493,14 @@ if (questions.length === 0) {
          </section>
            
             <section className='exam-section'>
-             
-        <Questionscard
+           <div
+  className={
+    tutorialStep === 4
+      ? "highlight"
+      : ""
+  }
+>
+ <Questionscard
           questionNumber={currentQuestion+1}
           totalQuestions={questions.length}
           question={questions[currentQuestion].title}
@@ -419,7 +515,11 @@ setSelectedAnswer={(answer) =>
   })
   
 }
-        />
+    
+  />
+</div>  
+        
+        
         
         </section>   
            

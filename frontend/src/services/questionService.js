@@ -106,17 +106,3 @@ export async function deleteOption(courseId, assignmentId, questionId, optionId)
   return true
 }
 
-
-/*
-export async function deleteOption(courseId, assignmentId, questionId, optionId) {
-  const token = await getAuthToken()
-  const res = await fetch(`${BACKEND}/api/courses/${courseId}/assignments/${assignmentId}/questions/${questionId}/options/${optionId}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new Error(body.error ?? `Request failed (${res.status})`)
-  }
-}
-*/
