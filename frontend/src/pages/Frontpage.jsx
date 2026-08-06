@@ -1,25 +1,23 @@
-import React from 'react'
-import "./Frontpage.css"
-import Topnav from '../components/topnav/Topnav'
-
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '../utils/supabase'
+import { getUserRole } from '../services/authService'
 
 export default function Frontpage() {
-  return (
-  
-  <>
-   <Topnav/>
-   <div className="frontContainer"> 
-    <div className='Front-title'>
-   
-    <h1>Exam app</h1>
-   
-    
-   <div className='image-container'> 
-  <img className='front-image' src="../images/5834.jpg" alt="image of study" />
- </div>   
- </div>
-  </div>
-</>
-)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    async function redirect() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        navigate('/login', { replace: true })
+        return
+      }
+      const role = await getUserRole().catch(() => 'teacher')
+      navigate(role === 'student' ? '/student' : '/teacher', { replace: true })
+    }
+    redirect()
+  }, [navigate])
+
+  return null
 }
-        

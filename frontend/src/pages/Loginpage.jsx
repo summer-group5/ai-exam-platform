@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { login } from '../services/authService'
+import { login, getUserRole } from '../services/authService'
 import './Loginpage.css'
 
 export default function Loginpage() {
@@ -16,7 +16,8 @@ export default function Loginpage() {
     setError(null)
     try {
       await login(email, password)
-      navigate('/teacher')
+      const role = await getUserRole()
+      navigate(role === 'student' ? '/student' : '/teacher')
     } catch (err) {
       setError(err.message)
     } finally {
