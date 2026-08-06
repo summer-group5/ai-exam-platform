@@ -1,3 +1,4 @@
+//monitoringService.js
 import { supabase } from '../utils/supabase'
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL
@@ -11,6 +12,30 @@ async function getAuthToken() {
 
   return session.access_token
 }
+
+
+export async function getExamSessions() {
+  const { data, error } = await supabase
+    .from("exam_sessions")
+    .select("*")
+    .order("started_at", { ascending: false });
+
+  if (error) throw error;
+
+  return data;
+}
+// get monitoring events 
+export async function getAllMonitoringEvents() {
+  const { data, error } = await supabase
+    .from("monitoring_events")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return data;
+}
+
 
 // save monitorning event
 export async function logMonitoringEvent(sessionId, event) {
@@ -38,8 +63,8 @@ export async function logMonitoringEvent(sessionId, event) {
 
 // get all monitoring events 
 
-export async function getMonitoringEvents(sessionId) {
-  const token = await getAuthToken()
+export async function getSessionMonitoringEvents(sessionId) {
+  const token = await getAuthToken();
 
   const res = await fetch(
     `${BACKEND}/api/exam-sessions/${sessionId}/events`,
@@ -48,14 +73,14 @@ export async function getMonitoringEvents(sessionId) {
         Authorization: `Bearer ${token}`
       }
     }
-  )
+  );
 
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new Error(body.error ?? `Request failed (${res.status})`)
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
   }
 
-  return res.json()
+  return res.json();
 }
 
 // sessions
