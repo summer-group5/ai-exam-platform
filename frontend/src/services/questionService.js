@@ -12,6 +12,8 @@ async function getAuthToken() {
   return session.access_token
 }
 
+
+
 export async function getExamQuestions(examId) {
   const token = await getAuthToken()
 
@@ -24,9 +26,14 @@ export async function getExamQuestions(examId) {
     }
   )
 
-  if (!session) throw new Error('Not logged in')
-  return session.access_token
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body.error ?? `Request failed (${res.status})`)
+  }
+
+  return await res.json()
 }
+
 
 export async function addQuestion(courseId, assignmentId, { question_text, max_points, order_number }) {
   const token = await getAuthToken()
@@ -77,6 +84,30 @@ export async function addOption(courseId, assignmentId, questionId, { option_tex
   return res.json()
 }
 
+
+export async function deleteOption(courseId, assignmentId, questionId, optionId) {
+  const token = await getAuthToken()
+
+  const res = await fetch(
+    `${BACKEND}/api/courses/${courseId}/assignments/${assignmentId}/questions/${questionId}/options/${optionId}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body.error ?? `Request failed (${res.status})`)
+  }
+
+  return true
+}
+
+
+/*
 export async function deleteOption(courseId, assignmentId, questionId, optionId) {
   const token = await getAuthToken()
   const res = await fetch(`${BACKEND}/api/courses/${courseId}/assignments/${assignmentId}/questions/${questionId}/options/${optionId}`, {
@@ -88,3 +119,4 @@ export async function deleteOption(courseId, assignmentId, questionId, optionId)
     throw new Error(body.error ?? `Request failed (${res.status})`)
   }
 }
+*/

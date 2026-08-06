@@ -43,7 +43,7 @@ async function initDb() {
 const monitoringRouter = require('./src/monitoringRouter')
 const enrollmentRouter = require('./src/enrollmentRouter')
 const submissionRouter = require('./src/submissionRouter')
-const questionRouter = require('./src/questionRouter')
+
 const courseRouter = require('./src/courseRouter')
 
 const app = express();
