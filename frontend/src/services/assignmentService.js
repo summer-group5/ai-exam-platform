@@ -77,3 +77,44 @@ export async function deleteAssignment(courseId, assignmentId) {
     throw new Error(body.error ?? `Request failed (${res.status})`)
   }
 }
+
+export async function submitAssignment(courseId, assignmentId, answers) {
+  const token = await getAuthToken()
+  const res = await fetch(`${BACKEND}/api/courses/${courseId}/assignments/${assignmentId}/submit`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ answers })
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body.error ?? `Request failed (${res.status})`)
+  }
+  return res.json()
+}
+
+export async function getMySubmission(courseId, assignmentId) {
+  const token = await getAuthToken()
+  const res = await fetch(`${BACKEND}/api/courses/${courseId}/assignments/${assignmentId}/my-submission`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body.error ?? `Request failed (${res.status})`)
+  }
+  return res.json()
+}
+
+export async function getSubmissions(courseId, assignmentId) {
+  const token = await getAuthToken()
+  const res = await fetch(`${BACKEND}/api/courses/${courseId}/assignments/${assignmentId}/submissions`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body.error ?? `Request failed (${res.status})`)
+  }
+  return res.json()
+}

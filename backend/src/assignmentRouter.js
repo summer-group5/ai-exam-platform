@@ -88,7 +88,7 @@ router.get('/', requireAuth, async (req, res) => {
 router.get('/:assignmentId', requireAuth, async (req, res) => {
   const { data, error } = await supabaseAdmin
     .from('assignments')
-    .select('*, questions(id, question_text, question_type, order_number, max_points, question_options(id, option_text))')
+    .select('*, questions(id, question_text, question_type, order_number, max_points, question_options(id, option_text, is_correct))')
     .eq('id', req.params.assignmentId)
     .eq('course_id', req.params.courseId)
     .single()

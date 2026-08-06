@@ -1,0 +1,57 @@
+.edit-assignment-page {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.edit-assignment-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem 4rem;
+}
+
+.edit-back-link {
+  background: none;
+  border: none;
+  color: rgb(19, 152, 204);
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.edit-back-link:hover {
+  text-decoration: underline;
+}
+
+.edit-assignment-container h1 {
+  margin-bottom: 0.25rem;
+}
+
+.edit-assignment-description {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.edit-assignment-actions {
+  margin-top: 2rem;
+}
+
+.edit-status {
+  margin: 2rem;
+  color: #555;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-family: inherit;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+}
