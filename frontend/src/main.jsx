@@ -18,7 +18,11 @@ import MyCoursespage from './pages/MyCoursespage'
 import SubmitExampage from './pages/SubmitExampage'
 import ExamResultspage from './pages/ExamResultspage'
 import CreateAssignmentPage from './pages/CreateAssignmentPage'
+import EditAssignmentPage from './pages/EditAssignmentPage'
 import EnrollmentPage from './pages/EnrollmentPage'
+import AssignmentPage from './pages/AssignmentPage'
+import AssignmentResultPage from './pages/AssignmentResultPage'
+import AssignmentSubmissionsPage from './pages/AssignmentSubmissionsPage'
 
 
 
@@ -31,9 +35,9 @@ const router = createBrowserRouter([
     { index: true, element: <Frontpage/> },
 
      // Student route
-      { path: "student", element: <ProtectedRoute><Studentspage /></ProtectedRoute> },
+      { path: "student", element: <ProtectedRoute requiredRole="student"><Studentspage /></ProtectedRoute> },
     // Teacher route
-      { path: "teacher", element: <ProtectedRoute><Teacherspage /></ProtectedRoute> },
+      { path: "teacher", element: <ProtectedRoute requiredRole="teacher"><Teacherspage /></ProtectedRoute> },
 
       // Design exam route
       {path: "design-exam", element: <ProtectedRoute><Examdesignpage /></ProtectedRoute>},
@@ -79,7 +83,13 @@ const router = createBrowserRouter([
       { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> },
 
       { path: "/Coursepage/:id/create-assignment", element: <ProtectedRoute><CreateAssignmentPage /></ProtectedRoute> },
-      { path: "/Coursepage/:id/enrollments", element: <EnrollmentPage /> }
+      { path: "/Coursepage/:id/assignments/:assignmentId/edit", element: <ProtectedRoute><EditAssignmentPage /></ProtectedRoute> },
+      { path: "/Coursepage/:id/enrollments", element: <EnrollmentPage /> },
+
+      // Assignment submission routes
+      { path: "/Coursepage/:id/assignments/:assignmentId", element: <ProtectedRoute><AssignmentPage /></ProtectedRoute> },
+      { path: "/Coursepage/:id/assignments/:assignmentId/result", element: <ProtectedRoute><AssignmentResultPage /></ProtectedRoute> },
+      { path: "/Coursepage/:id/assignments/:assignmentId/submissions", element: <ProtectedRoute><AssignmentSubmissionsPage /></ProtectedRoute> }
 
 
     ]

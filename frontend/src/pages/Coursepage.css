@@ -68,3 +68,24 @@ gap: 20px;
 .manage-students-btn:hover {
   background-color: #60a5fa;
 }
+
+.assignment-link {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.assignment-link:hover {
+  text-decoration: underline;
+}
+
+.assignment-edit-link {
+  margin-left: 0.75rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.assignment-edit-link:hover {
+  text-decoration: underline;
+  color: #374151;
+}

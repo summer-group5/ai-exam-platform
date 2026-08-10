@@ -7,133 +7,43 @@ import { getCourse } from '../services/courseService'
 import { getAssignments } from '../services/assignmentService'
 import { supabase } from '../utils/supabase'
 
-
-
 export default function Coursepage() {
-  
-  const { id } = useParams();
+  const { id } = useParams()
+  const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
   const [isOwner, setIsOwner] = useState(false)
 
   useEffect(() => {
-    getAssignments(id)
-      .then(data => setAssignments(data.assignments))
-      .catch(() => setAssignments([]))
-
-    }, [id])
-
-  useEffect(() => {
-    async function checkOwnership() {
-      try {
-        const [courseData, { data: { user } }] = await Promise.all([
-          getCourse(id),
-          supabase.auth.getUser()
-        ])
-        setIsOwner(!!user && courseData.teacher_id === user.id)
-      } catch {
-        setIsOwner(false)
-      }
+    async function loadPage() {
+      const [courseData, assignmentsData, { data: { user } }] = await Promise.all([
+        getCourse(id).catch(() => null),
+        getAssignments(id).catch(() => ({ assignments: [] })),
+        supabase.auth.getUser()
+      ])
+      setCourse(courseData)
+      setAssignments(assignmentsData?.assignments ?? [])
+      setIsOwner(!!user && courseData?.teacher_id === user.id)
     }
-    checkOwnership()
+    loadPage()
   }, [id])
 
-  const courses = [
-    { id: 1, title: 'Java basics',  description: 'Introduction to Java programming.',teacher: 'John Smith' },
-    { id: 2, title: 'Linux basics' ,description: 'Linux commands and basics.',teacher: 'John Smith'},
-    { id: 3, title: 'HTML5 and css',description: 'Introduction to Java programming.',teacher: 'John Smith' },
-    { id: 4, title: 'Advanced mobile development',description: 'Introduction to Java programming.',teacher: 'John Smith' },
-    { id: 5, title: 'Web development project' ,description: 'Introduction to Java programming.',teacher: 'John Smith'},
-    { id: 6, title: 'Svenska för arbetlivet' ,description: 'Introduction to Java programming.',teacher: 'John Smith'}
-  ];
-
-  const course = courses.find(
-    course => course.id === Number(id)
-  );
-
-  // course page links prop for topnav topnav component
- const courseLinks = [
-    { text: "Home", path: "/" },
-    { text: "My courses", path: "/student" },
-    { text: "Help", path: "/help" },
-    { text: "Login", path: "/login" }
-  ];
-
+  const courseLinks = [
+    { text: 'Home', path: '/' },
+    { text: 'My Courses', path: '/student' },
+  ]
 
   return (
-      <div className='coursepage'>
-        <Topnav links={courseLinks}/>
-       
-        <div className='course-container'>
+    <div className='coursepage'>
+      <Topnav links={courseLinks} />
 
-        {/* Top image for header*/ }  
- <div className='image-container'> 
-<img className='course-image' src="../images/course_image.jpg" alt="course image" /> 
-    
-    </div>
-   
-            <h1>{course?.title}</h1>
-            <h3>Course id: {id}</h3>
-            <p>{course?.description}</p>
+      <div className='course-container'>
 
-            <p>Course Teacher: {course?.teacher}</p>
-            
+        <div className='image-container'>
+          <img className='course-image' src="../images/course_image.jpg" alt="course image" />
+        </div>
 
-           <section>
-            <h3>Course materials</h3>
-           <ul>
-          <li><div className="file-item">
-  <span className='course-span'> Week 1 Slides</span>
-  <a href="/files/week1.pdf" target="_blank">
-    Open
-  </a>
-</div>
-</li>
-
-
-
-              {/* Word document embedded to course page*/}
-            
-
-           <li>Installation guide:</li>
- 
-     {/* Youtube video embedded to course page*/}
-    
- 
-    <iframe width="560" height="315" 
-    src="https://www.youtube.com/embed/#placeholder"
-        title="YouTube video player" 
-        frameBorder="0" 
-        allow="accelerometer; autoplay; clipboard-write; 
-               encrypted-media; gyroscope; 
-               picture-in-picture; web-share" 
-        referrerPolicy="strict-origin-when-cross-origin" allowFullScreen>
-    </iframe>
-
-           </ul>
-             <ul>
-          <li>Week 2 Slides</li>
-           
-           <li> <div className="file-item">
-  <span className='course-span'> Basic script</span>
-  <a href="/files/week1.pdf" target="_blank">
-    Open 
-  </a>
-</div>
-</li>
-
- <li> <div className="file-item">
-  <span className='course-span'> Variables</span>
-  <a href="/files/week1.pdf" target="_blank">
-    Open 
-  </a>
-</div>
-</li>
-
-
-           </ul>
-   
-           
-           </section>
+        <h1>{course?.title ?? 'Loading...'}</h1>
+        {course?.description && <p>{course.description}</p>}
 
         <section>
           <div className='assignments-header'>
@@ -150,8 +60,23 @@ export default function Coursepage() {
             <ul>
               {assignments.map(a => (
                 <li key={a.id}>
-                  <span>{a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}</span>
+                  <Link
+                    to={isOwner
+                      ? `/Coursepage/${id}/assignments/${a.id}/submissions`
+                      : `/Coursepage/${id}/assignments/${a.id}`}
+                    className='assignment-link'
+                  >
+                    {a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}
+                  </Link>
                   {a.due_date && <span className='due-date'> (Due: {new Date(a.due_date).toLocaleDateString()})</span>}
+                  {isOwner && (
+                    <Link
+                      to={`/Coursepage/${id}/assignments/${a.id}/edit`}
+                      className='assignment-edit-link'
+                    >
+                      Edit
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -184,10 +109,15 @@ export default function Coursepage() {
 </Link> 
   </div>      
 
-        </section>
-
-
-</div>
+        <div className='exam-container'>
+          <section>
+            <h3 className='exam-title'>Final Exam</h3>
+            <p>Exam uses browser detection and eye tracking. Students must have a web camera on during the exam.</p>
+            <Link to={`/Coursepage/${id}/exam`} className="join-btn">
+              Join
+            </Link>
+          </section>
+        </div>
 
         {isOwner && (
           <div className='teacher-tools'>
@@ -196,13 +126,10 @@ export default function Coursepage() {
             </Link>
           </div>
         )}
-        </div>
 
+      </div>
     </div>
-
-   
-      
-      ) 
+  )
 }
 
 

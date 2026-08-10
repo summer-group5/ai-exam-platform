@@ -1,0 +1,218 @@
+.question-editor {
+  margin-top: 32px;
+}
+
+.question-editor h2 {
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  color: #374151;
+}
+
+/* Question cards */
+.qe-question-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  background: #fafafa;
+}
+
+.qe-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.qe-question-text {
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.qe-delete-btn {
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  padding: 0;
+}
+
+.qe-delete-btn:hover {
+  text-decoration: underline;
+}
+
+/* Options list */
+.qe-options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.qe-option-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  padding: 4px 0;
+}
+
+.qe-option-item.qe-correct {
+  color: #276738;
+}
+
+.qe-correct-badge {
+  font-size: 0.75rem;
+  background: #d4edda;
+  color: #276738;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.qe-delete-option-btn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-left: auto;
+  padding: 0 4px;
+}
+
+.qe-delete-option-btn:hover {
+  color: #dc2626;
+}
+
+/* Add option form */
+.qe-add-option-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  border-top: 1px solid #eee;
+  padding-top: 0.75rem;
+}
+
+.qe-add-option-form input[type='text'] {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 220px;
+  font-family: inherit;
+}
+
+.qe-correct-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.qe-add-option-btn {
+  padding: 6px 14px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.qe-add-option-btn:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.qe-add-option-btn:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* Add question form */
+.qe-add-question-form {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.qe-add-question-form h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.qe-add-question-form textarea {
+  width: 100%;
+  max-width: 600px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.qe-points-row {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.qe-points-row label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.qe-points-row input[type='number'] {
+  width: 70px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.qe-add-question-btn {
+  padding: 8px 20px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.qe-add-question-btn:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.qe-add-question-btn:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.qe-empty {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.qe-error {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}

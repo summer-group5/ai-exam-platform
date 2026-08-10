@@ -1,0 +1,61 @@
+.result-page {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.result-container {
+  max-width: 500px;
+  margin: 4rem auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.result-title {
+  margin-bottom: 2rem;
+}
+
+.score-box {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  background: #f9f9f9;
+}
+
+.score-label {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.score-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.score-percentage {
+  font-size: 1.25rem;
+  color: rgb(19, 152, 204);
+  margin-top: 0.5rem;
+}
+
+.result-date {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.result-back-btn {
+  padding: 10px 28px;
+  background-color: rgb(19, 152, 204);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.result-back-btn:hover {
+  background-color: rgb(15, 120, 165);
+}
