@@ -148,6 +148,7 @@ router.get('/exam-sessions/:sessionId/events', requireAuth, async (req, res) => 
 
 // GET /api/monitoring/courses/:courseId/sessions
  
+
 router.get(
   '/monitoring/courses/:courseId/sessions',
   requireAuth,
@@ -155,31 +156,103 @@ router.get(
   async (req, res) => {
     const { courseId } = req.params;
 
+    const { data: sessions, error } = await supabaseAdmin
+      .from('exam_sessions')
+      .select(`
+        id,
+        exam_id,
+        student_id,
+        attempt_number,
+        status,
+        started_at,
+        exams!inner (
+          id,
+          course_id,
+          title
+        )
+      `)
+      .eq('exams.course_id', courseId)
+      .order('started_at', { ascending: false });
+
+    if (error) {
+      console.error('Failed to get exam sessions:', error);
+
+      return res.status(500).json({
+        error: error.message
+      });
+    }
+
+    // Get unique student IDs
+    const studentIds = [
+      ...new Set(
+        sessions
+          .map(session => session.student_id)
+          .filter(Boolean)
+      )
+    ];
+
+    let students = [];
+
+    if (studentIds.length > 0) {
+      const { data: studentData, error: studentError } =
+        await supabaseAdmin
+          .from('users')
+          .select('id, name, email')
+          .in('id', studentIds);
+
+      if (studentError) {
+        console.error('Failed to get students:', studentError);
+
+        return res.status(500).json({
+          error: studentError.message
+        });
+      }
+
+      students = studentData ?? [];
+    }
+
+    // Add student information to each session
+    const sessionsWithStudents = sessions.map(session => ({
+      ...session,
+      student: students.find(
+        student => student.id === session.student_id
+      ) ?? null
+    }));
+
+    return res.json(sessionsWithStudents);
+  }
+);
+
+
+
+/*router.get(
+  '/monitoring/courses/:courseId/sessions',
+  requireAuth,
+  requireCourseOwner,
+  async (req, res) => {
+    const { courseId } = req.params;
+
     const { data, error } = await supabaseAdmin
-  .from('exam_sessions')
-  .select(`
-    id,
+      .from('exam_sessions')
+      .select(`
+        id,
     exam_id,
     student_id,
     attempt_number,
     status,
     started_at,
-    ended_at,
-    users:student_id (
-      id,
-      name,
-      email
-    ),
     exams!inner (
       id,
       course_id,
       title
-    )
-  `)
-  .eq('exams.course_id', courseId)
-  .order('started_at', { ascending: false });
+        )
+      `)
+      .eq('exams.course_id', courseId)
+      .order('started_at', { ascending: false });
 
     if (error) {
+      console.error('Failed to get exam sessions:', error);
+
       return res.status(500).json({
         error: error.message
       });
@@ -188,6 +261,10 @@ router.get(
     return res.json(data);
   }
 );
+*/
+
+
+
 
 // GET /api/monitoring/courses/:courseId/events
 
@@ -199,35 +276,30 @@ router.get(
     const { courseId } = req.params;
 
     const { data, error } = await supabaseAdmin
-  .from('monitoring_events')
-  .select(`
-    id,
-    session_id,
-    type,
-    duration_ms,
-    details,
-    created_at,
-    exam_sessions!inner (
-      id,
-      student_id,
-      exam_id,
-
-      users:student_id (
+      .from('monitoring_events')
+      .select(`
         id,
-        name,
-        email
-      ),
-
-      exams!inner (
-        id,
-        course_id
-      )
-    )
-  `)
-  .eq('exam_sessions.exams.course_id', courseId)
-  .order('created_at', { ascending: false });
+        session_id,
+        type,
+        duration_ms,
+        details,
+        created_at,
+        exam_sessions!inner (
+          id,
+          student_id,
+          exam_id,
+          exams!inner (
+            id,
+            course_id
+          )
+        )
+      `)
+      .eq('exam_sessions.exams.course_id', courseId)
+      .order('created_at', { ascending: false });
 
     if (error) {
+      console.error('Failed to get monitoring events:', error);
+
       return res.status(500).json({
         error: error.message
       });
