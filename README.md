@@ -5,7 +5,7 @@ Web-based platform for weekly programming assignments and supervised online exam
 with AI-assisted monitoring during exams.
 
 ## Status
-Phase 1 - research and setup.
+Phase 2 - active development.
 
 ## Documentation
 - [Git practices](GIT_PRACTICES.md)
@@ -17,6 +17,33 @@ Phase 1 - research and setup.
 
 **Requirements:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
+> **Note:** Docker is set up but not currently used for local development. Use the manual setup below.
+
+### Supabase setup
+
+Create `frontend/.env` and add your Supabase project credentials:
+
+```
+VITE_SUPABASE_URL=<your-project-url>
+VITE_SUPABASE_PUBLISHABLE_KEY=<your-anon-key>
+```
+
+Both values are found in your Supabase project under **Settings → API**.
+
+### Run the frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` in your browser.
+
+### Docker
+
+Docker is set up but not currently used for local development. The following commands are for future use:
+
 1. Copy `.env.example` to `.env`:
    ```bash
    cp .env.example .env
@@ -25,13 +52,12 @@ Phase 1 - research and setup.
    ```bash
    docker compose up --build
    ```
-3. Open `http://localhost:3000` in your browser
 
 | Service  | URL                          |
 |----------|------------------------------|
 | Frontend | http://localhost:3000        |
 | Backend  | http://localhost:4000        |
-| Database | localhost:5432               |
+| Database | Supabase (cloud)             |
 
 **Stop:** `docker compose down`
 **Next time:** `docker compose up` (no `--build` needed unless Dockerfiles or dependencies changed)
@@ -64,7 +90,7 @@ Phase 1 - research and setup.
 ![Exam view](docs/wireframes/exam.png)
 
 
-## dependencies for development 
+## Dependencies for development 
 
 ### Front end 
 

@@ -26,3 +26,20 @@ text-decoration: none;
 
   transform: translateY(-2px);
 }
+
+.nav-logout {
+  color: white;
+  background-color: #ef4444;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: inherit;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-logout:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+}

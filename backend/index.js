@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const assignmentRouter = require('./src/assignmentRouter')
 
 const port = Number(process.env.PORT || 4000);
 const pool = new Pool({
@@ -36,9 +38,25 @@ async function initDb() {
   console.log('Database ready.');
 }
 
+const enrollmentRouter = require('./src/enrollmentRouter')
+const submissionRouter = require('./src/submissionRouter')
+const questionRouter = require('./src/questionRouter')
+const courseRouter = require('./src/courseRouter')
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Course-level routes (must be before /:courseId routes)
+app.use('/api/courses', courseRouter)
+
+// Assignment CRUD
+app.use('/api/courses/:courseId/assignments', assignmentRouter)
+// Assignment submissions
+app.use('/api/courses/:courseId/assignments/:assignmentId', submissionRouter)
+// Assignment questions
+app.use('/api/courses/:courseId/assignments/:assignmentId', questionRouter)
+app.use('/api/courses/:courseId/enrollments', enrollmentRouter)
 
 app.get('/api/health', async (req, res) => {
   try {
@@ -77,6 +95,50 @@ app.get('/api/messages', async (req, res) => {
     res.json({ messages: result.rows });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+
+// added gemma4 api calls
+app.post('/api/ai/generate-exam', async (req, res) => {
+  const { topic } = req.body;
+
+  if (!topic) {
+    return res.status(400).json({ error: 'Topic is required' });
+  }
+
+  try {
+    const response = await fetch('http://localhost:11434/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gemma4',
+        prompt: `
+You are an exam generator.
+
+Create 5 multiple-choice questions about: ${topic}
+
+Return ONLY valid JSON in this format:
+[
+  {
+    "title": "",
+    "options": ["A", "B", "C", "D"],
+    "correctAnswer": "A"
+  }
+]
+        `,
+        stream: false
+      })
+    });
+
+    const data = await response.json();
+
+    res.json({
+      raw: data.response
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
