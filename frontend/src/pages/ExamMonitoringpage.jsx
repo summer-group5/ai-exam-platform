@@ -49,9 +49,19 @@ export default function ExamMonitoringpage() {
         ? sessionEvents[0]
         : null;
 
+const tabChanges = sessionEvents.filter(
+  event => event.type === 'TAB_CHANGE'
+).length;
+
+const fullscreenExits = sessionEvents.filter(
+  event => event.type === 'FULLSCREEN_EXIT'
+).length;
+
     return {
       ...session,
-      latestEvent
+      latestEvent,
+       tabChanges,
+  fullscreenExits
     };
   });
 
@@ -83,7 +93,13 @@ export default function ExamMonitoringpage() {
                 ? new Date(session.started_at).toLocaleString()
                 : 'Unknown'}
             </p>
+            <p>
+               Tab changes: {session.tabChanges}
+            </p>
 
+            <p>
+               Fullscreen exits: {session.fullscreenExits}
+            </p>
             {session.latestEvent ? (
               <div>
 
