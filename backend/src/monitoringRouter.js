@@ -18,7 +18,38 @@ async function requireAuth(req, res, next) {
   next()
 }
 
+// require course owner
+async function requireCourseOwner(req, res, next) {
+  const { courseId } = req.params;
 
+  if (!courseId) {
+    return res.status(400).json({
+      error: 'courseId is required'
+    });
+  }
+
+  const { data: course, error } = await supabaseAdmin
+    .from('courses')
+    .select('id, teacher_id')
+    .eq('id', courseId)
+    .single();
+
+  if (error || !course) {
+    return res.status(404).json({
+      error: 'Course not found'
+    });
+  }
+
+  if (course.teacher_id !== req.user.id) {
+    return res.status(403).json({
+      error: 'You are not the owner of this course'
+    });
+  }
+
+  req.course = course;
+
+  next();
+}
 // POST /api/courses/:courseId/exam-sessions
 router.post('/exam-sessions', requireAuth, async (req, res) => {
   const { exam_id } = req.body;
@@ -112,6 +143,99 @@ router.get('/exam-sessions/:sessionId/events', requireAuth, async (req, res) => 
 
  return   res.json(data)
 })
+
+
+
+// GET /api/monitoring/courses/:courseId/sessions
+ 
+router.get(
+  '/monitoring/courses/:courseId/sessions',
+  requireAuth,
+  requireCourseOwner,
+  async (req, res) => {
+    const { courseId } = req.params;
+
+    const { data, error } = await supabaseAdmin
+  .from('exam_sessions')
+  .select(`
+    id,
+    exam_id,
+    student_id,
+    attempt_number,
+    status,
+    started_at,
+    ended_at,
+    users:student_id (
+      id,
+      name,
+      email
+    ),
+    exams!inner (
+      id,
+      course_id,
+      title
+    )
+  `)
+  .eq('exams.course_id', courseId)
+  .order('started_at', { ascending: false });
+
+    if (error) {
+      return res.status(500).json({
+        error: error.message
+      });
+    }
+
+    return res.json(data);
+  }
+);
+
+// GET /api/monitoring/courses/:courseId/events
+
+router.get(
+  '/monitoring/courses/:courseId/events',
+  requireAuth,
+  requireCourseOwner,
+  async (req, res) => {
+    const { courseId } = req.params;
+
+    const { data, error } = await supabaseAdmin
+  .from('monitoring_events')
+  .select(`
+    id,
+    session_id,
+    type,
+    duration_ms,
+    details,
+    created_at,
+    exam_sessions!inner (
+      id,
+      student_id,
+      exam_id,
+
+      users:student_id (
+        id,
+        name,
+        email
+      ),
+
+      exams!inner (
+        id,
+        course_id
+      )
+    )
+  `)
+  .eq('exam_sessions.exams.course_id', courseId)
+  .order('created_at', { ascending: false });
+
+    if (error) {
+      return res.status(500).json({
+        error: error.message
+      });
+    }
+
+    return res.json(data);
+  }
+);
 
 
 
