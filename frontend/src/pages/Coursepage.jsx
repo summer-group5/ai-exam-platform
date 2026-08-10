@@ -33,6 +33,7 @@ export default function Coursepage() {
   ]
 
   return (
+    
     <div className='coursepage'>
       <Topnav links={courseLinks} />
 
@@ -87,7 +88,7 @@ export default function Coursepage() {
         <section>
           <h3 className='exam-title'> Final Exam</h3>
           <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
-    
+      
      <div className='exam-buttons'>    
        <Link
   to={`/Coursepage/${id}/exam`}
@@ -108,16 +109,7 @@ export default function Coursepage() {
    Final Exam 
 </Link> 
   </div>      
-
-        <div className='exam-container'>
-          <section>
-            <h3 className='exam-title'>Final Exam</h3>
-            <p>Exam uses browser detection and eye tracking. Students must have a web camera on during the exam.</p>
-            <Link to={`/Coursepage/${id}/exam`} className="join-btn">
-              Join
-            </Link>
-          </section>
-        </div>
+ </section>      
 
         {isOwner && (
           <div className='teacher-tools'>
@@ -129,6 +121,8 @@ export default function Coursepage() {
 
       </div>
     </div>
+ </div>
+
   )
 }
 
