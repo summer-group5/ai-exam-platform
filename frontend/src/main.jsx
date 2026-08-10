@@ -51,18 +51,7 @@ const router = createBrowserRouter([
 
       // Login route
       {path: "login", element: <Loginpage />},
-      { path: "student", element: <Studentspage /> },
-    // Teacher route
-      { path: "teacher", element: <Teacherspage /> },
-
-      // Design exam route
-     
-
-     // Design quiz route
-      
-
-      // Create course route
-     
+    
 
       // My courses route
       {path: "my-courses", element: <MyCoursespage />},
@@ -75,9 +64,6 @@ const router = createBrowserRouter([
       //  Route for exam page 
       
  
-      //  Route for submit exam page 
-      
-
       //  Route for exam results 
       { path:"/Coursepage/:id/exam/results", element: <ExamResultspage /> },
 
