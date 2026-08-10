@@ -44,7 +44,7 @@ const isDemo = location.state?.demo ?? false;
   const [sessionId, setSessionId] = useState(null);
  
   // introduction before exam demo
-  const [showIntro, setShowIntro] = useState(isDemo);
+  const [showIntro, setShowIntro] = useState(true);
 
   
   const questions = [
