@@ -116,6 +116,13 @@ export default function Coursepage() {
             <Link to={`/Coursepage/${id}/enrollments`} className='manage-students-btn'>
               Manage Students
             </Link>
+          <Link
+      to={`/Coursepage/${id}/exam-monitoring`}
+      className="manage-students-btn"
+    >
+      Exam Monitoring
+    </Link>
+         
           </div>
         )}
 
