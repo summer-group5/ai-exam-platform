@@ -108,11 +108,16 @@ export default function Coursepage() {
    Final Exam 
 </Link> 
   </div>      
-        </section>
 
-
-</div>
-
+        <div className='exam-container'>
+          <section>
+            <h3 className='exam-title'>Final Exam</h3>
+            <p>Exam uses browser detection and eye tracking. Students must have a web camera on during the exam.</p>
+            <Link to={`/Coursepage/${id}/exam`} className="join-btn">
+              Join
+            </Link>
+          </section>
+        </div>
 
         {isOwner && (
           <div className='teacher-tools'>

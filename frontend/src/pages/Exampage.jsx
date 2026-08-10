@@ -44,93 +44,65 @@ const isDemo = location.state?.demo ?? false;
   const [sessionId, setSessionId] = useState(null);
  
   // introduction before exam demo
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(isDemo);
 
-console.log("location.state =", location.state);
-console.log("isDemo =", isDemo);
-console.log("showIntro =", showIntro);
+  
+  const questions = [
+  {
+    title: 'What does the acronym HTTP stand for?',
+    options: [
+      'HyperText Transfer Protocol',
+      'High Transfer Text Process',
+      'Hyper Transfer Tool Protocol',
+      'Host Transfer Text Protocol'
+    ],
+    correctAnswer: 'HyperText Transfer Protocol'
+  },
 
-const [questions, setQuestions] = useState([]);
+  {
+    title: 'Which HTML tag creates a hyperlink?',
+    options: [
+      '<a>',
+      '<link>',
+      '<href>',
+      '<url>'
+    ],
+    correctAnswer: '<a>'
+  },
 
-useEffect(() => {
-  if (showIntro) return;
+  {
+    title: 'Which CSS property changes text color?',
+    options: [
+      'color',
+      'font-color',
+      'text-style',
+      'background'
+    ],
+    correctAnswer: 'color'
+  },
 
-  if (isDemo) {
-    setQuestions(
-      demoQuestions.map(q => ({
-        title: q.question,
-        options: q.options,
-        correctAnswer: q.correctAnswer
-      }))
-    );
+  {
+    title: 'What is React mainly used for?',
+    options: [
+      'Building user interfaces',
+      'Database management',
+      'Server hosting',
+      'Operating systems'
+    ],
+    correctAnswer: 'Building user interfaces'
+  },
 
-    setExam({
-      title: "Demo Exam"
-    });
-
-    return;
+  {
+    title: 'Which JavaScript method prints to the browser console?',
+    options: [
+      'console.log()',
+      'print()',
+      'write()',
+      'display()'
+    ],
+    correctAnswer: 'console.log()'
   }
-
-  async function loadQuestions() {
-    try {
-      const loadedExam = await getExam(id);
-
-      setExam(loadedExam);
-
-      const data = await getExamQuestions(loadedExam.id);
-
-      const formatted = data.map(q => ({
-        title: q.question_text,
-        options: q.question_options.map(o => o.option_text),
-        correctAnswer:
-          q.question_options.find(o => o.is_correct)?.option_text
-      }));
-
-      setQuestions(formatted);
-
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  loadQuestions();
-
-}, [id, showIntro, isDemo]);
-
-
-console.log("Course ID:", id);
-console.log("Exam:", exam);
-
-
-// session use effect
-useEffect(() => {
-  if (showIntro) return;
-
-  if (isDemo) return;
-
-  async function startSession() {
-    try {
-      const loadedExam = await getExam(id);
-
-      setExam(loadedExam);
-
-      const session = await createExamSession(loadedExam.id);
-
-      setSessionId(session.id);
-
-      await logMonitoringEvent(session.id, {
-        type: "EXAM_STARTED",
-        details: "Student started the exam"
-      });
-
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  startSession();
-
-}, [id, showIntro, isDemo]);
+];
 
 // navigating to submit page
 
@@ -253,6 +225,9 @@ useEffect(() => {
     if (isDemo) {
       toast("Demo: Browser tab change detected.");
     } else {
+
+      
+
       toast("Warning: Browser tab changed.");
     }
   };
@@ -322,6 +297,7 @@ const requestCamera = async() => {
       setCameraError('Camera acces is required to start the exam')
       
       return false;
+      return false;
   }
 
 }; 
@@ -367,6 +343,11 @@ if (showIntro) {
   onChange={(e) => setAccepted(e.target.checked)}
 />
 I understand the exam rules
+{cameraError && (
+  <p className="camera-error">
+    {cameraError}
+  </p>
+)}
 {cameraError && (
   <p className="camera-error">
     {cameraError}
