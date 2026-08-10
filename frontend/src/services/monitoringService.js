@@ -13,27 +13,45 @@ async function getAuthToken() {
   return session.access_token
 }
 
+// exam sessions to backend
+export async function getExamSessions(courseId) {
+  const token = await getAuthToken();
 
-export async function getExamSessions() {
-  const { data, error } = await supabase
-    .from("exam_sessions")
-    .select("*")
-    .order("started_at", { ascending: false });
+  const res = await fetch(
+    `${BACKEND}/api/monitoring/courses/${courseId}/sessions`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
 
-  if (error) throw error;
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
+  }
 
-  return data;
+  return res.json();
 }
-// get monitoring events 
-export async function getAllMonitoringEvents() {
-  const { data, error } = await supabase
-    .from("monitoring_events")
-    .select("*")
-    .order("created_at", { ascending: false });
+// get monitoring events to backend
+export async function getAllMonitoringEvents(courseId) {
+  const token = await getAuthToken();
 
-  if (error) throw error;
+  const res = await fetch(
+    `${BACKEND}/api/monitoring/courses/${courseId}/events`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
 
-  return data;
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
+  }
+
+  return res.json();
 }
 
 
