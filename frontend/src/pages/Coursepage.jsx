@@ -115,6 +115,7 @@ export default function Coursepage() {
       )}
 
     </div>
+  </div>
   )
 }
 

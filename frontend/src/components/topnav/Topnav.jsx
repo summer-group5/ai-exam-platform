@@ -30,16 +30,15 @@ export default function Topnav({ links }) {
 
   return (
     <nav className='topnav'>
+      <Link to='/' className='nav-brand'>ExamPlatform</Link>
+      <div className='nav-links'>
         {navLinks.map(link => (
-          <Link
-          key={link.path}
-          to={link.path}
-          className='nav-link'
-          >
-          {link.text}
+          <Link key={link.path} to={link.path} className='nav-link'>
+            {link.text}
           </Link>
         ))}
-        {session && <button onClick={handleLogout} className='nav-logout'>Logout</button>}
+      </div>
+      {session && <button onClick={handleLogout} className='nav-logout'>Logout</button>}
     </nav>
   )
 }
