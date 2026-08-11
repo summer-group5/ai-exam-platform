@@ -83,67 +83,119 @@ router.post('/exam-sessions', requireAuth, async (req, res) => {
 
 
 //POST /api/exam-sessions/:sessionId/events
-router.post('/exam-sessions/:sessionId/events', requireAuth, async (req, res) => {
-  const { sessionId } = req.params
-  
-  const {
-    type,
-    duration_ms = 0,
-    details
-  } = req.body
-  if (!type) {
-    return res.status(400).json({
-      error: 'type is required'
-    });
-  }
-  
-  const { data: session, error: sessionError } = await supabaseAdmin
-  .from('exam_sessions')
-  .select('id')
-  .eq('id', sessionId)
-  .single();
+router.post(
+  '/exam-sessions/:sessionId/events',
+  requireAuth,
+  async (req, res) => {
 
-if (sessionError || !session) {
-  return res.status(404).json({
-    error: 'Exam session not found'
-  });
-}
-  
-  const { data, error } = await supabaseAdmin
-    .from('monitoring_events')
-    .insert({
-      session_id: sessionId,
+    const { sessionId } = req.params;
+
+    const {
       type,
-      duration_ms,
+      duration_ms = 0,
       details
-    })
-    .select()
-    .single()
+    } = req.body;
 
-  if (error)
-    return res.status(500).json({ error: error.message })
+    if (!type) {
+      return res.status(400).json({
+        error: 'type is required'
+      });
+    }
 
- return res.status(201).json(data)
-})
+    // Find session
+    const { data: session, error: sessionError } =
+      await supabaseAdmin
+        .from('exam_sessions')
+        .select('id, student_id')
+        .eq('id', sessionId)
+        .single();
+
+    if (sessionError || !session) {
+      return res.status(404).json({
+        error: 'Exam session not found'
+      });
+    }
+
+    // Make sure this session belongs to the logged-in student
+    if (session.student_id !== req.user.id) {
+      return res.status(403).json({
+        error: 'You do not own this exam session'
+      });
+    }
+
+    // Insert monitoring event
+    const { data, error } = await supabaseAdmin
+      .from('monitoring_events')
+      .insert({
+        session_id: sessionId,
+        type,
+        duration_ms,
+        details
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Failed to insert monitoring event:', error);
+
+      return res.status(500).json({
+        error: error.message
+      });
+    }
+
+    return res.status(201).json(data);
+  }
+);
+
 
 
 //GET /api/exam-sessions/:sessionId/events
 
-router.get('/exam-sessions/:sessionId/events', requireAuth, async (req, res) => {
-  const { sessionId } = req.params
+router.get(
+  '/exam-sessions/:sessionId/events',
+  requireAuth,
+  async (req, res) => {
 
-  const { data, error } = await supabaseAdmin
-    .from('monitoring_events')
-    .select('*')
-    .eq('session_id', sessionId)
-    .order('created_at', { ascending: true });
+    const { sessionId } = req.params;
 
-  if (error)
-    return res.status(500).json({ error: error.message })
+    const { data: session, error: sessionError } =
+      await supabaseAdmin
+        .from('exam_sessions')
+        .select('id, student_id')
+        .eq('id', sessionId)
+        .single();
 
- return   res.json(data)
-})
+    if (sessionError || !session) {
+      return res.status(404).json({
+        error: 'Exam session not found'
+      });
+    }
 
+    if (session.student_id !== req.user.id) {
+      return res.status(403).json({
+        error: 'You do not have access to this session'
+      });
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('monitoring_events')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('created_at', {
+        ascending: true
+      });
+
+    if (error) {
+      console.error('Failed to get monitoring events:', error);
+
+      return res.status(500).json({
+        error: error.message
+      });
+    }
+
+    return res.json(data);
+  }
+);
 
 
 // GET /api/monitoring/courses/:courseId/sessions

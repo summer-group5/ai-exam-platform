@@ -104,6 +104,7 @@ export async function getSessionMonitoringEvents(sessionId) {
 // sessions
 export async function createExamSession(examId) {
   
+   
    const token = await getAuthToken();
 
   const res = await fetch(
