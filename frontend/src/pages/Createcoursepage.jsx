@@ -31,7 +31,7 @@ export default function Createcoursepage() {
 
   return (
     <>
-      <Topnav />
+      <Topnav links={[{ text: 'Dashboard', path: '/teacher' }, { text: 'My Courses', path: '/my-courses' }]} />
 
       <div className='createcourse-page'>
 
@@ -61,82 +61,11 @@ export default function Createcoursepage() {
 
           {error && <p className="form-error">{error}</p>}
 
-          <div className="selection-row">
-
-            {/* QUIZ SECTION */}
-
-            <div className="selection-box">
-
-              <label>Select quiz to add for this course:</label>
-
-              <div className="selection-controls">
-
-                <select name="quiz" id="quiz-select">
-                  <option value="Quiz1">Quiz1</option>
-                  <option value="Quiz2">Quiz2</option>
-                  <option value="Quiz3">Quiz3</option>
-                </select>
-
-                <button type="button">
-                  Add Quiz
-                </button>
-
-              </div>
-
-              <div className="added-box">
-
-                <h3>Added Quizzes</h3>
-
-                <div className="item-row">
-                  <span>Quiz 1 Web Development</span>
-                  <button type="button">🗑</button>
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* EXAM SECTION */}
-
-            <div className="selection-box">
-
-              <label>Select exam to add for this course:</label>
-
-              <div className="selection-controls">
-
-                <select>
-                  <option>Select</option>
-                </select>
-
-                <button type="button">
-                  Add Exam
-                </button>
-
-              </div>
-
-              <div className="added-box">
-
-                <h3>Added Exams</h3>
-
-                <div className="item-row">
-                  <span>Exam 1 Web Development</span>
-                  <button type="button">🗑</button>
-                </div>
-
-              </div>
-
-              <div className='save-exam'>
-
-                <button type="button" onClick={() => navigate('/my-courses')}>Cancel</button>
-
-                <button type="submit" disabled={loading}>
-                  {loading ? 'Saving...' : 'Save Course'}
-                </button>
-
-              </div>
-
-            </div>
-
+          <div className='save-exam'>
+            <button type="button" onClick={() => navigate('/my-courses')}>Cancel</button>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Saving...' : 'Save Course'}
+            </button>
           </div>
 
         </form>
