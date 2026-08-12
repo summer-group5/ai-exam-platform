@@ -83,52 +83,39 @@ export default function Coursepage() {
           )}
         </section>
         
-       <div className='exam-container'>
+      <div className='exam-container'>
         <section>
-          <h3 className='exam-title'> Final Exam</h3>
-          <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
-    
-     <div className='exam-buttons'>    
-       <Link
-  to={`/Coursepage/${id}/exam`}
-  state={{
-    demo: true
-  }}
-  className="demo-btn"
->
-  Try Exam Demo
-</Link>
-             <Link
-  to={`/Coursepage/${id}/exam`}
-  state={{
-    demo: false
-  }}
-  className="exam-btn"
->
-   Final Exam 
-</Link> 
-  </div>      
-
-        <div className='exam-container'>
-          <section>
-            <h3 className='exam-title'>Final Exam</h3>
-            <p>Exam uses browser detection and eye tracking. Students must have a web camera on during the exam.</p>
-            <Link to={`/Coursepage/${id}/exam`} className="join-btn">
-              Join
+          <h3 className='exam-title'>Final Exam</h3>
+          <p>Exam uses browser detection and eye tracking. Students must have a web camera on during the exam.</p>
+          <div className='exam-buttons'>
+            <Link
+              to={`/Coursepage/${id}/exam`}
+              state={{ demo: true }}
+              className="demo-btn"
+            >
+              Try Exam Demo
             </Link>
-          </section>
-        </div>
-
-        {isOwner && (
-          <div className='teacher-tools'>
-            <Link to={`/Coursepage/${id}/enrollments`} className='manage-students-btn'>
-              Manage Students
+            <Link
+              to={`/Coursepage/${id}/exam`}
+              state={{ demo: false }}
+              className="exam-btn"
+            >
+              Final Exam
             </Link>
           </div>
-        )}
-
+        </section>
       </div>
+
+      {isOwner && (
+        <div className='teacher-tools'>
+          <Link to={`/Coursepage/${id}/enrollments`} className='manage-students-btn'>
+            Manage Students
+          </Link>
+        </div>
+      )}
+
     </div>
+  </div>
   )
 }
 
