@@ -1,73 +1,89 @@
 .submissions-page {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background: var(--color-canvas);
 }
 
 .submissions-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-.submissions-summary {
-  color: #555;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-}
-
-.submissions-status {
-  margin: 2rem;
-  color: #555;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6);
 }
 
 .back-link {
+  display: inline-flex;
+  align-items: center;
   background: none;
   border: none;
-  color: rgb(19, 152, 204);
+  color: var(--color-primary);
   cursor: pointer;
-  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
   padding: 0;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-5);
 }
 
 .back-link:hover {
-  text-decoration: underline;
+  color: var(--color-primary-hover);
+}
+
+.submissions-container h1 {
+  margin-bottom: var(--space-2);
+}
+
+.submissions-summary {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+.submissions-status {
+  color: var(--color-text-muted);
+  padding: var(--space-6) 0;
 }
 
 .submissions-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
 }
 
 .submissions-table th {
   text-align: left;
-  padding: 10px 12px;
-  background-color: #f0f0f0;
-  border-bottom: 2px solid #ddd;
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-panel);
 }
 
 .submissions-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #eee;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
 }
 
 .row-pending td {
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .status-badge {
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 999px;
 }
 
 .badge-submitted {
-  background-color: #d4edda;
-  color: #276738;
+  background: var(--color-success-tint);
+  color: var(--color-success);
 }
 
 .badge-pending {
-  background-color: #f8d7da;
-  color: #842029;
+  background: var(--color-warning-tint);
+  color: var(--color-warning);
 }
