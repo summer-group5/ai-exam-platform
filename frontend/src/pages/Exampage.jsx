@@ -17,15 +17,25 @@ export default function Exampage() {
 const [exam, setExam] = useState(null);
  
 const [sessionId, setSessionId] = useState(null); // session id 
-  const location = useLocation();
-const [currentQuestion, setCurrentQuestion] = useState(
-  location.state?.currentQuestion ?? 0
-);
+  
+const location = useLocation();
+const navigate = useNavigate();// navigation to submit page  
+const { id } = useParams();
 
 
+useEffect(() => {
+  console.log('=== EXAM PAGE LOADED ===')
+  console.log('Location state:', location.state)
+  console.log('Exam from state:', location.state?.exam)
+  console.log('Exam ID from state:', location.state?.exam?.id)
+
+  if (location.state?.exam) {
+    setExam(location.state.exam)
+  }
+}, [location.state])
 
 
-
+const [currentQuestion, setCurrentQuestion] = useState(location.state?.currentQuestion ?? 0);
 
 // tab change costants
 const [tabWarnings, setTabWarnings] = useState(0);
@@ -43,9 +53,9 @@ const [fullscreenViolations, setFullscreenViolations] = useState(0);
 const isDemo = location.state?.demo ?? false;
  const timeLimit = location.state?.timeLimit || (isDemo ? 5 : 60);
 
-  const navigate = useNavigate();// navigation to submit page
+
   const isAnswered = (index) => answers[index] !== undefined;
-  const { id } = useParams();
+
 
   // introduction before exam demo
   const [showIntro, setShowIntro] = useState(true);
