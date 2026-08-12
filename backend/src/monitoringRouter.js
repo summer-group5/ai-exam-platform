@@ -51,36 +51,6 @@ async function requireCourseOwner(req, res, next) {
   next();
 }
 
-/*// POST /api/courses/:courseId/exam-sessions
-router.post('/exam-sessions', requireAuth, async (req, res) => {
-  const { exam_id } = req.body;
-
-  if (!exam_id) {
-    return res.status(400).json({
-      error: 'exam_id is required'
-    });
-  }
-
-  const { data, error } = await supabaseAdmin
-    .from('exam_sessions')
-    .insert({
-      exam_id,
-      student_id: req.user.id,
-      attempt_number: 1,
-      status: 'active',
-      started_at: new Date()
-    })
-    .select()
-    .single();
-
-  if (error) {
-    return res.status(500).json({ error: error.message });
-  }
-
-  return res.status(201).json(data);
-});
-
-*/
 router.post('/exam-sessions', requireAuth, async (req, res) => {
   try {
     const { exam_id } = req.body;
@@ -215,56 +185,104 @@ router.post(
 
 
 
-//GET /api/exam-sessions/:sessionId/events
 
-/*router.get(
+// '/exam-sessions/:sessionId/events'
+
+router.post(
   '/exam-sessions/:sessionId/events',
   requireAuth,
   async (req, res) => {
+    try {
+      const { sessionId } = req.params;
 
-    const { sessionId } = req.params;
+      const {
+        type,
+        duration_ms = 0,
+        details
+      } = req.body;
 
-    const { data: session, error: sessionError } =
-      await supabaseAdmin
-        .from('exam_sessions')
-        .select('id, student_id')
-        .eq('id', sessionId)
-        .single();
+      console.log('==============================');
+      console.log('MONITORING EVENT REQUEST');
+      console.log('Session ID:', sessionId);
+      console.log('User ID:', req.user.id);
+      console.log('Type:', type);
+      console.log('Duration:', duration_ms);
+      console.log('Details:', details);
+      console.log('==============================');
 
-    if (sessionError || !session) {
-      return res.status(404).json({
-        error: 'Exam session not found'
-      });
-    }
+      if (!type) {
+        return res.status(400).json({
+          error: 'type is required'
+        });
+      }
 
-    if (session.student_id !== req.user.id) {
-      return res.status(403).json({
-        error: 'You do not have access to this session'
-      });
-    }
+      // Find exam session
+      const { data: session, error: sessionError } =
+        await supabaseAdmin
+          .from('exam_sessions')
+          .select('id, student_id')
+          .eq('id', sessionId)
+          .single();
 
-    const { data, error } = await supabaseAdmin
-      .from('monitoring_events')
-      .select('*')
-      .eq('session_id', sessionId)
-      .order('created_at', {
-        ascending: true
-      });
+      console.log('Session lookup:', session);
+      console.log('Session lookup error:', sessionError);
 
-    if (error) {
-      console.error('Failed to get monitoring events:', error);
+      if (sessionError || !session) {
+        return res.status(404).json({
+          error: 'Exam session not found'
+        });
+      }
+
+      // Student can only write events to their own session
+      if (session.student_id !== req.user.id) {
+        return res.status(403).json({
+          error: 'You do not own this exam session'
+        });
+      }
+
+      // Insert monitoring event
+      const { data, error } =
+        await supabaseAdmin
+          .from('monitoring_events')
+          .insert({
+            session_id: sessionId,
+            type,
+            duration_ms,
+            details
+          })
+          .select()
+          .single();
+
+      console.log('Inserted monitoring event:', data);
+      console.log('Insert error:', error);
+
+      if (error) {
+        console.error(
+          'Failed to insert monitoring event:',
+          error
+        );
+
+        return res.status(500).json({
+          error: error.message
+        });
+      }
+
+      console.log('MONITORING EVENT SAVED SUCCESSFULLY');
+
+      return res.status(201).json(data);
+
+    } catch (error) {
+      console.error('Monitoring event route error:', error);
 
       return res.status(500).json({
         error: error.message
       });
     }
-
-    return res.json(data);
   }
 );
-*/
 
-router.post(
+
+/*router.post(
   '/exam-sessions/:sessionId/events',
   requireAuth,
   async (req, res) => {
@@ -351,88 +369,11 @@ router.post(
     }
   }
 );
+*/
+
 
 //GET /api/monitoring/courses/:courseId/events
 
-
-// GET /api/monitoring/courses/:courseId/sessions
- 
-
-/*router.get(
-  '/monitoring/courses/:courseId/sessions',
-  requireAuth,
-  requireCourseOwner,
-  async (req, res) => {
-    const { courseId } = req.params;
-
-    const { data: sessions, error } = await supabaseAdmin
-      .from('exam_sessions')
-      .select(`
-        id,
-        exam_id,
-        student_id,
-        attempt_number,
-        status,
-        started_at,
-        exams!inner (
-          id,
-          course_id,
-          title
-        )
-      `)
-      .eq('exams.course_id', courseId)
-      .order('started_at', { ascending: false });
-
-    if (error) {
-      console.error('Failed to get exam sessions:', error);
-
-      return res.status(500).json({
-        error: error.message
-      });
-    }
-
-    // Get unique student IDs
-    const studentIds = [
-      ...new Set(
-        sessions
-          .map(session => session.student_id)
-          .filter(Boolean)
-      )
-    ];
-
-    let students = [];
-
-    if (studentIds.length > 0) {
-      const { data: studentData, error: studentError } =
-        await supabaseAdmin
-          .from('users')
-          .select('id, name, email')
-          .in('id', studentIds);
-
-      if (studentError) {
-        console.error('Failed to get students:', studentError);
-
-        return res.status(500).json({
-          error: studentError.message
-        });
-      }
-
-      students = studentData ?? [];
-    }
-
-    // Add student information to each session
-    const sessionsWithStudents = sessions.map(session => ({
-      ...session,
-      student: students.find(
-        student => student.id === session.student_id
-      ) ?? null
-    }));
-
-    return res.json(sessionsWithStudents);
-  }
-);
-
-*/
 
 router.get(
   '/monitoring/courses/:courseId/sessions',
