@@ -6,23 +6,38 @@ import Topnav from '../components/topnav/Topnav';
 import { getCourse } from '../services/courseService'
 import { getAssignments } from '../services/assignmentService'
 import { supabase } from '../utils/supabase'
+import { getExam } from '../services/examService'
+
 
 export default function Coursepage() {
   const { id } = useParams()
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
   const [isOwner, setIsOwner] = useState(false)
+  const [exam, setExam] = useState(null)
 
+
+  
   useEffect(() => {
     async function loadPage() {
-      const [courseData, assignmentsData, { data: { user } }] = await Promise.all([
+      const [courseData, assignmentsData, examData, { data: { user } }] = await Promise.all([
         getCourse(id).catch(() => null),
         getAssignments(id).catch(() => ({ assignments: [] })),
-        supabase.auth.getUser()
+        getExam(id).catch((error) => {
+         console.error('Failed to load exam:', error)
+          return null
+    }),
+        
+          supabase.auth.getUser()
       ])
+      console.log('Course:', courseData)
+      console.log('Exam:', examData)
+      console.log('User:', user)
+      
       setCourse(courseData)
       setAssignments(assignmentsData?.assignments ?? [])
-      setIsOwner(!!user && courseData?.teacher_id === user.id)
+      setExam(examData)
+      setIsOwner(!!user && courseData?.teacher_id === user.id) 
     }
     loadPage()
   }, [id])
@@ -89,11 +104,12 @@ export default function Coursepage() {
           <h3 className='exam-title'> Final Exam</h3>
           <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
       
-     <div className='exam-buttons'>    
+    {exam ? ( <div className='exam-buttons'>    
        <Link
   to={`/Coursepage/${id}/exam`}
   state={{
-    demo: true
+    demo: true,
+    exam
   }}
   className="demo-btn"
 >
@@ -102,13 +118,17 @@ export default function Coursepage() {
              <Link
   to={`/Coursepage/${id}/exam`}
   state={{
-    demo: false
+    demo: false,
+    exam
   }}
   className="exam-btn"
 >
    Final Exam 
 </Link> 
-  </div>      
+  </div>   
+  ) : (
+     <p>Loading exam...</p>)}
+     
  </section>      
 
         {isOwner && (

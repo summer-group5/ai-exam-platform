@@ -1,3 +1,4 @@
+//Exampage.jsx
 import React, { useEffect, useState } from 'react';
 import './Exampage.css'
 import Questionscard from '../components/questionscard/Questionscard';
@@ -10,6 +11,8 @@ import { Toaster, toast } from 'react-hot-toast';
 import { getExam } from "../services/examService";
 import { getExamQuestions } from '../services/questionService';
 
+
+
 export default function Exampage() {
 const [exam, setExam] = useState(null);
  
@@ -18,6 +21,11 @@ const [sessionId, setSessionId] = useState(null); // session id
 const [currentQuestion, setCurrentQuestion] = useState(
   location.state?.currentQuestion ?? 0
 );
+
+
+
+
+
 
 // tab change costants
 const [tabWarnings, setTabWarnings] = useState(0);
