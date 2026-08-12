@@ -297,7 +297,7 @@ router.get(
       console.log('=== MONITORING SESSIONS ROUTE ===');
       console.log('courseId:', req.params.courseId);
       console.log('user:', req.user);
-    console.log('Passed requireCourseOwner');
+      console.log('Passed requireCourseOwner');
       
       const { courseId } = req.params;
        
