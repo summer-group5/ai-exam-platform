@@ -4,8 +4,7 @@ import Questionscard from '../components/questionscard/Questionscard';
 import QuestionProgress from '../components/questionscard/questionprogress/QuestionProgress';
 import ExamTimer from '../components/timer/ExamTimer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { createExamSession } from '../services/monitoringService';
-import { logMonitoringEvent } from '../services/monitoringService';
+import { createExamSession, logMonitoringEvent } from '../services/monitoringService';
 import { Toaster, toast } from 'react-hot-toast';
 
 import { getExam } from "../services/examService";
@@ -13,8 +12,8 @@ import { getExamQuestions } from '../services/questionService';
 
 export default function Exampage() {
 const [exam, setExam] = useState(null);
- console.log("Exampage rendered");
-
+ 
+const [sessionId, setSessionId] = useState(null); // session id 
   const location = useLocation();
 const [currentQuestion, setCurrentQuestion] = useState(
   location.state?.currentQuestion ?? 0
@@ -31,7 +30,7 @@ const [answers, setAnswers] = useState(
 // fullscreen nitification for demo exam
 const [fullscreenWarning, setFullscreenWarning] = useState(false);
 const [fullscreenViolations, setFullscreenViolations] = useState(0);
-
+ 
 // exam demo 
 const isDemo = location.state?.demo ?? false;
  const timeLimit = location.state?.timeLimit || (isDemo ? 5 : 60);
@@ -39,10 +38,7 @@ const isDemo = location.state?.demo ?? false;
   const navigate = useNavigate();// navigation to submit page
   const isAnswered = (index) => answers[index] !== undefined;
   const { id } = useParams();
-  
 
-  const [sessionId, setSessionId] = useState(null);
- 
   // introduction before exam demo
   const [showIntro, setShowIntro] = useState(true);
 
@@ -103,6 +99,36 @@ const isDemo = location.state?.demo ?? false;
     correctAnswer: 'console.log()'
   }
 ];
+
+
+const handleStartExam = async () => {
+  try {
+    console.log('=== START EXAM ===')
+    console.log('Exam:', exam)
+    console.log('Exam ID:', exam?.id)
+
+    if (!exam?.id) {
+      console.error('No exam ID!')
+      return
+    }
+
+    const session = await createExamSession(exam.id)
+
+    console.log('Created exam session:', session)
+
+    setSessionId(session.id)
+
+    console.log('Session ID:', session.id)
+
+    // Now actually start the exam UI
+    setShowIntro(false)
+
+  } catch (error) {
+    console.error('Failed to create exam session:', error)
+    alert(`Could not start exam: ${error.message}`)
+  }
+}
+
 
 // navigating to submit page
 
@@ -297,7 +323,7 @@ const requestCamera = async() => {
       setCameraError('Camera acces is required to start the exam')
       
       return false;
-      return false;
+      return false; // ?? 
   }
 
 }; 
@@ -353,22 +379,7 @@ I understand the exam rules
     {cameraError}
   </p>
 )}
-        <button   disabled={!accepted}
-  onClick={async () => {
-    const success = await requestCamera();
-  
-    if (!success) return;
-
-    setShowIntro(false);
-
-    try {
-      await document.documentElement.requestFullscreen();
-    } catch {
-      toast.error("Fullscreen required");
-    }
-
-  }}
-        >
+        <button  onClick={handleStartExam} disabled={!accepted} >
           Start Exam
         </button>
 

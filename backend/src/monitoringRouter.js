@@ -50,7 +50,8 @@ async function requireCourseOwner(req, res, next) {
 
   next();
 }
-// POST /api/courses/:courseId/exam-sessions
+
+/*// POST /api/courses/:courseId/exam-sessions
 router.post('/exam-sessions', requireAuth, async (req, res) => {
   const { exam_id } = req.body;
 
@@ -77,6 +78,71 @@ router.post('/exam-sessions', requireAuth, async (req, res) => {
   }
 
   return res.status(201).json(data);
+});
+
+*/
+router.post('/exam-sessions', requireAuth, async (req, res) => {
+  try {
+    const { exam_id } = req.body;
+
+    console.log('Creating exam session');
+    console.log('User:', req.user.id);
+    console.log('Exam:', exam_id);
+
+    if (!exam_id) {
+      return res.status(400).json({
+        error: 'exam_id is required'
+      });
+    }
+
+    // Check that exam exists
+    const { data: exam, error: examError } = await supabaseAdmin
+      .from('exams')
+      .select('id, course_id, title')
+      .eq('id', exam_id)
+      .single();
+
+    if (examError || !exam) {
+      console.error('Exam not found:', examError);
+
+      return res.status(404).json({
+        error: 'Exam not found'
+      });
+    }
+
+    // Create session
+    const { data: session, error: sessionError } =
+      await supabaseAdmin
+        .from('exam_sessions')
+        .insert({
+          exam_id: exam_id,
+          student_id: req.user.id,
+          attempt_number: 1,
+          status: 'active',
+          started_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+    if (sessionError) {
+      console.error('Failed to create exam session:', sessionError);
+
+      return res.status(500).json({
+        error: sessionError.message
+      });
+    }
+
+    console.log('SESSION CREATED:', session);
+
+    return res.status(201).json(session);
+
+  } catch (error) {
+    console.error('Create session error:', error);
+
+    return res.status(500).json({
+      error: error.message
+    });
+  }
 });
 
 
@@ -151,7 +217,7 @@ router.post(
 
 //GET /api/exam-sessions/:sessionId/events
 
-router.get(
+/*router.get(
   '/exam-sessions/:sessionId/events',
   requireAuth,
   async (req, res) => {
@@ -196,12 +262,103 @@ router.get(
     return res.json(data);
   }
 );
+*/
+
+router.post(
+  '/exam-sessions/:sessionId/events',
+  requireAuth,
+  async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+
+      const {
+        type,
+        duration_ms = 0,
+        details = null
+      } = req.body;
+
+      console.log('Monitoring event received:', {
+        sessionId,
+        userId: req.user.id,
+        type,
+        duration_ms,
+        details
+      });
+
+      if (!type) {
+        return res.status(400).json({
+          error: 'type is required'
+        });
+      }
+
+      // Find session
+      const { data: session, error: sessionError } =
+        await supabaseAdmin
+          .from('exam_sessions')
+          .select('id, student_id, exam_id')
+          .eq('id', sessionId)
+          .single();
+
+      if (sessionError || !session) {
+        console.error('Session not found:', sessionError);
+
+        return res.status(404).json({
+          error: 'Exam session not found'
+        });
+      }
+
+      // Student can only write events to their own session
+      if (session.student_id !== req.user.id) {
+        return res.status(403).json({
+          error: 'You do not own this exam session'
+        });
+      }
+
+      // Insert monitoring event
+      const { data: event, error: eventError } =
+        await supabaseAdmin
+          .from('monitoring_events')
+          .insert({
+            session_id: sessionId,
+            type,
+            duration_ms,
+            details
+          })
+          .select()
+          .single();
+
+      if (eventError) {
+        console.error(
+          'Failed to insert monitoring event:',
+          eventError
+        );
+
+        return res.status(500).json({
+          error: eventError.message
+        });
+      }
+
+      console.log('MONITORING EVENT CREATED:', event);
+
+      return res.status(201).json(event);
+
+    } catch (error) {
+      console.error('Monitoring event error:', error);
+
+      return res.status(500).json({
+        error: error.message
+      });
+    }
+  }
+);
+
+//GET /api/monitoring/courses/:courseId/events
 
 
 // GET /api/monitoring/courses/:courseId/sessions
  
 
-router.get(
+/*router.get(
   '/monitoring/courses/:courseId/sessions',
   requireAuth,
   requireCourseOwner,
@@ -275,45 +432,65 @@ router.get(
   }
 );
 
+*/
 
-
-/*router.get(
+router.get(
   '/monitoring/courses/:courseId/sessions',
   requireAuth,
   requireCourseOwner,
   async (req, res) => {
-    const { courseId } = req.params;
+    try {
+      const { courseId } = req.params;
 
-    const { data, error } = await supabaseAdmin
-      .from('exam_sessions')
-      .select(`
-        id,
-    exam_id,
-    student_id,
-    attempt_number,
-    status,
-    started_at,
-    exams!inner (
-      id,
-      course_id,
-      title
-        )
-      `)
-      .eq('exams.course_id', courseId)
-      .order('started_at', { ascending: false });
+      const { data: sessions, error } =
+        await supabaseAdmin
+          .from('exam_sessions')
+          .select(`
+            id,
+            exam_id,
+            student_id,
+            attempt_number,
+            status,
+            started_at,
+            exams!inner (
+              id,
+              course_id,
+              title
+            )
+          `)
+          .eq('exams.course_id', courseId)
+          .order('started_at', {
+            ascending: false
+          });
 
-    if (error) {
-      console.error('Failed to get exam sessions:', error);
+      if (error) {
+        console.error(
+          'Failed to get exam sessions:',
+          error
+        );
+
+        return res.status(500).json({
+          error: error.message
+        });
+      }
+
+      console.log(
+        `Found ${sessions.length} sessions for course ${courseId}`
+      );
+
+      return res.json(sessions);
+
+    } catch (error) {
+      console.error('Get sessions error:', error);
 
       return res.status(500).json({
         error: error.message
       });
     }
-
-    return res.json(data);
   }
 );
-*/
+
+
 
 
 
