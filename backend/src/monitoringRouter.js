@@ -186,7 +186,7 @@ router.post(
 
 
 
-// '/exam-sessions/:sessionId/events'
+//POST '/exam-sessions/:sessionId/events'
 
 router.post(
   '/exam-sessions/:sessionId/events',
@@ -282,94 +282,7 @@ router.post(
 );
 
 
-/*router.post(
-  '/exam-sessions/:sessionId/events',
-  requireAuth,
-  async (req, res) => {
-    try {
-      const { sessionId } = req.params;
 
-      const {
-        type,
-        duration_ms = 0,
-        details = null
-      } = req.body;
-
-      console.log('Monitoring event received:', {
-        sessionId,
-        userId: req.user.id,
-        type,
-        duration_ms,
-        details
-      });
-
-      if (!type) {
-        return res.status(400).json({
-          error: 'type is required'
-        });
-      }
-
-      // Find session
-      const { data: session, error: sessionError } =
-        await supabaseAdmin
-          .from('exam_sessions')
-          .select('id, student_id, exam_id')
-          .eq('id', sessionId)
-          .single();
-
-      if (sessionError || !session) {
-        console.error('Session not found:', sessionError);
-
-        return res.status(404).json({
-          error: 'Exam session not found'
-        });
-      }
-
-      // Student can only write events to their own session
-      if (session.student_id !== req.user.id) {
-        return res.status(403).json({
-          error: 'You do not own this exam session'
-        });
-      }
-
-      // Insert monitoring event
-      const { data: event, error: eventError } =
-        await supabaseAdmin
-          .from('monitoring_events')
-          .insert({
-            session_id: sessionId,
-            type,
-            duration_ms,
-            details
-          })
-          .select()
-          .single();
-
-      if (eventError) {
-        console.error(
-          'Failed to insert monitoring event:',
-          eventError
-        );
-
-        return res.status(500).json({
-          error: eventError.message
-        });
-      }
-
-      console.log('MONITORING EVENT CREATED:', event);
-
-      return res.status(201).json(event);
-
-    } catch (error) {
-      console.error('Monitoring event error:', error);
-
-      return res.status(500).json({
-        error: error.message
-      });
-    }
-  }
-);
-*/
 
 
 //GET /api/monitoring/courses/:courseId/events
@@ -381,8 +294,13 @@ router.get(
   requireCourseOwner,
   async (req, res) => {
     try {
+      console.log('=== MONITORING SESSIONS ROUTE ===');
+      console.log('courseId:', req.params.courseId);
+      console.log('user:', req.user);
+    console.log('Passed requireCourseOwner');
+      
       const { courseId } = req.params;
-
+       
       const { data: sessions, error } =
         await supabaseAdmin
           .from('exam_sessions')

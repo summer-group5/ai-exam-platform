@@ -163,35 +163,50 @@ export async function getSessionMonitoringEvents(sessionId) {
 // =====================================================
 
 export async function getExamSessions(courseId) {
-  console.log('=== getExamSessions() ===')
-  console.log('courseId:', courseId)
+  console.log('=== getExamSessions() ===');
+  console.log('courseId:', courseId);
 
-  const token = await getAuthToken()
+  const token = await getAuthToken();
 
   const url =
-    `${BACKEND}/api/monitoring/courses/${courseId}/sessions`
+    `${BACKEND}/api/monitoring/courses/${courseId}/sessions`;
 
-  console.log('GET:', url)
+  console.log('GET:', url);
 
   const res = await fetch(url, {
+    method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`
     }
-  })
+  });
 
-  console.log('getExamSessions status:', res.status)
+  console.log('HTTP STATUS:', res.status);
+  console.log('HTTP OK:', res.ok);
 
-  const body = await res.json().catch(() => ([]))
+  // Read raw response first
+  const text = await res.text();
 
-  console.log('Sessions response:', body)
+  console.log('RAW RESPONSE:', text);
+
+  let body;
+
+  try {
+    body = JSON.parse(text);
+  } catch {
+    body = text;
+  }
+
+  console.log('Sessions response:', body);
 
   if (!res.ok) {
     throw new Error(
-      body.error ?? `Request failed (${res.status})`
-    )
+      typeof body === 'object'
+        ? body.error ?? `Request failed (${res.status})`
+        : body
+    );
   }
 
-  return body
+  return body;
 }
 
 
