@@ -29,7 +29,7 @@ export default function Coursepage() {
 
   const courseLinks = [
     { text: 'Home', path: '/' },
-    { text: 'My Courses', path: '/student' },
+    { text: 'My Courses', path: isOwner ? '/my-courses' : '/student' },
   ]
 
   return (

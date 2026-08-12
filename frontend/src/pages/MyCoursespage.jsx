@@ -28,7 +28,7 @@ export default function MyCoursespage() {
 
   return (
     <>
-      <Topnav />
+      <Topnav links={[{ text: 'Dashboard', path: '/teacher' }, { text: 'My Courses', path: '/my-courses' }]} />
 
       <div className="my-courses-page">
 
