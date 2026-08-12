@@ -94,7 +94,7 @@ export default function ExamResultspage() {
   Total points: {score} / {maxScore}
 </h2>
     
-<button className='return-btn' onClick={goTocourse}> return to course</button>
+<button className='return-btn' onClick={goTocourse}>Return to Course</button>
 </div> 
         </div>
 

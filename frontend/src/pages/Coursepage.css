@@ -9,21 +9,6 @@
   padding: var(--space-10) var(--space-6);
 }
 
-/* Hero image */
-.image-container {
-  height: 240px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  margin-bottom: var(--space-6);
-  background: var(--color-panel);
-}
-
-.course-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 /* Title + description */
 .course-container > h1 {
   margin-bottom: var(--space-2);

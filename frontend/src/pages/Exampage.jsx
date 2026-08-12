@@ -177,7 +177,7 @@ useEffect(() => {
       
       
         toast(
-          'Demo notice: You exited fullscreen. In real exam this will be recorded',
+          'Demo notice: You exited fullscreen. In a real exam this will be recorded.',
          
         );
       } else {
@@ -286,7 +286,7 @@ const [tutorialStep, setTutorialStep] = useState(
 const tutorial = [
   'Welcome to exam training mode.',
   'This timer shows remaining exam time.',
-  'This monitoring means that any exit from fullcreen may be recorded and any browser tab changes may be recorded ',
+  'Exiting fullscreen or switching browser tabs may be recorded.',
   'Use question navigation to move between tasks.',
   'Choose one answer for each question.',
   'Submit when finished.'
@@ -319,7 +319,7 @@ const requestCamera = async() => {
     } catch (err) {
 
       setCameraAllowed(false);
-      setCameraError('Camera acces is required to start the exam')
+      setCameraError('Camera access is required to start the exam.')
       
       return false;
   }
@@ -352,7 +352,7 @@ if (showIntro) {
           <li>Fullscreen mode will be required</li>
           <li>Leaving the tab may be recorded</li>
           <li>Exiting fullscreen may be recorded</li>
-          <li>Timer starts immediately after start</li>
+          <li>Timer starts immediately when you click Start</li>
         </ul>
 
         {isDemo && (
@@ -409,7 +409,7 @@ reverseOrder={false}
         <div className="exam-header">
           
            
-            <h1> {isDemo ? 'Exam Demo' : 'Final Exam'}</h1>
+            <h1>{isDemo ? 'Exam Demo' : 'Final Exam'}</h1>
              {fullscreenWarning && (
 
 

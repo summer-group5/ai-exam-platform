@@ -38,10 +38,6 @@ export default function Coursepage() {
 
       <div className='course-container'>
 
-        <div className='image-container'>
-          <img className='course-image' src="../images/course_image.jpg" alt="course image" />
-        </div>
-
         <h1>{course?.title ?? 'Loading...'}</h1>
         {course?.description && <p>{course.description}</p>}
 
@@ -86,7 +82,7 @@ export default function Coursepage() {
       <div className='exam-container'>
         <section>
           <h3 className='exam-title'>Final Exam</h3>
-          <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam.</p>
+          <p>Exam uses browser detection and eye tracking. Students must have a web camera on during the exam.</p>
           <div className='exam-buttons'>
             <Link
               to={`/Coursepage/${id}/exam`}
