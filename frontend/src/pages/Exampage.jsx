@@ -129,7 +129,15 @@ const handleStartExam = async () => {
       console.error('No exam ID!')
       return
     }
+    // Request camera permission first
+    const cameraGranted = await requestCamera();
 
+    if (!cameraGranted) {
+      console.error('Camera permission denied');
+      return;
+    }
+
+    console.log('Camera permission granted');
     const session = await createExamSession(exam.id)
 
     console.log('Created exam session:', session)
@@ -341,7 +349,7 @@ const requestCamera = async() => {
       setCameraError('Camera acces is required to start the exam')
       
       return false;
-      return false; // ?? 
+     
   }
 
 }; 
@@ -387,9 +395,9 @@ if (showIntro) {
   onChange={(e) => setAccepted(e.target.checked)}
 />
 I understand the exam rules
-{cameraError && (
-  <p className="camera-error">
-    {cameraError}
+{cameraAllowed && (
+  <p className="camera-success">
+    ✓ Camera access granted
   </p>
 )}
 {cameraError && (
