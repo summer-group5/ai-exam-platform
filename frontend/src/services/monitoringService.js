@@ -3,19 +3,11 @@ import { supabase } from '../utils/supabase'
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL
 
-console.log('=== monitoringService loaded ===')
-console.log('BACKEND:', BACKEND)
-
 async function getAuthToken() {
-  console.log('=== getAuthToken() called ===')
-
   const {
     data: { session },
     error
   } = await supabase.auth.getSession()
-
-  console.log('Supabase session:', session)
-  console.log('Supabase auth error:', error)
 
   if (error) {
     throw new Error(`Supabase auth error: ${error.message}`)
@@ -24,8 +16,6 @@ async function getAuthToken() {
   if (!session) {
     throw new Error('Not logged in')
   }
-
-  console.log('Auth token exists:', !!session.access_token)
 
   return session.access_token
 }
@@ -36,16 +26,9 @@ async function getAuthToken() {
 // =====================================================
 
 export async function createExamSession(examId) {
-  console.log('=== createExamSession() ===')
-  console.log('examId:', examId)
-
   const token = await getAuthToken()
 
-  const url = `${BACKEND}/api/exam-sessions`
-
-  console.log('POST:', url)
-
-  const res = await fetch(url, {
+  const res = await fetch(`${BACKEND}/api/exam-sessions`, {
     method: 'POST',
 
     headers: {
@@ -58,19 +41,11 @@ export async function createExamSession(examId) {
     })
   })
 
-  console.log('createExamSession status:', res.status)
-
   const body = await res.json().catch(() => ({}))
 
-  console.log('createExamSession response:', body)
-
   if (!res.ok) {
-    throw new Error(
-      body.error ?? `Request failed (${res.status})`
-    )
+    throw new Error(body.error ?? `Request failed (${res.status})`)
   }
-
-  console.log('Exam session created:', body)
 
   return body
 }
@@ -81,18 +56,9 @@ export async function createExamSession(examId) {
 // =====================================================
 
 export async function logMonitoringEvent(sessionId, event) {
-  console.log('=== logMonitoringEvent() ===')
-  console.log('sessionId:', sessionId)
-  console.log('event:', event)
-
   const token = await getAuthToken()
 
-  const url =
-    `${BACKEND}/api/exam-sessions/${sessionId}/events`
-
-  console.log('POST:', url)
-
-  const res = await fetch(url, {
+  const res = await fetch(`${BACKEND}/api/exam-sessions/${sessionId}/events`, {
     method: 'POST',
 
     headers: {
@@ -103,19 +69,11 @@ export async function logMonitoringEvent(sessionId, event) {
     body: JSON.stringify(event)
   })
 
-  console.log('logMonitoringEvent status:', res.status)
-
   const body = await res.json().catch(() => ({}))
 
-  console.log('logMonitoringEvent response:', body)
-
   if (!res.ok) {
-    throw new Error(
-      body.error ?? `Request failed (${res.status})`
-    )
+    throw new Error(body.error ?? `Request failed (${res.status})`)
   }
-
-  console.log('Monitoring event saved:', body)
 
   return body
 }
@@ -126,27 +84,15 @@ export async function logMonitoringEvent(sessionId, event) {
 // =====================================================
 
 export async function getSessionMonitoringEvents(sessionId) {
-  console.log('=== getSessionMonitoringEvents() ===')
-  console.log('sessionId:', sessionId)
-
   const token = await getAuthToken()
 
-  const url =
-    `${BACKEND}/api/exam-sessions/${sessionId}/events`
-
-  console.log('GET:', url)
-
-  const res = await fetch(url, {
+  const res = await fetch(`${BACKEND}/api/exam-sessions/${sessionId}/events`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   })
 
-  console.log('getSessionMonitoringEvents status:', res.status)
-
   const body = await res.json().catch(() => ([]))
-
-  console.log('Events response:', body)
 
   if (!res.ok) {
     throw new Error(
@@ -163,47 +109,21 @@ export async function getSessionMonitoringEvents(sessionId) {
 // =====================================================
 
 export async function getExamSessions(courseId) {
-  console.log('=== getExamSessions() ===');
-  console.log('courseId:', courseId);
-
   const token = await getAuthToken();
 
-  const url =
-    `${BACKEND}/api/monitoring/courses/${courseId}/sessions`;
-
-  console.log('GET:', url);
-
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`
+  const res = await fetch(
+    `${BACKEND}/api/monitoring/courses/${courseId}/sessions`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     }
-  });
+  );
 
-  console.log('HTTP STATUS:', res.status);
-  console.log('HTTP OK:', res.ok);
-
-  // Read raw response first
-  const text = await res.text();
-
-  console.log('RAW RESPONSE:', text);
-
-  let body;
-
-  try {
-    body = JSON.parse(text);
-  } catch {
-    body = text;
-  }
-
-  console.log('Sessions response:', body);
+  const body = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    throw new Error(
-      typeof body === 'object'
-        ? body.error ?? `Request failed (${res.status})`
-        : body
-    );
+    throw new Error(body.error ?? `Request failed (${res.status})`);
   }
 
   return body;
@@ -215,27 +135,15 @@ export async function getExamSessions(courseId) {
 // =====================================================
 
 export async function getAllMonitoringEvents(courseId) {
-  console.log('=== getAllMonitoringEvents() ===')
-  console.log('courseId:', courseId)
-
   const token = await getAuthToken()
 
-  const url =
-    `${BACKEND}/api/monitoring/courses/${courseId}/events`
-
-  console.log('GET:', url)
-
-  const res = await fetch(url, {
+  const res = await fetch(`${BACKEND}/api/monitoring/courses/${courseId}/events`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   })
 
-  console.log('getAllMonitoringEvents status:', res.status)
-
   const body = await res.json().catch(() => ([]))
-
-  console.log('All monitoring events:', body)
 
   if (!res.ok) {
     throw new Error(

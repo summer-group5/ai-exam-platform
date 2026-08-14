@@ -55,10 +55,6 @@ router.post('/exam-sessions', requireAuth, async (req, res) => {
   try {
     const { exam_id } = req.body;
 
-    console.log('Creating exam session');
-    console.log('User:', req.user.id);
-    console.log('Exam:', exam_id);
-
     if (!exam_id) {
       return res.status(400).json({
         error: 'exam_id is required'
@@ -73,8 +69,6 @@ router.post('/exam-sessions', requireAuth, async (req, res) => {
       .single();
 
     if (examError || !exam) {
-      console.error('Exam not found:', examError);
-
       return res.status(404).json({
         error: 'Exam not found'
       });
@@ -101,8 +95,6 @@ router.post('/exam-sessions', requireAuth, async (req, res) => {
         error: sessionError.message
       });
     }
-
-    console.log('SESSION CREATED:', session);
 
     return res.status(201).json(session);
 
@@ -186,103 +178,6 @@ router.post(
 
 
 
-//POST '/exam-sessions/:sessionId/events'
-
-router.post(
-  '/exam-sessions/:sessionId/events',
-  requireAuth,
-  async (req, res) => {
-    try {
-      const { sessionId } = req.params;
-
-      const {
-        type,
-        duration_ms = 0,
-        details
-      } = req.body;
-
-      console.log('==============================');
-      console.log('MONITORING EVENT REQUEST');
-      console.log('Session ID:', sessionId);
-      console.log('User ID:', req.user.id);
-      console.log('Type:', type);
-      console.log('Duration:', duration_ms);
-      console.log('Details:', details);
-      console.log('==============================');
-
-      if (!type) {
-        return res.status(400).json({
-          error: 'type is required'
-        });
-      }
-
-      // Find exam session
-      const { data: session, error: sessionError } =
-        await supabaseAdmin
-          .from('exam_sessions')
-          .select('id, student_id')
-          .eq('id', sessionId)
-          .single();
-
-      console.log('Session lookup:', session);
-      console.log('Session lookup error:', sessionError);
-
-      if (sessionError || !session) {
-        return res.status(404).json({
-          error: 'Exam session not found'
-        });
-      }
-
-      // Student can only write events to their own session
-      if (session.student_id !== req.user.id) {
-        return res.status(403).json({
-          error: 'You do not own this exam session'
-        });
-      }
-
-      // Insert monitoring event
-      const { data, error } =
-        await supabaseAdmin
-          .from('monitoring_events')
-          .insert({
-            session_id: sessionId,
-            type,
-            duration_ms,
-            details
-          })
-          .select()
-          .single();
-
-      console.log('Inserted monitoring event:', data);
-      console.log('Insert error:', error);
-
-      if (error) {
-        console.error(
-          'Failed to insert monitoring event:',
-          error
-        );
-
-        return res.status(500).json({
-          error: error.message
-        });
-      }
-
-      console.log('MONITORING EVENT SAVED SUCCESSFULLY');
-
-      return res.status(201).json(data);
-
-    } catch (error) {
-      console.error('Monitoring event route error:', error);
-
-      return res.status(500).json({
-        error: error.message
-      });
-    }
-  }
-);
-
-
-
 
 
 //GET /api/monitoring/courses/:courseId/events
@@ -294,11 +189,6 @@ router.get(
   requireCourseOwner,
   async (req, res) => {
     try {
-      console.log('=== MONITORING SESSIONS ROUTE ===');
-      console.log('courseId:', req.params.courseId);
-      console.log('user:', req.user);
-      console.log('Passed requireCourseOwner');
-      
       const { courseId } = req.params;
        
       const { data: sessions, error } =
@@ -332,10 +222,6 @@ router.get(
           error: error.message
         });
       }
-
-      console.log(
-        `Found ${sessions.length} sessions for course ${courseId}`
-      );
 
       return res.json(sessions);
 

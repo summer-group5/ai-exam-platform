@@ -30,10 +30,6 @@ export default function Coursepage() {
         
           supabase.auth.getUser()
       ])
-      console.log('Course:', courseData)
-      console.log('Exam:', examData)
-      console.log('User:', user)
-      
       setCourse(courseData)
       setAssignments(assignmentsData?.assignments ?? [])
       setExam(examData)
@@ -53,10 +49,6 @@ export default function Coursepage() {
       <Topnav links={courseLinks} />
 
       <div className='course-container'>
-
-        <div className='image-container'>
-          <img className='course-image' src="../images/course_image.jpg" alt="course image" />
-        </div>
 
         <h1>{course?.title ?? 'Loading...'}</h1>
         {course?.description && <p>{course.description}</p>}

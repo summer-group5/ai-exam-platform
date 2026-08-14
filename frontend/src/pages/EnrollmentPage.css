@@ -1,127 +1,154 @@
 .enrollment-page {
-  padding: 40px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6);
 }
 
 .enrollment-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
+  margin-bottom: var(--space-8);
 }
 
 .enrollment-section {
-  margin-bottom: 40px;
+  margin-bottom: var(--space-10);
 }
 
 .enrollment-section h2 {
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
 }
 
+/* Student table */
 .students-table {
   width: 100%;
   border-collapse: collapse;
-}
-
-.students-table th,
-.students-table td {
-  text-align: left;
-  padding: 10px 12px;
-  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9375rem;
 }
 
 .students-table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-panel);
 }
 
-.form-group {
-  margin-bottom: 12px;
+.students-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
 }
 
-.import-hint {
-  color: #555;
-  font-size: 0.9rem;
-  margin-bottom: 12px;
-}
-
-.import-hint code {
-  background: #f3f4f6;
-  padding: 1px 4px;
-}
-
-.import-result {
-  margin-top: 16px;
-}
-
-.import-success {
-  color: #16a34a;
-  font-weight: 600;
-}
-
-.import-skipped {
-  color: #b45309;
-  font-weight: 600;
-}
-
-.skipped-list {
-  font-size: 0.9rem;
-  color: #555;
-  margin-top: 4px;
-}
-
+/* Buttons */
 .btn-primary {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   text-decoration: none;
-  display: inline-block;
+  transition: background 0.15s;
 }
 
-.btn-primary:hover {
-  background-color: #60a5fa;
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: #fff;
 }
 
 .btn-primary:disabled {
-  background-color: #93c5fd;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .btn-secondary {
-  background-color: #e5e7eb;
-  color: #111827;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   text-decoration: none;
-  display: inline-block;
+  transition: background 0.15s;
 }
 
 .btn-secondary:hover {
-  background-color: #d1d5db;
+  background: var(--color-panel);
+  color: var(--color-text);
 }
 
 .btn-danger {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: var(--color-surface);
+  color: var(--color-danger);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 0.9rem;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .btn-danger:hover {
-  background-color: #dc2626;
+  background: var(--color-danger-tint);
+  border-color: var(--color-danger);
+}
+
+/* Import section */
+.import-hint {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-3);
+}
+
+.import-hint code {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.import-result {
+  margin-top: var(--space-4);
+}
+
+.import-success {
+  color: var(--color-success);
+  font-weight: 500;
+}
+
+.import-skipped {
+  color: var(--color-warning);
+  font-weight: 500;
+}
+
+.skipped-list {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
 }
 
 .empty-state {
-  color: #555;
-}
-
-.form-error {
-  color: #dc2626;
+  color: var(--color-text-muted);
 }

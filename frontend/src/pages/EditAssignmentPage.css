@@ -1,57 +1,67 @@
 .edit-assignment-page {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background: var(--color-canvas);
 }
 
 .edit-assignment-container {
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem 4rem;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6) var(--space-12);
 }
 
 .edit-back-link {
+  display: inline-flex;
+  align-items: center;
   background: none;
   border: none;
-  color: rgb(19, 152, 204);
+  color: var(--color-primary);
   cursor: pointer;
-  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
   padding: 0;
-  margin-bottom: 1rem;
-  display: inline-block;
+  margin-bottom: var(--space-5);
 }
 
 .edit-back-link:hover {
-  text-decoration: underline;
+  color: var(--color-primary-hover);
 }
 
 .edit-assignment-container h1 {
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-2);
 }
 
 .edit-assignment-description {
-  color: #555;
-  margin-bottom: 1.5rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
 }
 
 .edit-assignment-actions {
-  margin-top: 2rem;
+  margin-top: var(--space-8);
 }
 
 .edit-status {
-  margin: 2rem;
-  color: #555;
+  padding: var(--space-10) var(--space-6);
+  color: var(--color-text-muted);
 }
 
 .btn-primary {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 24px;
-  font-size: 1rem;
-  font-family: inherit;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
   cursor: pointer;
+  transition: background 0.15s;
 }
 
 .btn-primary:hover {
-  background-color: #2563eb;
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: #fff;
 }

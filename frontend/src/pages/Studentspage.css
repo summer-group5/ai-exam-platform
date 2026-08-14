@@ -1,22 +1,15 @@
 .students-page {
-  padding: 40px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6);
 }
+
 .students-page h1 {
- text-align: center;
-margin: 100px;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: var(--space-8);
 }
+
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-
+  gap: var(--space-4);
 }
-
-.tools-grid :hover {
-  background-color: #60a5fa;
-  color: white;
-
- 
-}
-
