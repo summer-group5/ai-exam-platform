@@ -1,18 +1,36 @@
 //Exampage.jsx
-import React, {useState, useEffect} from 'react'
+import React, { useEffect, useState } from 'react';
 import './Exampage.css'
 import Questionscard from '../components/questionscard/Questionscard';
 import QuestionProgress from '../components/questionscard/questionprogress/QuestionProgress';
 import ExamTimer from '../components/timer/ExamTimer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { createExamSession, logMonitoringEvent } from '../services/monitoringService';
 import { Toaster, toast } from 'react-hot-toast';
+
+import { getExam } from "../services/examService";
+import { getExamQuestions } from '../services/questionService';
+
 
 
 export default function Exampage() {
+const [exam, setExam] = useState(null);
+ 
+const [sessionId, setSessionId] = useState(null); // session id 
+  
 const location = useLocation();
-const [currentQuestion, setCurrentQuestion] = useState(
-  location.state?.currentQuestion ?? 0
-);
+const navigate = useNavigate();// navigation to submit page  
+const { id } = useParams();
+
+
+useEffect(() => {
+  if (location.state?.exam) {
+    setExam(location.state.exam)
+  }
+}, [location.state])
+
+
+const [currentQuestion, setCurrentQuestion] = useState(location.state?.currentQuestion ?? 0);
 
 // tab change costants
 const [tabWarnings, setTabWarnings] = useState(0);
@@ -22,25 +40,14 @@ const [answers, setAnswers] = useState(
   location.state?.answers ?? []
 );
 
-
 // fullscreen nitification for demo exam
 const [fullscreenWarning, setFullscreenWarning] = useState(false);
 const [fullscreenViolations, setFullscreenViolations] = useState(0);
-
-
-
+ 
 // exam demo 
 const isDemo = location.state?.demo ?? false;
  const timeLimit = location.state?.timeLimit || (isDemo ? 5 : 60);
-  
-  
-  const navigate = useNavigate();// navigation to submit page
-  const isAnswered = (index) => answers[index] !== undefined;
-  const { id } = useParams();
-  
-  // timer protype constants
-  const exam = location.state?.exam;
- 
+
 
   // introduction before exam demo
   const [showIntro, setShowIntro] = useState(true);
@@ -103,7 +110,34 @@ const isDemo = location.state?.demo ?? false;
   }
 ];
 
+
+const handleStartExam = async () => {
+  try {
+    if (!exam?.id) return
+
+    const cameraGranted = await requestCamera();
+    if (!cameraGranted) return;
+
+    const session = await createExamSession(exam.id)
+    setSessionId(session.id)
+
+    setShowIntro(false)
+
+    try {
+      await document.documentElement.requestFullscreen();
+    } catch {
+      toast.error('Could not enter fullscreen');
+    }
+
+  } catch (error) {
+    console.error('Failed to create exam session:', error)
+    alert(`Could not start exam: ${error.message}`)
+  }
+}
+
+
 // navigating to submit page
+
 const goToSubmitPage = () => {
   
    if (isDemo) {
@@ -121,74 +155,62 @@ const goToSubmitPage = () => {
   });
 };
 
+// handle submit
+const handleSubmit = async () => {
 
-const handleSubmit = () => {
-  console.log('Submitted answers:', answers);
-  alert('time is up.')
-  alert('All answers are saved and submitted')
-  // Example: 
-  // send answers to backend
-  // navigate('/results')
-  // calculate score
-}; 
-
-useEffect(() => {
-
-  const startFullscreen = async () => {
-    try {
-      if (!document.fullscreenElement) {
-        await document.documentElement.requestFullscreen();
-      }
-    } catch (err) {
-      console.log("Fullscreen denied");
+    if (isDemo) {
+        alert("Demo completed.");
+        navigate(`/Coursepage/${id}`);
+        return;
     }
-  };
 
-  startFullscreen();
+    if (sessionId) {
+        await logMonitoringEvent(sessionId, {
+            type: "EXAM_SUBMITTED",
+            details: "Student submitted the exam"
+        });
+    }
 
-}, []);
+    navigate(`/Coursepage/${id}/exam/submit`, {
+        state: {
+            exam,
+            answers
+        }
+    });
+};
 
-
-
-// check fullsceen exit
+// new fullscreen exit
 useEffect(() => {
-
   let wasFullscreen = true;
 
-  const checkFullscreen = () => {
-
-    const browserFullscreen =
+  const handleFullscreenChange = async () => {
+    const fullscreen =
+      !!document.fullscreenElement ||
       window.innerHeight === screen.height;
 
-    const apiFullscreen =
-      !!document.fullscreenElement;
-
-    const fullscreen =
-      browserFullscreen || apiFullscreen;
-
-    // count only transition fullscreen → not fullscreen
     if (wasFullscreen && !fullscreen) {
 
+      setFullscreenViolations(prev => prev + 1);
       setFullscreenWarning(true);
 
-      setFullscreenViolations(prev => prev + 1);
-
-      if (isDemo) {
-      
-      
-        toast(
-          'Demo notice: You exited fullscreen. In a real exam this will be recorded.',
-         
-        );
-      } else {
-        toast(
-          'Warning: Fullscreen exited.'
-        );
+      if (sessionId) {
+        try {
+          await logMonitoringEvent(sessionId, {
+            type: "FULLSCREEN_EXIT",
+            details: "Student exited fullscreen"
+          });
+        } catch (err) {
+          console.error(err);
+        }
       }
 
+      toast(
+        isDemo
+          ? "Demo: Fullscreen exited."
+          : "Warning: Fullscreen exited."
+      );
     }
 
-    // hide warning when returning
     if (fullscreen) {
       setFullscreenWarning(false);
     }
@@ -196,32 +218,14 @@ useEffect(() => {
     wasFullscreen = fullscreen;
   };
 
-  document.addEventListener(
-    'fullscreenchange',
-    checkFullscreen
-  );
-
-  window.addEventListener(
-    'resize',
-    checkFullscreen
-  );
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  window.addEventListener("resize", handleFullscreenChange);
 
   return () => {
-
-    document.removeEventListener(
-      'fullscreenchange',
-      checkFullscreen
-    );
-
-    window.removeEventListener(
-      'resize',
-      checkFullscreen
-    );
-
+    document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    window.removeEventListener("resize", handleFullscreenChange);
   };
-
-}, [isDemo]);
-
+}, [sessionId, isDemo]);
 
 // return to fullscreen button
 const returnFullscreen = async () => {
@@ -232,51 +236,40 @@ const returnFullscreen = async () => {
   }
 };
 
-
-
 useEffect(() => {
+  const handleVisibilityChange = async () => {
+    if (!document.hidden) return;
 
-  const handleVisibilityChange = () => {
+    setTabWarnings(prev => prev + 1);
+    setTabWarningVisible(true);
 
-    const hidden =
-      document.visibilityState === 'hidden';
-
-    if (hidden) {
-
-      setTabWarningVisible(true);
-
-      setTabWarnings(prev => prev + 1);
-
-      if (isDemo) {
-        
-        toast('Demo: Browser tab change detected.');
-      } else {
-        alert(
-          'Warning: Tab switch detected.'
-        );
+    if (sessionId) {
+      try {
+        await logMonitoringEvent(sessionId, {
+          type: "TAB_CHANGE",
+          details: "Student switched browser tab"
+        });
+      } catch (err) {
+        console.error(err);
       }
+    }
 
+    if (isDemo) {
+      toast("Demo: Browser tab change detected.");
     } else {
 
       
 
+      toast("Warning: Browser tab changed.");
     }
   };
 
-  document.addEventListener(
-    'visibilitychange',
-    handleVisibilityChange
-  );
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
   return () => {
-    document.removeEventListener(
-      'visibilitychange',
-      handleVisibilityChange
-    );
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
   };
-
-}, [isDemo]);
-
+}, [sessionId, isDemo]);
 
 // tutorial for exam demo
 const [tutorialStep, setTutorialStep] = useState(
@@ -292,12 +285,11 @@ const tutorial = [
   'Submit when finished.'
 ];
 
-const [accepted, setAccepted] = useState(false);
 
+const [accepted, setAccepted] = useState(false);
 const [cameraAllowed, setCameraAllowed] = useState(false);
 const [cameraError, setCameraError] = useState('');
 const [stream, setStream] = useState(null);
-
 
 // requesting camera access
 
@@ -315,13 +307,13 @@ const requestCamera = async() => {
 
     return true; // fixed camera allowance and start exam functionality
 
-
     } catch (err) {
 
       setCameraAllowed(false);
       setCameraError('Camera access is required to start the exam.')
       
       return false;
+     
   }
 
 }; 
@@ -333,6 +325,7 @@ useEffect(() => {
     }
   };
 }, [stream]);
+
 
 
 
@@ -366,28 +359,17 @@ if (showIntro) {
   onChange={(e) => setAccepted(e.target.checked)}
 />
 I understand the exam rules
+{cameraAllowed && (
+  <p className="camera-success">
+    ✓ Camera access granted
+  </p>
+)}
 {cameraError && (
   <p className="camera-error">
     {cameraError}
   </p>
 )}
-        <button   disabled={!accepted}
-  onClick={async () => {
-    const success = await requestCamera();
-  
-
-    if (!success) return;
-
-    setShowIntro(false);
-
-    try {
-      await document.documentElement.requestFullscreen();
-    } catch {
-      toast.error("Fullscreen required");
-    }
-
-  }}
-        >
+        <button  onClick={handleStartExam} disabled={!accepted} >
           Start Exam
         </button>
 
@@ -397,141 +379,105 @@ I understand the exam rules
   );
 }
 
+if (questions.length === 0) {
+  return <div>Loading exam...</div>;
+}
+
     return (
+   
+   <>
+  <Toaster position="top-right" />
+
+  {isDemo && tutorialStep >= 0 && (
+    <div className="tutorial-overlay">
+      <div className="tutorial-box">
+        <h3>Training Tutorial</h3>
+
+        <p>{tutorial[tutorialStep]}</p>
+
+        <div className="tutorial-buttons">
+          <button
+            disabled={tutorialStep === 0}
+            onClick={() => setTutorialStep(prev => prev - 1)}
+          >
+            Previous
+          </button>
+
+          <button
+            onClick={() => {
+              if (tutorialStep === tutorial.length - 1) {
+                setTutorialStep(-1);
+              } else {
+                setTutorialStep(prev => prev + 1);
+              }
+            }}
+          >
+            {tutorialStep === tutorial.length - 1 ? "Finish" : "Next"}
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+ 
  
  <div className='exam-page'>
-  
-  <Toaster
-position="top-center"
-reverseOrder={false}
-/>
-
+      
         <div className="exam-header">
-          
-           
-            <h1>{isDemo ? 'Exam Demo' : 'Final Exam'}</h1>
-             {fullscreenWarning && (
-
-
-
-<div className="fullscreen-alert">
-
-  <p>⚠️ Fullscreen exited</p>
-
-  <p>Warnings: {fullscreenViolations}</p>
-
-  <button onClick={returnFullscreen}>
-    Return to fullscreen
-  </button>
-
-</div>
-
-)}
-     
-     {tabWarningVisible && (
-  <div className="tab-alert">
-    <p>⚠️ Browser tab changed</p>
-    <p>Warnings: {tabWarnings}</p>
-   <button onClick={() => setTabWarningVisible(false)}>
-      Dismiss
-    </button>
-  </div>
-)}
-     
-     
-      {tutorialStep >= 0 && (
-<div className="tutorial-box">
-
-<p>{tutorial[tutorialStep]}</p>
-
-<button
-onClick={() =>
-setTutorialStep(prev =>
-prev < tutorial.length - 1
-? prev + 1
-: -1
-)}
->
-Next
-</button>
-
-</div>
-)}
-      
-      <div className={
-tutorialStep === 1
-? 'highlight'
-: ''
-}>
-       <div className="timer-container">
-      
+          <h1>{isDemo ? "Demo Exam" : exam?.title}</h1>
+          <div className={tutorialStep === 1 ? "timer-container highlight" : "timer-container"}>
         <span className="timer-span"><ExamTimer
  
    initialHours={Math.floor(timeLimit / 60)}
   initialMinutes={timeLimit % 60}
   onFinish={handleSubmit}
 /></span>
-        
-
-
+          
        </div>
-   </div>   
-      <div className={
-tutorialStep === 2
-? 'highlight'
-: ''
-}>
-   <div className="monitor-container">
-
-<span className="monitor-span">
-
-{isDemo
-? 'Demo monitoring preview'
-: 'Monitoring active'}
-
-</span>
-
-</div></div>
-         
+        <div className={
+    tutorialStep === 2
+      ? "monitor-container highlight"
+      : "monitor-container"
+  }>
+           <span className="monitor-span">  Monitoring active</span>
+        
+        </div>
+          
          </div> 
        
        <div className="row-container">
         <section className='exam-section'>
         
-         <div className={
-tutorialStep === 3
-? 'highlight'
-: ''
-}> 
-        <div className="progress-bar">
+        <div className={
+    tutorialStep === 3
+      ? "progress-bar highlight"
+      : "progress-bar"
+  }>
          <QuestionProgress
   questions={questions}
   currentQuestion={currentQuestion}
   setCurrentQuestion={setCurrentQuestion}
   answers= {answers}
 />
-      </div> 
-          <div className={
-tutorialStep === 5
-? 'highlight'
-: ''
-}>   
-         <div className="button-container">
-         
+         <div className={
+    tutorialStep === 5
+      ? "button-container highlight"
+      : "button-container"
+  }>
             <button className='submit'id="submit-grad" onClick={goToSubmitPage}>Submit</button>
-         
           </div> 
-         </div> 
+       
         </div> 
          </section>
            
             <section className='exam-section'>
-              <div className={
-tutorialStep === 4
-? 'highlight'
-: ''
-}>   
-        <Questionscard
+           <div
+  className={
+    tutorialStep === 4
+      ? "highlight"
+      : ""
+  }
+>
+ <Questionscard
           questionNumber={currentQuestion+1}
           totalQuestions={questions.length}
           question={questions[currentQuestion].title}
@@ -541,19 +487,24 @@ setSelectedAnswer={(answer) =>
   setAnswers((prev) => {
     const newAnswers = [...prev];      // create copy of array
     newAnswers[currentQuestion] = answer; // updates index of current question
+    
     return newAnswers;
   })
   
 }
-        /> </div> 
+    
+  />
+</div>  
+        
+        
         
         </section>   
            
         </div>
       
-        
+             
         
         </div>
+        </>
   )
 }
-

@@ -68,7 +68,11 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
 }
-
+.exam-buttons{
+display: flex;
+justify-content: center;
+gap: 20px;
+}
 .assignment-link {
   flex: 1;
   font-weight: 500;

@@ -21,6 +21,7 @@ import ExamResultspage from './pages/ExamResultspage'
 import CreateAssignmentPage from './pages/CreateAssignmentPage'
 import EditAssignmentPage from './pages/EditAssignmentPage'
 import EnrollmentPage from './pages/EnrollmentPage'
+import ExamMonitoringPage from "./pages/ExamMonitoringpage";
 import AssignmentPage from './pages/AssignmentPage'
 import AssignmentResultPage from './pages/AssignmentResultPage'
 import AssignmentSubmissionsPage from './pages/AssignmentSubmissionsPage'
@@ -51,18 +52,7 @@ const router = createBrowserRouter([
 
       // Login route
       {path: "login", element: <Loginpage />},
-      { path: "student", element: <Studentspage /> },
-    // Teacher route
-      { path: "teacher", element: <Teacherspage /> },
-
-      // Design exam route
-     
-
-     // Design quiz route
-      
-
-      // Create course route
-     
+    
 
       // My courses route
       {path: "my-courses", element: <MyCoursespage />},
@@ -75,15 +65,17 @@ const router = createBrowserRouter([
       //  Route for exam page 
       
  
-      //  Route for submit exam page 
-      
-
       //  Route for exam results 
       { path:"/Coursepage/:id/exam/results", element: <ExamResultspage /> },
 
       { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> },
 
       { path: "/Coursepage/:id/create-assignment", element: <ProtectedRoute><CreateAssignmentPage /></ProtectedRoute> },
+      { path: "/Coursepage/:id/enrollments", element: <EnrollmentPage /> },
+
+      // Examevent page route here
+
+     { path: "/Coursepage/:id/exam-monitoring", element: (<ProtectedRoute requiredRole="teacher"><ExamMonitoringPage /></ProtectedRoute>) },
       { path: "/Coursepage/:id/assignments/:assignmentId/edit", element: <ProtectedRoute><EditAssignmentPage /></ProtectedRoute> },
       { path: "/Coursepage/:id/enrollments", element: <EnrollmentPage /> },
 
