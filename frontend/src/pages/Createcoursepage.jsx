@@ -43,7 +43,7 @@ export default function Createcoursepage() {
             <label>Course name:</label>
             <input
               type="text"
-              placeholder='Give name for course'
+              placeholder='Give a name for the course'
               value={title}
               onChange={e => setTitle(e.target.value)}
             />

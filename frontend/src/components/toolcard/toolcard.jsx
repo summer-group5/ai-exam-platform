@@ -7,12 +7,7 @@ export default function Toolcard({title, path}) {
     
     
     <Link to={path} className='tool-card'>
-        <h3>{title}</h3>
-
- <div className="image-placeholder">
-        <img src="/placeholder.png" alt="" />
-      </div>
-
+      <h3>{title}</h3>
     </Link>
   
 

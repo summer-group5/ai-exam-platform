@@ -1,88 +1,90 @@
 .my-courses-page {
-  padding: 40px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6);
 }
 
 .my-courses-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
-}
-
-.my-courses-header h1 {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.btn-primary {
-  background-color: #3b82f6;
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  font-size: 1rem;
-  font-family: inherit;
-  display: inline-block;
-  line-height: 1.5;
-  box-sizing: border-box;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  background-color: #60a5fa;
+  margin-bottom: var(--space-8);
 }
 
 .courses-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-3);
 }
 
 .course-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  border: 1px solid #999;
-  background: white;
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 }
 
 .course-info h3 {
-  margin: 0 0 4px 0;
+  margin: 0 0 var(--space-1) 0;
 }
 
 .course-info p {
   margin: 0;
-  color: #555;
-  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
 }
 
 .course-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: center;
 }
 
-.btn-danger {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 10px 20px;
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 1rem;
-  font-family: inherit;
-  display: inline-block;
-  line-height: 1.5;
-  box-sizing: border-box;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: #fff;
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--color-surface);
+  color: var(--color-danger);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .btn-danger:hover {
-  background-color: #dc2626;
+  background: var(--color-danger-tint);
+  border-color: var(--color-danger);
 }
 
 .empty-state {
-  color: #555;
-}
-
-.form-error {
-  color: #dc2626;
+  color: var(--color-text-muted);
 }

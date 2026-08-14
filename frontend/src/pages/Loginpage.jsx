@@ -30,14 +30,14 @@ export default function Loginpage() {
 
       <div className='login-card'>
 
-        <div className='login-logo'>[Logo]</div>
+        <div className='login-brand'>ExamPlatform</div>
 
-        <h1>Exam Platform</h1>
+        <h1>Sign in</h1>
         <p className='login-subtitle'>Sign in to continue</p>
 
         <form onSubmit={handleSubmit}>
 
-          <div className='login-form-group'>
+          <div className='form-group'>
             <label>Email</label>
             <input
               type='email'
@@ -47,7 +47,7 @@ export default function Loginpage() {
             />
           </div>
 
-          <div className='login-form-group'>
+          <div className='form-group'>
             <label>Password</label>
             <input
               type='password'
