@@ -197,11 +197,17 @@ router.get(
             attempt_number,
             status,
             started_at,
+            
             exams!inner (
               id,
               course_id,
               title
-            )
+              ),
+              users!exam_sessions_student_id_fkey (
+              id,
+              name,
+              email
+              )
           `)
           .eq('exams.course_id', courseId)
           .order('started_at', {
@@ -280,7 +286,7 @@ try {
         error: error.message
       });
     }
-
+    console.log('Monitoring data:', JSON.stringify(data, null, 2));
     return res.json(data);
     }   catch (error) {
         console.error('Get monitoring events error:', error);
