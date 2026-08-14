@@ -1,5 +1,5 @@
 import React from 'react'
-
+import './QuestionsCard.css'
 
 export default function Questionscard( {
      questionNumber,
@@ -15,7 +15,7 @@ export default function Questionscard( {
 
     <div className="question-container">
                  
-                 <h2>QUESTIONS {questionNumber}  OF {totalQuestions}</h2>
+                 <h2>Question {questionNumber} of {totalQuestions}</h2>
          <h3>{question}</h3>
                   
            <div className="question-options">

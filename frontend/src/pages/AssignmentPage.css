@@ -1,45 +1,57 @@
 .assignment-page {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background: var(--color-canvas);
 }
 
 .assignment-container {
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6);
+}
+
+.assignment-container h1 {
+  margin-bottom: var(--space-2);
 }
 
 .assignment-description {
-  color: #555;
-  margin-bottom: 0.5rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
 }
 
 .assignment-due {
-  color: #888;
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-6);
 }
 
 .assignment-status {
-  margin: 2rem;
-  color: #555;
+  color: var(--color-text-muted);
+  padding: var(--space-6) 0;
+}
+
+/* Question cards */
+.questions-form {
+  margin-top: var(--space-6);
 }
 
 .question-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
-  background: #fafafa;
-}
-
-.question-number {
-  font-weight: bold;
-  margin-right: 0.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-6);
+  margin-bottom: var(--space-4);
 }
 
 .question-text {
   font-size: 1rem;
-  margin-bottom: 0.75rem;
+  font-weight: 500;
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+}
+
+.question-number {
+  color: var(--color-text-muted);
+  margin-right: var(--space-1);
 }
 
 .options-list {
@@ -48,56 +60,67 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .option-label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   cursor: pointer;
+  font-size: 0.9375rem;
 }
 
 .option-label input {
   cursor: pointer;
 }
 
+/* Actions */
 .assignment-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.submit-btn,
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  line-height: 1.5;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .submit-btn {
-  padding: 10px 24px;
-  background-color: rgb(19, 152, 204);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.submit-btn:disabled {
-  background-color: #aaa;
-  cursor: not-allowed;
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: rgb(15, 120, 165);
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .back-btn {
-  padding: 10px 24px;
-  background-color: #e0e0e0;
-  color: #333;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
 }
 
 .back-btn:hover {
-  background-color: #ccc;
+  background: var(--color-panel);
 }

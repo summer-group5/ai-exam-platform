@@ -38,10 +38,6 @@ export default function Coursepage() {
 
       <div className='course-container'>
 
-        <div className='image-container'>
-          <img className='course-image' src="../images/course_image.jpg" alt="course image" />
-        </div>
-
         <h1>{course?.title ?? 'Loading...'}</h1>
         {course?.description && <p>{course.description}</p>}
 

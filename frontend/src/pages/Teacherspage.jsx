@@ -21,7 +21,7 @@ export default function Teacherspage() {
 
 
     <div className='teachers-page'>
-    <h1>Teachers tool box</h1>
+    <h1>Teacher Toolbox</h1>
     <div className='tools-grid'>
       {tools.map(tool => (
         <ToolCard
