@@ -24,11 +24,6 @@ const { id } = useParams();
 
 
 useEffect(() => {
-  console.log('=== EXAM PAGE LOADED ===')
-  console.log('Location state:', location.state)
-  console.log('Exam from state:', location.state?.exam)
-  console.log('Exam ID from state:', location.state?.exam?.id)
-
   if (location.state?.exam) {
     setExam(location.state.exam)
   }
@@ -52,9 +47,6 @@ const [fullscreenViolations, setFullscreenViolations] = useState(0);
 // exam demo 
 const isDemo = location.state?.demo ?? false;
  const timeLimit = location.state?.timeLimit || (isDemo ? 5 : 60);
-
-
-  const isAnswered = (index) => answers[index] !== undefined;
 
 
   // introduction before exam demo
@@ -121,33 +113,21 @@ const isDemo = location.state?.demo ?? false;
 
 const handleStartExam = async () => {
   try {
-    console.log('=== START EXAM ===')
-    console.log('Exam:', exam)
-    console.log('Exam ID:', exam?.id)
+    if (!exam?.id) return
 
-    if (!exam?.id) {
-      console.error('No exam ID!')
-      return
-    }
-    // Request camera permission first
     const cameraGranted = await requestCamera();
+    if (!cameraGranted) return;
 
-    if (!cameraGranted) {
-      console.error('Camera permission denied');
-      return;
-    }
-
-    console.log('Camera permission granted');
     const session = await createExamSession(exam.id)
-
-    console.log('Created exam session:', session)
-
     setSessionId(session.id)
 
-    console.log('Session ID:', session.id)
-
-    // Now actually start the exam UI
     setShowIntro(false)
+
+    try {
+      await document.documentElement.requestFullscreen();
+    } catch {
+      toast.error('Could not enter fullscreen');
+    }
 
   } catch (error) {
     console.error('Failed to create exam session:', error)
@@ -303,22 +283,6 @@ const tutorial = [
   'Use question navigation to move between tasks.',
   'Choose one answer for each question.',
   'Submit when finished.'
-];
-
-
-const demoQuestions = [
-  {
-    id: 1,
-    question: "Which keyword declares a variable in Java?",
-    options: ["type", "var", "declare", "define"],
-    correctAnswer: 1,
-  },
-  {
-    id: 2,
-    question: "Which collection does not allow duplicates?",
-    options: ["List", "Queue", "Set", "Array"],
-    correctAnswer: 2,
-  },
 ];
 
 

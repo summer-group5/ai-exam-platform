@@ -30,10 +30,6 @@ export default function Coursepage() {
         
           supabase.auth.getUser()
       ])
-      console.log('Course:', courseData)
-      console.log('Exam:', examData)
-      console.log('User:', user)
-      
       setCourse(courseData)
       setAssignments(assignmentsData?.assignments ?? [])
       setExam(examData)
