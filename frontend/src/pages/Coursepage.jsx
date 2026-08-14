@@ -40,7 +40,7 @@ export default function Coursepage() {
 
   const courseLinks = [
     { text: 'Home', path: '/' },
-    { text: 'My Courses', path: '/student' },
+    { text: 'My Courses', path: isOwner ? '/my-courses' : '/student' },
   ]
 
   return (
@@ -49,10 +49,6 @@ export default function Coursepage() {
       <Topnav links={courseLinks} />
 
       <div className='course-container'>
-
-        <div className='image-container'>
-          <img className='course-image' src="../images/course_image.jpg" alt="course image" />
-        </div>
 
         <h1>{course?.title ?? 'Loading...'}</h1>
         {course?.description && <p>{course.description}</p>}
@@ -95,57 +91,46 @@ export default function Coursepage() {
           )}
         </section>
         
-       <div className='exam-container'>
+      <div className='exam-container'>
         <section>
-          <h3 className='exam-title'> Final Exam</h3>
-          <p>Exam is using browser detection and eye tracking. Students must have web camera on during the exam. </p>
-      
-    {exam ? ( <div className='exam-buttons'>    
-       <Link
-  to={`/Coursepage/${id}/exam`}
-  state={{
-    demo: true,
-    exam
-  }}
-  className="demo-btn"
->
-  Try Exam Demo
-</Link>
-             <Link
-  to={`/Coursepage/${id}/exam`}
-  state={{
-    demo: false,
-    exam
-  }}
-  className="exam-btn"
->
-   Final Exam 
-</Link> 
-  </div>   
-  ) : (
-     <p>Loading exam...</p>)}
-     
- </section>      
-
-        {isOwner && (
-          <div className='teacher-tools'>
-            <Link to={`/Coursepage/${id}/enrollments`} className='manage-students-btn'>
-              Manage Students
-            </Link>
-          <Link
-      to={`/Coursepage/${id}/exam-monitoring`}
-      className="manage-students-btn"
-    >
-      Exam Monitoring
-    </Link>
-         
-          </div>
-        )}
-
+          <h3 className='exam-title'>Final Exam</h3>
+          <p>Exam uses browser detection and eye tracking. Students must have a web camera on during the exam.</p>
+          {exam ? (
+            <div className='exam-buttons'>
+              <Link
+                to={`/Coursepage/${id}/exam`}
+                state={{ demo: true, exam }}
+                className="demo-btn"
+              >
+                Try Exam Demo
+              </Link>
+              <Link
+                to={`/Coursepage/${id}/exam`}
+                state={{ demo: false, exam }}
+                className="exam-btn"
+              >
+                Final Exam
+              </Link>
+            </div>
+          ) : (
+            <p>Loading exam...</p>
+          )}
+        </section>
       </div>
-    </div>
- </div>
 
+      {isOwner && (
+        <div className='teacher-tools'>
+          <Link to={`/Coursepage/${id}/enrollments`} className='manage-students-btn'>
+            Manage Students
+          </Link>
+          <Link to={`/Coursepage/${id}/exam-monitoring`} className='manage-students-btn'>
+            Exam Monitoring
+          </Link>
+        </div>
+      )}
+
+    </div>
+  </div>
   )
 }
 

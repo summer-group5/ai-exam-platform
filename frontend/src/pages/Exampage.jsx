@@ -279,7 +279,7 @@ const [tutorialStep, setTutorialStep] = useState(
 const tutorial = [
   'Welcome to exam training mode.',
   'This timer shows remaining exam time.',
-  'This monitoring means that any exit from fullcreen may be recorded and any browser tab changes may be recorded ',
+  'Exiting fullscreen or switching browser tabs may be recorded.',
   'Use question navigation to move between tasks.',
   'Choose one answer for each question.',
   'Submit when finished.'
@@ -310,7 +310,7 @@ const requestCamera = async() => {
     } catch (err) {
 
       setCameraAllowed(false);
-      setCameraError('Camera acces is required to start the exam')
+      setCameraError('Camera access is required to start the exam.')
       
       return false;
      
@@ -345,7 +345,7 @@ if (showIntro) {
           <li>Fullscreen mode will be required</li>
           <li>Leaving the tab may be recorded</li>
           <li>Exiting fullscreen may be recorded</li>
-          <li>Timer starts immediately after start</li>
+          <li>Timer starts immediately when you click Start</li>
         </ul>
 
         {isDemo && (
@@ -423,13 +423,8 @@ if (questions.length === 0) {
  <div className='exam-page'>
       
         <div className="exam-header">
-           <h1>{isDemo ? "Demo Exam" : exam?.title}</h1>
-       <div  className={
-    tutorialStep === 1
-      ? "timer-container highlight"
-      : "timer-container"
-  }>
-        
+          <h1>{isDemo ? "Demo Exam" : exam?.title}</h1>
+          <div className={tutorialStep === 1 ? "timer-container highlight" : "timer-container"}>
         <span className="timer-span"><ExamTimer
  
    initialHours={Math.floor(timeLimit / 60)}
