@@ -176,10 +176,6 @@ router.post(
 );
 
 
-
-
-
-
 //GET /api/monitoring/courses/:courseId/events
 
 
@@ -201,11 +197,17 @@ router.get(
             attempt_number,
             status,
             started_at,
+            
             exams!inner (
               id,
               course_id,
               title
-            )
+              ),
+              users!exam_sessions_student_id_fkey (
+              id,
+              name,
+              email
+              )
           `)
           .eq('exams.course_id', courseId)
           .order('started_at', {
@@ -236,10 +238,6 @@ router.get(
 );
 
 
-
-
-
-
 // GET /api/monitoring/courses/:courseId/events
 
 router.get(
@@ -248,28 +246,38 @@ router.get(
   requireCourseOwner,
   async (req, res) => {
     const { courseId } = req.params;
-
+try {
     const { data, error } = await supabaseAdmin
-      .from('monitoring_events')
+      .from('exam_sessions')
       .select(`
         id,
-        session_id,
-        type,
-        duration_ms,
-        details,
-        created_at,
-        exam_sessions!inner (
-          id,
-          student_id,
-          exam_id,
-          exams!inner (
+        exam_id,
+        student_id,
+        attempt_number,
+        status,
+        started_at,
+        final_score,
+
+        exams!inner (
+        id,
+        course_id,
+        title),
+        users!exam_sessions_student_id_fkey (
             id,
-            course_id
+            name,
+            email
+          ),
+
+          monitoring_events (
+            id,
+            type,
+            duration_ms,
+            details,
+            created_at
           )
-        )
       `)
-      .eq('exam_sessions.exams.course_id', courseId)
-      .order('created_at', { ascending: false });
+      .eq('exams.course_id', courseId)
+      .order('started_at', { ascending: false });
 
     if (error) {
       console.error('Failed to get monitoring events:', error);
@@ -278,8 +286,16 @@ router.get(
         error: error.message
       });
     }
-
+    console.log('Monitoring data:', JSON.stringify(data, null, 2));
     return res.json(data);
+    }   catch (error) {
+        console.error('Get monitoring events error:', error);
+        return res.status(500).json({
+        error: error.message
+      });
+    
+    }
+      
   }
 );
 

@@ -81,9 +81,11 @@ const fullscreenExits = sessionEvents.filter(
           >
 
             <h2>
-              Student: {session.student?.name ?? 'Unknown student'}
+              Student: {session.users?.name || 'Unknown student'}
             </h2>
-
+  <p>
+    Email: {session.users?.email || 'No email'}
+  </p>
             <p>
               Status: {session.status}
             </p>
