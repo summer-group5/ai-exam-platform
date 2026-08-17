@@ -153,3 +153,29 @@ export async function getAllMonitoringEvents(courseId) {
 
   return body
 }
+
+
+// =====================================================
+// SUBMIT EXAM SESSION
+// =====================================================
+
+export async function submitExamSession(sessionId, answers) {
+  const token = await getAuthToken()
+
+  const res = await fetch(`${BACKEND}/api/exam-sessions/${sessionId}/submit`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ answers })
+  })
+
+  const body = await res.json().catch(() => ({}))
+
+  if (!res.ok) {
+    throw new Error(body.error ?? `Request failed (${res.status})`)
+  }
+
+  return body
+}

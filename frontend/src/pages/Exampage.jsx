@@ -68,6 +68,7 @@ const isDemo = location.state?.demo ?? false;
           id: q.id,
           title: q.question_text,
           options: q.question_options.map(o => o.option_text),
+          question_options: q.question_options,
           correctAnswer: (q.question_options.find(o => o.is_correct) ?? {}).option_text ?? '',
           points: q.max_points ?? 1
         }));
@@ -121,7 +122,8 @@ const goToSubmitPage = () => {
       exam,
       timeLimit,
       answers,
-      questions
+      questions,
+      sessionId
     }
   });
 };

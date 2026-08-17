@@ -11,26 +11,14 @@ export default function ExamResultspage() {
     const { id } = useParams();
     const questions = location.state?.questions ?? [];
     const answers = location.state?.answers ?? [];
-    
-// max score for different points weights 
-   const maxScore = questions.reduce(
-  (sum, q) => sum + (q.points ?? 1),
-  0
-);
+
+    const maxScore = location.state?.max_score
+      ?? questions.reduce((sum, q) => sum + (q.points ?? 1), 0);
 
 
 
     const goTocourse = () => {
- 
-    alert('All answers are saved and submitted');
-   
-    // Example:
-    // send answers to backend
-    
-    navigate(`/Coursepage/${id}`, 
-     
-  );
-  
+    navigate(`/Coursepage/${id}`);
 };
 
     if (!questions.length) {
