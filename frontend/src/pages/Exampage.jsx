@@ -52,63 +52,34 @@ const isDemo = location.state?.demo ?? false;
   // introduction before exam demo
   const [showIntro, setShowIntro] = useState(true);
 
-  
-  const questions = [
-  {
-    title: 'What does the acronym HTTP stand for?',
-    options: [
-      'HyperText Transfer Protocol',
-      'High Transfer Text Process',
-      'Hyper Transfer Tool Protocol',
-      'Host Transfer Text Protocol'
-    ],
-    correctAnswer: 'HyperText Transfer Protocol'
-  },
+  const [questions, setQuestions] = useState([]);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
+  const [questionsError, setQuestionsError] = useState('');
 
-  {
-    title: 'Which HTML tag creates a hyperlink?',
-    options: [
-      '<a>',
-      '<link>',
-      '<href>',
-      '<url>'
-    ],
-    correctAnswer: '<a>'
-  },
+  useEffect(() => {
+    if (!exam?.id) return;
 
-  {
-    title: 'Which CSS property changes text color?',
-    options: [
-      'color',
-      'font-color',
-      'text-style',
-      'background'
-    ],
-    correctAnswer: 'color'
-  },
+    setQuestionsLoading(true);
+    setQuestionsError('');
 
-  {
-    title: 'What is React mainly used for?',
-    options: [
-      'Building user interfaces',
-      'Database management',
-      'Server hosting',
-      'Operating systems'
-    ],
-    correctAnswer: 'Building user interfaces'
-  },
-
-  {
-    title: 'Which JavaScript method prints to the browser console?',
-    options: [
-      'console.log()',
-      'print()',
-      'write()',
-      'display()'
-    ],
-    correctAnswer: 'console.log()'
-  }
-];
+    getExamQuestions(exam.id)
+      .then(data => {
+        const mapped = data.map(q => ({
+          id: q.id,
+          title: q.question_text,
+          options: q.question_options.map(o => o.option_text),
+          correctAnswer: (q.question_options.find(o => o.is_correct) ?? {}).option_text ?? '',
+          points: q.max_points ?? 1
+        }));
+        setQuestions(mapped);
+      })
+      .catch(err => {
+        setQuestionsError('Failed to load exam questions: ' + err.message);
+      })
+      .finally(() => {
+        setQuestionsLoading(false);
+      });
+  }, [exam]);
 
 
 const handleStartExam = async () => {
@@ -149,8 +120,8 @@ const goToSubmitPage = () => {
     state: {
       exam,
       timeLimit,
-      answers
-      
+      answers,
+      questions
     }
   });
 };
@@ -174,7 +145,8 @@ const handleSubmit = async () => {
     navigate(`/Coursepage/${id}/exam/submit`, {
         state: {
             exam,
-            answers
+            answers,
+            questions
         }
     });
 };
@@ -379,7 +351,11 @@ I understand the exam rules
   );
 }
 
-if (questions.length === 0) {
+if (questionsError) {
+  return <div className="exam-error">{questionsError}</div>;
+}
+
+if (questionsLoading || questions.length === 0) {
   return <div>Loading exam...</div>;
 }
 
