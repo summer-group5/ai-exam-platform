@@ -24,7 +24,11 @@ export default function ExamResultspage() {
     if (!questions.length) {
     return (
       <div className="exam-results-page">
-        <h3>No exam results found</h3>
+        <div className="results-header"><h1 className="results-heding">Exam Results</h1></div>
+        <div className="results-container">
+          <h2 className="total-score">Total points: {score} / {maxScore}</h2>
+          <button className="return-btn" onClick={goTocourse}>Return to Course</button>
+        </div>
       </div>
     );
   }
@@ -68,8 +72,8 @@ export default function ExamResultspage() {
 
       <p className="result-status">
   {isCorrect
-    ? `✅ Correct — ${question.points ?? 1} point(s)`
-    : '❌ Incorrect — 0 points'}
+    ? `Correct — ${question.points ?? 1} point(s)`
+    : 'Incorrect — 0 points'}
 </p>
 
               

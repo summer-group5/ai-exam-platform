@@ -8,7 +8,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { createExamSession, logMonitoringEvent } from '../services/monitoringService';
 import { Toaster, toast } from 'react-hot-toast';
 
-import { getExam } from "../services/examService";
+import { getExam, getMyExamSession } from "../services/examService";
 import { getExamQuestions } from '../services/questionService';
 
 
@@ -50,13 +50,40 @@ const isDemo = location.state?.demo ?? false;
 
 
   // introduction before exam demo
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(!location.state?.skipIntro);
+  const [examStartedAt] = useState(location.state?.examStartedAt ?? null);
 
   const [questions, setQuestions] = useState([]);
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionsError, setQuestionsError] = useState('');
 
+  const demoQuestions = [
+    {
+      title: 'What does HTTP stand for?',
+      options: ['HyperText Transfer Protocol', 'High Transfer Text Process', 'Hyper Tool Markup Logic', 'Host Transfer Text Protocol'],
+      correctAnswer: 'HyperText Transfer Protocol',
+      points: 1
+    },
+    {
+      title: 'Which HTML tag creates a hyperlink?',
+      options: ['<a>', '<link>', '<href>', '<url>'],
+      correctAnswer: '<a>',
+      points: 1
+    },
+    {
+      title: 'Which CSS property changes text color?',
+      options: ['color', 'font-color', 'text-style', 'background'],
+      correctAnswer: 'color',
+      points: 1
+    },
+  ];
+
   useEffect(() => {
+    if (isDemo) {
+      setQuestions(demoQuestions);
+      return;
+    }
+
     if (!exam?.id) return;
 
     setQuestionsLoading(true);
@@ -80,12 +107,41 @@ const isDemo = location.state?.demo ?? false;
       .finally(() => {
         setQuestionsLoading(false);
       });
-  }, [exam]);
+  }, [exam, isDemo]);
 
+
+const [startedAt, setStartedAt] = useState(examStartedAt);
 
 const handleStartExam = async () => {
   try {
     if (!exam?.id) return
+
+    if (exam.start_time) {
+      const start = new Date(exam.start_time);
+      const end = new Date(start.getTime() + (exam.duration_minutes ?? 60) * 60 * 1000);
+      const now = new Date();
+      if (now < start) {
+        alert(`The exam has not started yet. It opens on ${start.toLocaleString()}.`);
+        return;
+      }
+      if (now > end) {
+        alert('The exam has ended.');
+        return;
+      }
+    }
+
+    const existing = await getMyExamSession(id).catch(() => null);
+    if (existing?.status === 'submitted') {
+      alert('You have already submitted this exam.');
+      return;
+    }
+    if (existing?.status === 'active') {
+      setSessionId(existing.id);
+      if (!startedAt) setStartedAt(Date.now());
+      setShowIntro(false);
+      try { await document.documentElement.requestFullscreen(); } catch {}
+      return;
+    }
 
     const cameraGranted = await requestCamera();
     if (!cameraGranted) return;
@@ -93,6 +149,7 @@ const handleStartExam = async () => {
     const session = await createExamSession(exam.id)
     setSessionId(session.id)
 
+    if (!startedAt) setStartedAt(Date.now());
     setShowIntro(false)
 
     try {
@@ -123,7 +180,8 @@ const goToSubmitPage = () => {
       timeLimit,
       answers,
       questions,
-      sessionId
+      sessionId,
+      examStartedAt: startedAt
     }
   });
 };
@@ -357,8 +415,12 @@ if (questionsError) {
   return <div className="exam-error">{questionsError}</div>;
 }
 
-if (questionsLoading || questions.length === 0) {
+if (questionsLoading) {
   return <div>Loading exam...</div>;
+}
+
+if (questions.length === 0) {
+  return <div className="exam-error">No questions have been added to this exam yet.</div>;
 }
 
     return (
@@ -404,9 +466,12 @@ if (questionsLoading || questions.length === 0) {
           <h1>{isDemo ? "Demo Exam" : exam?.title}</h1>
           <div className={tutorialStep === 1 ? "timer-container highlight" : "timer-container"}>
         <span className="timer-span"><ExamTimer
- 
-   initialHours={Math.floor(timeLimit / 60)}
-  initialMinutes={timeLimit % 60}
+  initialSeconds={(() => {
+    const total = timeLimit * 60;
+    if (!startedAt) return total;
+    const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+    return Math.max(0, total - elapsed);
+  })()}
   onFinish={handleSubmit}
 /></span>
           

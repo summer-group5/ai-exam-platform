@@ -6,8 +6,18 @@ import Topnav from '../components/topnav/Topnav';
 import { getCourse } from '../services/courseService'
 import { getAssignments } from '../services/assignmentService'
 import { supabase } from '../utils/supabase'
-import { getExam } from '../services/examService'
+import { getExam, getMyExamSession } from '../services/examService'
 
+
+function getExamStatus(exam) {
+  if (!exam?.start_time) return 'open';
+  const start = new Date(exam.start_time);
+  const end = new Date(start.getTime() + (exam.duration_minutes ?? 60) * 60 * 1000);
+  const now = new Date();
+  if (now < start) return { status: 'upcoming', start };
+  if (now > end) return { status: 'ended' };
+  return 'open';
+}
 
 export default function Coursepage() {
   const { id } = useParams()
@@ -15,25 +25,25 @@ export default function Coursepage() {
   const [assignments, setAssignments] = useState([])
   const [isOwner, setIsOwner] = useState(false)
   const [exam, setExam] = useState(null)
+  const [mySession, setMySession] = useState(null)
 
-
-  
   useEffect(() => {
     async function loadPage() {
       const [courseData, assignmentsData, examData, { data: { user } }] = await Promise.all([
         getCourse(id).catch(() => null),
         getAssignments(id).catch(() => ({ assignments: [] })),
-        getExam(id).catch((error) => {
-         console.error('Failed to load exam:', error)
-          return null
-    }),
-        
-          supabase.auth.getUser()
+        getExam(id).catch(() => null),
+        supabase.auth.getUser()
       ])
       setCourse(courseData)
       setAssignments(assignmentsData?.assignments ?? [])
       setExam(examData)
-      setIsOwner(!!user && courseData?.teacher_id === user.id) 
+      const owner = !!user && courseData?.teacher_id === user.id
+      setIsOwner(owner)
+      if (!owner && examData) {
+        const session = await getMyExamSession(id).catch(() => null)
+        setMySession(session)
+      }
     }
     loadPage()
   }, [id])
@@ -104,16 +114,59 @@ export default function Coursepage() {
               >
                 Try Exam Demo
               </Link>
-              <Link
-                to={`/Coursepage/${id}/exam`}
-                state={{ demo: false, exam }}
-                className="exam-btn"
-              >
-                Final Exam
-              </Link>
+              {!isOwner && (() => {
+                const examStatus = getExamStatus(exam);
+                if (examStatus === 'open') {
+                  return (
+                    <Link
+                      to={`/Coursepage/${id}/exam`}
+                      state={{ demo: false, exam }}
+                      className="exam-btn"
+                    >
+                      Final Exam
+                    </Link>
+                  );
+                }
+                if (examStatus?.status === 'upcoming') {
+                  return (
+                    <div className="exam-status exam-status--upcoming">
+                      <span className="exam-status__label">Opens</span>
+                      <span className="exam-status__time">{examStatus.start.toLocaleString()}</span>
+                    </div>
+                  );
+                }
+                if (examStatus?.status === 'ended') {
+                  return (
+                    <div className="exam-status exam-status--ended">
+                      <span className="exam-status__label">Exam closed</span>
+                    </div>
+                  );
+                }
+              })()}
+              {isOwner && (
+                <Link to={`/Coursepage/${id}/design-exam`} className="manage-students-btn">
+                  Edit Exam
+                </Link>
+              )}
             </div>
+          ) : null}
+          {!isOwner && mySession?.status === 'submitted' && (
+            <Link
+              to={`/Coursepage/${id}/exam/results`}
+              state={{ score: mySession.final_score, max_score: mySession.max_score }}
+              className="demo-btn"
+            >
+              View Exam Results
+            </Link>
+          )}
+          {exam ? null : course !== null && isOwner ? (
+            <Link to={`/Coursepage/${id}/design-exam`} className='exam-btn'>
+              + Create Exam
+            </Link>
+          ) : course !== null ? (
+            <p>No exam scheduled yet.</p>
           ) : (
-            <p>Loading exam...</p>
+            <p>Loading...</p>
           )}
         </section>
       </div>

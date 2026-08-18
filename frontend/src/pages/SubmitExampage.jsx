@@ -11,6 +11,7 @@ export default function SubmitExampage() {
   const exam = location.state?.exam;
   const timeLimit = location.state?.timeLimit ?? 60;
   const sessionId = location.state?.sessionId ?? null;
+  const examStartedAt = location.state?.examStartedAt ?? null;
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -59,7 +60,9 @@ export default function SubmitExampage() {
         timeLimit,
         answers,
         questions,
-        sessionId
+        sessionId,
+        examStartedAt,
+        skipIntro: true
       }
     });
   };
@@ -70,8 +73,12 @@ export default function SubmitExampage() {
         <div className="timer-container">
           <span className="timer-span">
             <ExamTimer
-              initialHours={Math.floor(timeLimit / 60)}
-              initialMinutes={timeLimit % 60}
+              initialSeconds={(() => {
+                const total = timeLimit * 60;
+                if (!examStartedAt) return total;
+                const elapsed = Math.floor((Date.now() - examStartedAt) / 1000);
+                return Math.max(0, total - elapsed);
+              })()}
               onFinish={handleSubmit}
             />
           </span>
