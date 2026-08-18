@@ -74,11 +74,25 @@ router.post('/', requireCourseOwner, async (req, res) => {
 
 // GET /api/courses/:courseId/assignments
 router.get('/', requireAuth, async (req, res) => {
-  const { data, error } = await supabaseAdmin
+  const { data: course } = await supabaseAdmin
+    .from('courses')
+    .select('teacher_id')
+    .eq('id', req.params.courseId)
+    .single()
+
+  const isOwner = course?.teacher_id === req.user.id
+
+  let query = supabaseAdmin
     .from('assignments')
     .select('*')
     .eq('course_id', req.params.courseId)
     .order('due_date', { ascending: true, nullsFirst: false })
+
+  if (!isOwner) {
+    query = query.or(`available_from.is.null,available_from.lte.${new Date().toISOString()}`)
+  }
+
+  const { data, error } = await query
 
   if (error) return res.status(500).json({ error: error.message })
   return res.json({ assignments: data })
@@ -94,6 +108,19 @@ router.get('/:assignmentId', requireAuth, async (req, res) => {
     .single()
 
   if (error) return res.status(404).json({ error: 'Assignment not found' })
+
+  const { data: course } = await supabaseAdmin
+    .from('courses')
+    .select('teacher_id')
+    .eq('id', req.params.courseId)
+    .single()
+
+  const isOwner = course?.teacher_id === req.user.id
+
+  if (!isOwner && data.available_from && new Date(data.available_from) > new Date()) {
+    return res.status(403).json({ error: 'Assignment not available yet' })
+  }
+
   return res.json(data)
 })
 
