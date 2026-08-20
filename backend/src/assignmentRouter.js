@@ -82,20 +82,34 @@ router.get('/', requireAuth, async (req, res) => {
 
   const isOwner = course?.teacher_id === req.user.id
 
-  let query = supabaseAdmin
+  const { data, error } = await supabaseAdmin
     .from('assignments')
     .select('*')
     .eq('course_id', req.params.courseId)
     .order('due_date', { ascending: true, nullsFirst: false })
 
-  if (!isOwner) {
-    query = query.or(`available_from.is.null,available_from.lte.${new Date().toISOString()}`)
+  if (error) return res.status(500).json({ error: error.message })
+
+  if (isOwner) return res.json({ assignments: data })
+
+  // For students: merge in their submission status
+  const { data: submissions } = await supabaseAdmin
+    .from('assignment_submissions')
+    .select('assignment_id, score, status, submitted_at')
+    .eq('student_id', req.user.id)
+    .in('assignment_id', data.map(a => a.id))
+
+  const submissionMap = {}
+  for (const s of submissions ?? []) {
+    submissionMap[s.assignment_id] = s
   }
 
-  const { data, error } = await query
+  const assignments = data.map(a => ({
+    ...a,
+    my_submission: submissionMap[a.id] ?? null
+  }))
 
-  if (error) return res.status(500).json({ error: error.message })
-  return res.json({ assignments: data })
+  return res.json({ assignments })
 })
 
 // GET /api/courses/:courseId/assignments/:assignmentId

@@ -51,6 +51,20 @@
   color: var(--color-text-muted);
 }
 
+.assignment-group-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin: var(--space-5) 0 var(--space-2);
+}
+
+.assignment-link--muted {
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
 /* Assignment list */
 .course-container ul {
   list-style: none;
