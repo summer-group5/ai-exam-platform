@@ -116,7 +116,7 @@ const handleStartExam = async () => {
   try {
     if (!exam?.id) return
 
-    if (exam.start_time) {
+    if (!isDemo && exam.start_time) {
       const start = new Date(exam.start_time);
       const end = new Date(start.getTime() + (exam.duration_minutes ?? 60) * 60 * 1000);
       const now = new Date();
