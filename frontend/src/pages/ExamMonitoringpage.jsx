@@ -3,17 +3,13 @@ import React, { useEffect, useState } from 'react';
 import './ExamMonitoringpage.css';
 import { useParams } from 'react-router-dom';
 
-import {
-  getExamSessions,
-  getAllMonitoringEvents
-} from '../services/monitoringService';
+import { getAllMonitoringEvents } from '../services/monitoringService';
 
 export default function ExamMonitoringpage() {
 
   const { id: courseId } = useParams();
 
   const [sessions, setSessions] = useState([]);
-  const [events, setEvents] = useState([]);
 
   useEffect(() => {
 
@@ -21,12 +17,8 @@ export default function ExamMonitoringpage() {
 
     async function loadData() {
       try {
-        const sessionData = await getExamSessions(courseId);
-        const eventData = await getAllMonitoringEvents(courseId);
-
-        setSessions(sessionData);
-        setEvents(eventData);
-
+        const data = await getAllMonitoringEvents(courseId);
+        setSessions(data);
       } catch (err) {
         console.error("Failed to load monitoring data:", err);
       }
@@ -36,34 +28,13 @@ export default function ExamMonitoringpage() {
 
   }, [courseId]);
 
-  console.log("Sessions:", sessions);
-  console.log("Events:", events);
-
   const monitoring = sessions.map((session) => {
+    const sessionEvents = session.monitoring_events ?? [];
+    const tabChanges = sessionEvents.filter(e => e.type === 'TAB_CHANGE').length;
+    const fullscreenExits = sessionEvents.filter(e => e.type === 'FULLSCREEN_EXIT').length;
+    const latestEvent = sessionEvents.length > 0 ? sessionEvents[0] : null;
 
-    const sessionEvents = events.filter(
-      event => event.session_id === session.id
-    );
-
-    const latestEvent =
-      sessionEvents.length > 0
-        ? sessionEvents[0]
-        : null;
-
-const tabChanges = sessionEvents.filter(
-  event => event.type === 'TAB_CHANGE'
-).length;
-
-const fullscreenExits = sessionEvents.filter(
-  event => event.type === 'FULLSCREEN_EXIT'
-).length;
-
-    return {
-      ...session,
-      latestEvent,
-       tabChanges,
-  fullscreenExits
-    };
+    return { ...session, tabChanges, fullscreenExits, latestEvent };
   });
 
   return (
