@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 export default function ExamTimer({
-  initialHours = 1,
-  initialMinutes = 30,
+  initialHours = 0,
+  initialMinutes = 0,
   initialSeconds = 0,
   onFinish
 }) {
