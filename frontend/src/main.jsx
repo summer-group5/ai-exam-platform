@@ -41,9 +41,6 @@ const router = createBrowserRouter([
     // Teacher route
       { path: "teacher", element: <ProtectedRoute requiredRole="teacher"><Teacherspage /></ProtectedRoute> },
 
-      // Design exam route
-      {path: "design-exam", element: <ProtectedRoute><Examdesignpage /></ProtectedRoute>},
-
      // Design quiz route
       {path: "create-quiz", element: <ProtectedRoute><Createquizpage /></ProtectedRoute>},
 
@@ -71,6 +68,7 @@ const router = createBrowserRouter([
       { path:"/Coursepage/:id/exam/submit", element: <SubmitExampage /> },
 
       { path: "/Coursepage/:id/create-assignment", element: <ProtectedRoute><CreateAssignmentPage /></ProtectedRoute> },
+      { path: "/Coursepage/:id/design-exam", element: <ProtectedRoute requiredRole="teacher"><Examdesignpage /></ProtectedRoute> },
       { path: "/Coursepage/:id/enrollments", element: <EnrollmentPage /> },
 
       // Examevent page route here

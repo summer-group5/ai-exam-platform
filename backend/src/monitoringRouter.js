@@ -286,7 +286,6 @@ try {
         error: error.message
       });
     }
-    console.log('Monitoring data:', JSON.stringify(data, null, 2));
     return res.json(data);
     }   catch (error) {
         console.error('Get monitoring events error:', error);
@@ -300,5 +299,90 @@ try {
 );
 
 
+
+// POST /api/exam-sessions/:sessionId/submit
+router.post('/exam-sessions/:sessionId/submit', requireAuth, async (req, res) => {
+  const { sessionId } = req.params;
+  const { answers } = req.body;
+
+  if (!Array.isArray(answers)) {
+    return res.status(400).json({ error: 'answers must be an array' });
+  }
+
+  const { data: session, error: sessionError } = await supabaseAdmin
+    .from('exam_sessions')
+    .select('id, student_id, status, exam_id')
+    .eq('id', sessionId)
+    .single();
+
+  if (sessionError || !session) {
+    return res.status(404).json({ error: 'Exam session not found' });
+  }
+
+  if (session.student_id !== req.user.id) {
+    return res.status(403).json({ error: 'You do not own this exam session' });
+  }
+
+  if (session.status === 'submitted') {
+    return res.status(409).json({ error: 'Exam already submitted' });
+  }
+
+  const { data: questions, error: questionsError } = await supabaseAdmin
+    .from('questions')
+    .select('id, max_points, question_options(id, is_correct)')
+    .eq('exam_id', session.exam_id);
+
+  if (questionsError) {
+    return res.status(500).json({ error: questionsError.message });
+  }
+
+  let score = 0;
+  let maxScore = 0;
+  const answerRows = [];
+
+  for (const question of questions) {
+    const qMaxPoints = question.max_points ?? 1;
+    maxScore += qMaxPoints;
+
+    const submitted = answers.find(a => a.question_id === question.id);
+    if (!submitted) continue;
+
+    const selectedOption = question.question_options.find(o => o.id === submitted.option_id);
+    const earnedPoints = selectedOption?.is_correct ? qMaxPoints : 0;
+    score += earnedPoints;
+
+    answerRows.push({
+      session_id: sessionId,
+      question_id: question.id,
+      selected_option_id: submitted.option_id,
+      score: earnedPoints
+    });
+  }
+
+  if (answerRows.length > 0) {
+    const { error: answersError } = await supabaseAdmin
+      .from('answers')
+      .insert(answerRows);
+
+    if (answersError) {
+      return res.status(500).json({ error: answersError.message });
+    }
+  }
+
+  const { error: updateError } = await supabaseAdmin
+    .from('exam_sessions')
+    .update({
+      status: 'submitted',
+      final_score: score,
+      submitted_at: new Date().toISOString()
+    })
+    .eq('id', sessionId);
+
+  if (updateError) {
+    return res.status(500).json({ error: updateError.message });
+  }
+
+  return res.status(200).json({ score, max_score: maxScore });
+});
 
 module.exports = router;

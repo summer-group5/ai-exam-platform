@@ -1,218 +1,239 @@
-import React, {useState} from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import "./Examdesignpage.css"
 import Topnav from '../components/topnav/Topnav'
 
-import { generateExamTasks } from '../services/aiService'
-
-
-
+import { getExam, createExam, addExamQuestion, addExamOption } from '../services/examService'
+import { getExamQuestions } from '../services/questionService'
 
 export default function Examdesignpage() {
-  
-  const [timeLimit, setTimeLimit] = useState(null);
-  const navigate = useNavigate();
-  
-  const [examTasks, setExamTasks] = useState([]);
+  const { id: courseId } = useParams()
+  const navigate = useNavigate()
 
+  // Exam settings
+  const [examId, setExamId] = useState(null)
+  const [examTitle, setExamTitle] = useState('')
+  const [examDate, setExamDate] = useState('')
+  const [examTime, setExamTime] = useState('')
+  const [timeLimit, setTimeLimit] = useState(60)
+  const [saving, setSaving] = useState(false)
 
-  // Ai states
-const [aiPrompt, setAiPrompt] = useState('');
-const [generatedTasks, setGeneratedTasks] = useState([]);
-const [loading, setLoading] = useState(false);
+  // Questions list for display
+  const [examTasks, setExamTasks] = useState([])
+  const [addingQuestion, setAddingQuestion] = useState(false)
 
-// add generated tasks to exam
-const addGeneratedTasks = () => {
-  if (!Array.isArray(generatedTasks) || generatedTasks.length === 0) {
-    alert("No AI tasks to add");
-    return;
+  // Manual question builder
+  const [questionText, setQuestionText] = useState('')
+  const [options, setOptions] = useState(['', '', '', ''])
+  const [correctOption, setCorrectOption] = useState(0)
+
+  // Load existing exam on mount (teacher may re-enter the page)
+  useEffect(() => {
+    if (!courseId) return
+    getExam(courseId)
+      .then(async data => {
+        setExamId(data.id)
+        setExamTitle(data.title ?? '')
+        if (data.duration_minutes) setTimeLimit(data.duration_minutes)
+        try {
+          const qs = await getExamQuestions(data.id)
+          const mapped = qs.map(q => ({
+            title: q.question_text,
+            options: q.question_options.map(o => o.option_text),
+            correctAnswer: (q.question_options.find(o => o.is_correct) ?? {}).option_text ?? ''
+          }))
+          setExamTasks(mapped)
+        } catch {
+          // No questions yet
+        }
+      })
+      .catch(() => {
+        // No exam yet — teacher will create one
+      })
+  }, [courseId])
+
+  const handleCreateExam = async () => {
+    if (!examTitle.trim()) {
+      alert('Please enter an exam title')
+      return
+    }
+    try {
+      setSaving(true)
+      const startTime = examDate && examTime ? `${examDate}T${examTime}:00` : null
+      const exam = await createExam(courseId, {
+        title: examTitle.trim(),
+        duration_minutes: timeLimit,
+        start_time: startTime
+      })
+      setExamId(exam.id)
+    } catch (err) {
+      alert('Failed to create exam: ' + err.message)
+    } finally {
+      setSaving(false)
+    }
   }
 
-  setExamTasks((prev) => [
-    ...prev,
-    ...generatedTasks
-  ]);
-
-  alert("AI tasks added to exam!");
-};
-
-
-
-// generate tasks with Ai
-const handleGenerateAI = async () => {
-  
-
-  try {
-    setLoading(true);
-
-    const result = await generateExamTasks(aiPrompt);
-
-  
-
-    const parsed = JSON.parse(result); 
-
-   
-
-    setGeneratedTasks(parsed);
-
-  } catch (error) {
-    console.error("AI PARSE ERROR:", error);
-    alert("AI returned invalid JSON");
-  } finally {
-    setLoading(false);
+  const handleAddQuestion = async () => {
+    if (!questionText.trim()) {
+      alert('Please enter a question')
+      return
+    }
+    if (options.some(o => !o.trim())) {
+      alert('Please fill in all 4 options')
+      return
+    }
+    try {
+      setAddingQuestion(true)
+      const question = await addExamQuestion(courseId, {
+        question_text: questionText.trim(),
+        order_number: examTasks.length + 1
+      })
+      for (let i = 0; i < options.length; i++) {
+        await addExamOption(courseId, question.id, {
+          option_text: options[i].trim(),
+          is_correct: i === correctOption
+        })
+      }
+      setExamTasks(prev => [...prev, {
+        title: questionText.trim(),
+        options: [...options],
+        correctAnswer: options[correctOption]
+      }])
+      setQuestionText('')
+      setOptions(['', '', '', ''])
+      setCorrectOption(0)
+    } catch (err) {
+      alert('Failed to add question: ' + err.message)
+    } finally {
+      setAddingQuestion(false)
+    }
   }
-};
-
-
-  // for timer porotype added course id
-  const courseId = 1;
 
   return (
-<>
-<Topnav/>
+    <>
+      <Topnav />
+      <div className='exam-designpage'>
+        <h1>Design Exam</h1>
+        <div className='design-container'>
+          <div className="task-section">
 
-<div className='exam-designpage'>
-  
+            <div className="form-group">
+              <label>Exam name:</label>
+              <input
+                type="text"
+                placeholder='Give name for exam'
+                value={examTitle}
+                onChange={e => setExamTitle(e.target.value)}
+                disabled={!!examId}
+              />
+            </div>
 
- <h1>Design Exam</h1>
-  
-<div className='design-container'>
+            <div className="form-group">
+              <label>Exam date:</label>
+              <input
+                type="date"
+                value={examDate}
+                onChange={e => setExamDate(e.target.value)}
+                disabled={!!examId}
+              />
+            </div>
 
+            <div className="form-group">
+              <label>Start time:</label>
+              <input
+                type="time"
+                value={examTime}
+                onChange={e => setExamTime(e.target.value)}
+                disabled={!!examId}
+              />
+              <label>Exam time limit:</label>
+              <select
+                value={timeLimit}
+                onChange={e => setTimeLimit(Number(e.target.value))}
+                disabled={!!examId}
+              >
+                <option value={60}>60min</option>
+                <option value={90}>90min</option>
+                <option value={120}>120min</option>
+              </select>
+            </div>
 
-<div className="task-section">
+            {!examId ? (
+              <button className="btn btn-primary" onClick={handleCreateExam} disabled={saving}>
+                {saving ? 'Creating...' : 'Create Exam'}
+              </button>
+            ) : (
+              <p style={{ color: 'green' }}>✓ Exam created — add questions below</p>
+            )}
 
-<div className="form-group">
+            {examId && (
+              <>
+                <h3>Current Exam Tasks</h3>
+                {examTasks.length === 0 ? (
+                  <p>No tasks added yet</p>
+                ) : (
+                  examTasks.map((task, index) => (
+                    <div key={index} className="task-preview">
+                      <h4>Question {index + 1}</h4>
+                      <p>{task.title}</p>
+                      <ul>
+                        {task.options?.map((opt, i) => (
+                          <li key={i}>
+                            {opt === task.correctAnswer ? <strong>{opt} ✓</strong> : opt}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
+                )}
 
-<label>Exam name:</label>
-<input type="text" placeholder='Give name for exam' />
-</div>
+                <h3>Add question:</h3>
+                <div className="form-group">
+                  <label>Question:</label>
+                  <input
+                    type="text"
+                    placeholder="Question text"
+                    value={questionText}
+                    onChange={e => setQuestionText(e.target.value)}
+                  />
+                </div>
+                {options.map((opt, i) => (
+                  <div key={i} className="form-group">
+                    <label>
+                      <input
+                        type="radio"
+                        name="correct-option"
+                        checked={correctOption === i}
+                        onChange={() => setCorrectOption(i)}
+                      />
+                      {' '}Option {i + 1} (mark as correct):
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={`Option ${i + 1}`}
+                      value={opt}
+                      onChange={e => {
+                        const updated = [...options]
+                        updated[i] = e.target.value
+                        setOptions(updated)
+                      }}
+                    />
+                  </div>
+                ))}
+                <button className="btn btn-primary" onClick={handleAddQuestion} disabled={addingQuestion}>
+                  {addingQuestion ? 'Adding...' : 'Add Question'}
+                </button>
 
-<div className="form-group">
-
-<label>Exam date:</label>
-<input type="date" id='start'name="exam-date" />
-</div>
-
-
-<div className="form-group">
-<label>Start time:</label>
-<input type="time" name='exam-time' />
-
-
-<label>Exam time limit:</label>
-
-
-<select name="timelimits" id="time-limit-select" value={timeLimit} onChange={(e) => setTimeLimit(Number(e.target.value))}>
-  <option value="">Select time limit for exam</option>
-  <option value="60">60min</option>
-  <option value="90">90min</option>
-  <option value="120">120min</option>
-  
-</select>
-</div>
-
-<h3>Current Exam Tasks</h3>
-
-{examTasks.length === 0 ? (
-  <p>No tasks added yet</p>
-) : (
-  examTasks.map((task, index) => (
-    <div key={index} className="task-preview">
-      <h4>Question {index + 1}</h4>
-      <p>{task.title}</p>
-
-      <ul>
-        {task.options?.map((opt, i) => (
-          <li key={i}>{opt}</li>
-        ))}
-      </ul>
-    </div>
-  ))
-)}
-
-<h3>Create tasks:</h3>
-
-<select name="tasks" id="task-select">
-  
-  <option value="">Select tasks for Exam from Task database</option>
-  <option value="Task1">Task 1</option>
-  <option value="Task2">Task 2</option>
-  <option value="Task3">Task 3</option>
-  
-</select>
-  
-
-
-</div>
-
-<button>Add task</button>
-
-<div className='ai-generator'>
-
-<h3>Generate exam tasks with AI</h3>
-
-<textarea  id="ai-assistant" name="assistant" placeholder='Example: Create 5 React questions for beginners' value={aiPrompt} onChange={(e) =>
-    setAiPrompt(e.target.value)}>
-
-</textarea>
-
-
-</div>
- <button onClick={handleGenerateAI}> {loading
-    ? 'Generating...'
-    : 'Generate with AI'}</button>
-
-<div className='save-exam'>
-
-<button>save and quit</button>
-
-{/*Prototype for timer works when exam is published timelimit is set to selected timelimit */ }
-<button onClick={() =>
-    navigate(`/Coursepage/${courseId}/exam`, {
-      state: {
-        timeLimit,
-        demo: false
-      }
-    })
-  }>Publish exam</button>
-
-
-
-
-</div>
-{generatedTasks.length  > 0 && (
-  <div className="generated-exam">
-
-    <h3>Generated Tasks</h3>
-
-    {generatedTasks.map((task, index) => (
-  <div key={index} className="task-preview">
-    <h4>Question {index + 1}</h4>
-
-    <p>{task.title}</p>
-
-    <ul>
-      {task.options.map((opt, i) => (
-        <li key={i}>{opt}</li>
-      ))}
-    </ul>
-
-    <p>
-      <strong>Correct:</strong> {task.correctAnswer}
-    </p>
-  </div>
-))}
-<button onClick={addGeneratedTasks}>
-  Add AI Tasks to Exam
-</button>
-  </div>
-)}
-
-</div>
-
-  </div> 
-
-</>
-    
+                <div className='save-exam'>
+                  <button className="btn btn-secondary" onClick={() => navigate(`/Coursepage/${courseId}`)}>
+                    Finish
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   )
 }

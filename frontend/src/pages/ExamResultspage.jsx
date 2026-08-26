@@ -11,32 +11,24 @@ export default function ExamResultspage() {
     const { id } = useParams();
     const questions = location.state?.questions ?? [];
     const answers = location.state?.answers ?? [];
-    
-// max score for different points weights 
-   const maxScore = questions.reduce(
-  (sum, q) => sum + (q.points ?? 1),
-  0
-);
+
+    const maxScore = location.state?.max_score
+      ?? questions.reduce((sum, q) => sum + (q.points ?? 1), 0);
 
 
 
     const goTocourse = () => {
- 
-    alert('All answers are saved and submitted');
-   
-    // Example:
-    // send answers to backend
-    
-    navigate(`/Coursepage/${id}`, 
-     
-  );
-  
+    navigate(`/Coursepage/${id}`);
 };
 
     if (!questions.length) {
     return (
       <div className="exam-results-page">
-        <h3>No exam results found</h3>
+        <div className="results-header"><h1 className="results-heding">Exam Results</h1></div>
+        <div className="results-container">
+          <h2 className="total-score">Total points: {score} / {maxScore}</h2>
+          <button className="return-btn" onClick={goTocourse}>Return to Course</button>
+        </div>
       </div>
     );
   }
@@ -80,8 +72,8 @@ export default function ExamResultspage() {
 
       <p className="result-status">
   {isCorrect
-    ? `✅ Correct — ${question.points ?? 1} point(s)`
-    : '❌ Incorrect — 0 points'}
+    ? `Correct — ${question.points ?? 1} point(s)`
+    : 'Incorrect — 0 points'}
 </p>
 
               

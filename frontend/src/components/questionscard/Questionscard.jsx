@@ -21,21 +21,19 @@ export default function Questionscard( {
            <div className="question-options">
 
   {options.map((option) => (
-    <div className="option" key={option}>
-    
+    <label className="option" key={option}>
+
     <input
       type="radio"
       name="exam-question"
       value={option}
       checked={selectedAnswer === option}
       onChange={(e) => setSelectedAnswer(e.target.value)}
-     
     />
- 
 
     <span>{option}</span>
-  
-  </div>
+
+  </label>
 
    ))}
    

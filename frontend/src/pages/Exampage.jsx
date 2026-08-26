@@ -8,7 +8,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { createExamSession, logMonitoringEvent } from '../services/monitoringService';
 import { Toaster, toast } from 'react-hot-toast';
 
-import { getExam } from "../services/examService";
+import { getExam, getMyExamSession } from "../services/examService";
 import { getExamQuestions } from '../services/questionService';
 
 
@@ -50,70 +50,98 @@ const isDemo = location.state?.demo ?? false;
 
 
   // introduction before exam demo
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(!location.state?.skipIntro);
+  const [examStartedAt] = useState(location.state?.examStartedAt ?? null);
 
-  
-  const questions = [
-  {
-    title: 'What does the acronym HTTP stand for?',
-    options: [
-      'HyperText Transfer Protocol',
-      'High Transfer Text Process',
-      'Hyper Transfer Tool Protocol',
-      'Host Transfer Text Protocol'
-    ],
-    correctAnswer: 'HyperText Transfer Protocol'
-  },
+  const [questions, setQuestions] = useState([]);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
+  const [questionsError, setQuestionsError] = useState('');
 
-  {
-    title: 'Which HTML tag creates a hyperlink?',
-    options: [
-      '<a>',
-      '<link>',
-      '<href>',
-      '<url>'
-    ],
-    correctAnswer: '<a>'
-  },
+  const demoQuestions = [
+    {
+      title: 'What does HTTP stand for?',
+      options: ['HyperText Transfer Protocol', 'High Transfer Text Process', 'Hyper Tool Markup Logic', 'Host Transfer Text Protocol'],
+      correctAnswer: 'HyperText Transfer Protocol',
+      points: 1
+    },
+    {
+      title: 'Which HTML tag creates a hyperlink?',
+      options: ['<a>', '<link>', '<href>', '<url>'],
+      correctAnswer: '<a>',
+      points: 1
+    },
+    {
+      title: 'Which CSS property changes text color?',
+      options: ['color', 'font-color', 'text-style', 'background'],
+      correctAnswer: 'color',
+      points: 1
+    },
+  ];
 
-  {
-    title: 'Which CSS property changes text color?',
-    options: [
-      'color',
-      'font-color',
-      'text-style',
-      'background'
-    ],
-    correctAnswer: 'color'
-  },
+  useEffect(() => {
+    if (isDemo) {
+      setQuestions(demoQuestions);
+      return;
+    }
 
-  {
-    title: 'What is React mainly used for?',
-    options: [
-      'Building user interfaces',
-      'Database management',
-      'Server hosting',
-      'Operating systems'
-    ],
-    correctAnswer: 'Building user interfaces'
-  },
+    if (!exam?.id) return;
 
-  {
-    title: 'Which JavaScript method prints to the browser console?',
-    options: [
-      'console.log()',
-      'print()',
-      'write()',
-      'display()'
-    ],
-    correctAnswer: 'console.log()'
-  }
-];
+    setQuestionsLoading(true);
+    setQuestionsError('');
 
+    getExamQuestions(exam.id)
+      .then(data => {
+        const mapped = data.map(q => ({
+          id: q.id,
+          title: q.question_text,
+          options: q.question_options.map(o => o.option_text),
+          question_options: q.question_options,
+          correctAnswer: (q.question_options.find(o => o.is_correct) ?? {}).option_text ?? '',
+          points: q.max_points ?? 1
+        }));
+        setQuestions(mapped);
+      })
+      .catch(err => {
+        setQuestionsError('Failed to load exam questions: ' + err.message);
+      })
+      .finally(() => {
+        setQuestionsLoading(false);
+      });
+  }, [exam, isDemo]);
+
+
+const [startedAt, setStartedAt] = useState(examStartedAt);
 
 const handleStartExam = async () => {
   try {
     if (!exam?.id) return
+
+    if (!isDemo && exam.start_time) {
+      const start = new Date(exam.start_time);
+      const end = new Date(start.getTime() + (exam.duration_minutes ?? 60) * 60 * 1000);
+      const now = new Date();
+      if (now < start) {
+        alert(`The exam has not started yet. It opens on ${start.toLocaleString()}.`);
+        return;
+      }
+      if (now > end) {
+        alert('The exam has ended.');
+        return;
+      }
+    }
+
+    const existing = await getMyExamSession(id).catch(() => null);
+    if (existing?.status === 'submitted') {
+      alert('You have already submitted this exam.');
+      return;
+    }
+    if (existing?.status === 'active') {
+      setSessionId(existing.id);
+      if (!startedAt) setStartedAt(Date.now());
+      setShowIntro(false);
+      try { await document.documentElement.requestFullscreen(); } catch {}
+      return;
+    }
 
     const cameraGranted = await requestCamera();
     if (!cameraGranted) return;
@@ -121,6 +149,7 @@ const handleStartExam = async () => {
     const session = await createExamSession(exam.id)
     setSessionId(session.id)
 
+    if (!startedAt) setStartedAt(Date.now());
     setShowIntro(false)
 
     try {
@@ -149,8 +178,10 @@ const goToSubmitPage = () => {
     state: {
       exam,
       timeLimit,
-      answers
-      
+      answers,
+      questions,
+      sessionId,
+      examStartedAt: startedAt
     }
   });
 };
@@ -174,7 +205,8 @@ const handleSubmit = async () => {
     navigate(`/Coursepage/${id}/exam/submit`, {
         state: {
             exam,
-            answers
+            answers,
+            questions
         }
     });
 };
@@ -379,8 +411,16 @@ I understand the exam rules
   );
 }
 
-if (questions.length === 0) {
+if (questionsError) {
+  return <div className="exam-error">{questionsError}</div>;
+}
+
+if (questionsLoading) {
   return <div>Loading exam...</div>;
+}
+
+if (questions.length === 0) {
+  return <div className="exam-error">No questions have been added to this exam yet.</div>;
 }
 
     return (
@@ -426,9 +466,12 @@ if (questions.length === 0) {
           <h1>{isDemo ? "Demo Exam" : exam?.title}</h1>
           <div className={tutorialStep === 1 ? "timer-container highlight" : "timer-container"}>
         <span className="timer-span"><ExamTimer
- 
-   initialHours={Math.floor(timeLimit / 60)}
-  initialMinutes={timeLimit % 60}
+  initialSeconds={(() => {
+    const total = timeLimit * 60;
+    if (!startedAt) return total;
+    const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+    return Math.max(0, total - elapsed);
+  })()}
   onFinish={handleSubmit}
 /></span>
           
