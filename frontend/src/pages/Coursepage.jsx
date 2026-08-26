@@ -74,31 +74,84 @@ export default function Coursepage() {
           </div>
           {assignments.length === 0 ? (
             <p className='no-assignments'>No assignments yet.</p>
-          ) : (
+          ) : isOwner ? (
             <ul>
               {assignments.map(a => (
                 <li key={a.id}>
                   <Link
-                    to={isOwner
-                      ? `/Coursepage/${id}/assignments/${a.id}/submissions`
-                      : `/Coursepage/${id}/assignments/${a.id}`}
+                    to={`/Coursepage/${id}/assignments/${a.id}/submissions`}
                     className='assignment-link'
                   >
                     {a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}
                   </Link>
                   {a.due_date && <span className='due-date'> (Due: {new Date(a.due_date).toLocaleDateString()})</span>}
-                  {isOwner && (
-                    <Link
-                      to={`/Coursepage/${id}/assignments/${a.id}/edit`}
-                      className='assignment-edit-link'
-                    >
-                      Edit
-                    </Link>
+                  {a.available_from && new Date(a.available_from) > new Date() && (
+                    <span className='due-date'> (Available: {new Date(a.available_from).toLocaleDateString()})</span>
                   )}
+                  <Link to={`/Coursepage/${id}/assignments/${a.id}/edit`} className='assignment-edit-link'>
+                    Edit
+                  </Link>
                 </li>
               ))}
             </ul>
-          )}
+          ) : (() => {
+            const now = new Date()
+            const completed = assignments.filter(a => a.my_submission)
+            const open = assignments.filter(a => !a.my_submission && (!a.available_from || new Date(a.available_from) <= now))
+            const upcoming = assignments.filter(a => !a.my_submission && a.available_from && new Date(a.available_from) > now)
+            return (
+              <>
+                {open.length > 0 && (
+                  <>
+                    <p className='assignment-group-label'>To do</p>
+                    <ul>
+                      {open.map(a => (
+                        <li key={a.id}>
+                          <Link to={`/Coursepage/${id}/assignments/${a.id}`} className='assignment-link'>
+                            {a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}
+                          </Link>
+                          {a.due_date && <span className='due-date'> (Due: {new Date(a.due_date).toLocaleDateString()})</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {completed.length > 0 && (
+                  <>
+                    <p className='assignment-group-label'>Completed</p>
+                    <ul>
+                      {completed.map(a => (
+                        <li key={a.id}>
+                          <Link to={`/Coursepage/${id}/assignments/${a.id}/result`} className='assignment-link'>
+                            {a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}
+                          </Link>
+                          <span className='due-date'> — {a.my_submission.score ?? 0} pts</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {upcoming.length > 0 && (
+                  <>
+                    <p className='assignment-group-label'>Upcoming</p>
+                    <ul>
+                      {upcoming.map(a => (
+                        <li key={a.id} className='assignment-upcoming'>
+                          <span className='assignment-link assignment-link--muted'>
+                            {a.week_number ? `Week ${a.week_number} — ` : ''}{a.title}
+                          </span>
+                          <span className='due-date'> (Available: {new Date(a.available_from).toLocaleDateString()})</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {open.length === 0 && completed.length === 0 && upcoming.length === 0 && (
+                  <p className='no-assignments'>No assignments yet.</p>
+                )}
+              </>
+            )
+          })()}
         </section>
         
       <div className='exam-container'>

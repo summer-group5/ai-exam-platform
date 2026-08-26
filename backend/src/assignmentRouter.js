@@ -74,6 +74,14 @@ router.post('/', requireCourseOwner, async (req, res) => {
 
 // GET /api/courses/:courseId/assignments
 router.get('/', requireAuth, async (req, res) => {
+  const { data: course } = await supabaseAdmin
+    .from('courses')
+    .select('teacher_id')
+    .eq('id', req.params.courseId)
+    .single()
+
+  const isOwner = course?.teacher_id === req.user.id
+
   const { data, error } = await supabaseAdmin
     .from('assignments')
     .select('*')
@@ -81,7 +89,27 @@ router.get('/', requireAuth, async (req, res) => {
     .order('due_date', { ascending: true, nullsFirst: false })
 
   if (error) return res.status(500).json({ error: error.message })
-  return res.json({ assignments: data })
+
+  if (isOwner) return res.json({ assignments: data })
+
+  // For students: merge in their submission status
+  const { data: submissions } = await supabaseAdmin
+    .from('assignment_submissions')
+    .select('assignment_id, score, status, submitted_at')
+    .eq('student_id', req.user.id)
+    .in('assignment_id', data.map(a => a.id))
+
+  const submissionMap = {}
+  for (const s of submissions ?? []) {
+    submissionMap[s.assignment_id] = s
+  }
+
+  const assignments = data.map(a => ({
+    ...a,
+    my_submission: submissionMap[a.id] ?? null
+  }))
+
+  return res.json({ assignments })
 })
 
 // GET /api/courses/:courseId/assignments/:assignmentId
@@ -94,6 +122,19 @@ router.get('/:assignmentId', requireAuth, async (req, res) => {
     .single()
 
   if (error) return res.status(404).json({ error: 'Assignment not found' })
+
+  const { data: course } = await supabaseAdmin
+    .from('courses')
+    .select('teacher_id')
+    .eq('id', req.params.courseId)
+    .single()
+
+  const isOwner = course?.teacher_id === req.user.id
+
+  if (!isOwner && data.available_from && new Date(data.available_from) > new Date()) {
+    return res.status(403).json({ error: 'Assignment not available yet' })
+  }
+
   return res.json(data)
 })
 
